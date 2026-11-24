@@ -1,0 +1,589 @@
+(async () => {
+  'use strict';
+
+  const VERSION = '1.8.0';
+  const LOG_PREFIX = '[ChatGPT DOM Clone Test]';
+
+  const diagnostics = {
+    version: VERSION,
+    timestamp: new Date().toISOString(),
+    errors: [],
+    warnings: [],
+    container: null,
+    messages: [],
+    css: {
+      stylesheetCount: 0,
+      accessibleStylesheets: 0,
+      inaccessibleStylesheets: [],
+      cssLength: 0,
+      customPropertyCount: 0
+    },
+    result: null
+  };
+
+  const log = () => {
+    console.log(
+      `${LOG_PREFIX} ${diagnostics.result?.success ? 'SUCCESS' : 'FAILED'}`,
+      JSON.stringify(diagnostics, null, 2)
+    );
+  };
+
+  const fail = (message) => {
+    diagnostics.errors.push(message);
+    diagnostics.result = {
+      success: false,
+      reason: message
+    };
+    log();
+  };
+
+  const getMarkdownRoots = (element) => {
+    return [...element.querySelectorAll('[class*="MarkdownRoot-"]')];
+  };
+
+  const getTextLength = (element) => {
+    return (element.innerText || element.textContent || '').length;
+  };
+
+  const getCustomProperties = (element) => {
+    const computed = getComputedStyle(element);
+    const properties = [];
+
+    for (let i = 0; i < computed.length; i++) {
+      const name = computed[i];
+
+      if (name.startsWith('--')) {
+        const value = computed.getPropertyValue(name).trim();
+
+        if (value) {
+          properties.push(`${name}:${value}`);
+        }
+      }
+    }
+
+    return properties;
+  };
+
+  const getElementInfo = (element) => {
+    const rect = element.getBoundingClientRect();
+    const style = getComputedStyle(element);
+
+    return {
+      tag: element.tagName,
+      className: typeof element.className === 'string'
+        ? element.className
+        : '',
+      id: element.id || '',
+      textLength: getTextLength(element),
+      childElementCount: element.childElementCount,
+      markdownRootCount: getMarkdownRoots(element).length,
+      rect: {
+        width: Math.round(rect.width),
+        height: Math.round(rect.height)
+      },
+      display: style.display,
+      position: style.position,
+      dataTheme: element.getAttribute('data-theme')
+    };
+  };
+
+  try {
+    // --------------------------------------------------
+    // 1. 查找真正的消息容器
+    // --------------------------------------------------
+
+    const candidates = [
+      ...document.querySelectorAll('div.relative.shrink-0')
+    ];
+
+    const validCandidates = candidates
+      .map(element => ({
+        element,
+        roots: getMarkdownRoots(element)
+      }))
+      .filter(item => item.roots.length > 0)
+      .sort((a, b) => {
+        if (b.roots.length !== a.roots.length) {
+          return b.roots.length - a.roots.length;
+        }
+
+        return getTextLength(b.element) - getTextLength(a.element);
+      });
+
+    if (!validCandidates.length) {
+      fail('没有找到包含 MarkdownRoot 的 div.relative.shrink-0 容器。');
+      return;
+    }
+
+    const container = validCandidates[0].element;
+    const originalRoots = validCandidates[0].roots;
+
+    if (
+      container === document.documentElement ||
+      container === document.body ||
+      container === document.head
+    ) {
+      fail('候选容器意外指向文档根节点，已终止。');
+      return;
+    }
+
+    diagnostics.container = {
+      selected: getElementInfo(container),
+      candidateCount: candidates.length,
+      validCandidateCount: validCandidates.length,
+      otherCandidates: validCandidates.slice(1, 6).map(item =>
+        getElementInfo(item.element)
+      )
+    };
+
+    // --------------------------------------------------
+    // 2. 查找顶层虚拟滚动消息节点
+    // --------------------------------------------------
+
+    const allVirtualizedTurns = [
+      ...container.querySelectorAll('[data-virtualized-turn]')
+    ];
+
+    const topLevelTurns = allVirtualizedTurns.filter(turn => {
+      const parentTurn = turn.parentElement?.closest(
+        '[data-virtualized-turn]'
+      );
+
+      return !parentTurn || !container.contains(parentTurn);
+    });
+
+    if (!topLevelTurns.length) {
+      fail('消息容器中没有找到顶层 data-virtualized-turn 节点。');
+      return;
+    }
+
+    const originalRootCount = originalRoots.length;
+
+    const originalTextLength = getTextLength(container);
+
+    diagnostics.messages = topLevelTurns.map((turn, index) => ({
+      index,
+      ...getElementInfo(turn)
+    }));
+
+    // --------------------------------------------------
+    // 3. 克隆消息节点
+    // --------------------------------------------------
+
+    const exportMessages = [];
+
+    for (const [index, turn] of topLevelTurns.entries()) {
+      const clone = turn.cloneNode(true);
+
+      // 清理虚拟滚动布局造成的固定尺寸和偏移。
+      const virtualizedNodes = [
+        clone,
+        ...clone.querySelectorAll('[data-virtualized-turn]')
+      ];
+
+      for (const node of virtualizedNodes) {
+        if (!node.style) continue;
+
+        node.style.removeProperty('height');
+        node.style.removeProperty('min-height');
+        node.style.removeProperty('max-height');
+        node.style.removeProperty('margin-top');
+        node.style.removeProperty('contain');
+        node.style.removeProperty('overflow');
+        node.style.removeProperty('overflow-y');
+        node.style.removeProperty('content-visibility');
+
+        node.style.height = 'auto';
+        node.style.minHeight = '0';
+        node.style.overflow = 'visible';
+      }
+
+      // 清理内部虚拟滚动内容的隐藏状态。
+      for (const node of clone.querySelectorAll('[style]')) {
+        node.style.removeProperty('content-visibility');
+      }
+
+      // 移除消息操作按钮，避免导出无意义的交互控件。
+      clone.querySelectorAll(
+        'button, [role="toolbar"], [data-testid*="action-bar"]'
+      ).forEach(element => element.remove());
+
+      const markdownRoots = getMarkdownRoots(clone);
+
+      const messageInfo = {
+        index,
+        markdownRootCount: markdownRoots.length,
+        textLength: getTextLength(clone),
+        htmlLength: clone.outerHTML.length
+      };
+
+      // 给每个消息节点补充其 MarkdownRoot 的计算变量。
+      for (const root of markdownRoots) {
+        const properties = getCustomProperties(
+          originalRoots.find(original =>
+            original.className === root.className
+          ) || originalRoots[index] || container
+        );
+
+        if (properties.length) {
+          root.style.cssText +=
+            ';' + properties.join(';') + ';';
+        }
+      }
+
+      const wrapper = document.createElement('section');
+      wrapper.className = 'export-message';
+      wrapper.dataset.messageIndex = String(index + 1);
+      wrapper.appendChild(clone);
+
+      exportMessages.push(wrapper);
+
+      messageInfo.exportHtmlLength = wrapper.outerHTML.length;
+      diagnostics.messages[index] = {
+        ...diagnostics.messages[index],
+        ...messageInfo
+      };
+    }
+
+    const clonedRootCount = exportMessages.reduce(
+      (total, message) =>
+        total + getMarkdownRoots(message).length,
+      0
+    );
+
+    const clonedTextLength = exportMessages.reduce(
+      (total, message) => total + getTextLength(message),
+      0
+    );
+
+    diagnostics.container.originalMarkdownRootCount =
+      originalRootCount;
+
+    diagnostics.container.clonedMarkdownRootCount =
+      clonedRootCount;
+
+    diagnostics.container.originalTextLength =
+      originalTextLength;
+
+    diagnostics.container.clonedTextLength =
+      clonedTextLength;
+
+    // 必须确保没有遗漏 MarkdownRoot。
+    if (clonedRootCount !== originalRootCount) {
+      fail(
+        `MarkdownRoot 数量不一致：原始 ${originalRootCount}，克隆 ${clonedRootCount}。`
+      );
+      return;
+    }
+
+    if (clonedTextLength < 1) {
+      fail('克隆后的消息没有有效文本内容。');
+      return;
+    }
+
+    // --------------------------------------------------
+    // 4. 提取页面 CSS
+    // --------------------------------------------------
+
+    const stylesheets = [...document.styleSheets];
+
+    diagnostics.css.stylesheetCount = stylesheets.length;
+
+    const cssParts = [];
+
+    for (const [index, sheet] of stylesheets.entries()) {
+      try {
+        const rules = sheet.cssRules;
+
+        if (!rules) {
+          diagnostics.css.inaccessibleStylesheets.push({
+            index,
+            href: sheet.href || '(inline)',
+            reason: 'cssRules 不可用'
+          });
+          continue;
+        }
+
+        const cssText = [...rules]
+          .map(rule => rule.cssText)
+          .join('\n');
+
+        if (cssText) {
+          cssParts.push(cssText);
+          diagnostics.css.accessibleStylesheets++;
+          diagnostics.css.cssLength += cssText.length;
+        }
+      } catch (error) {
+        diagnostics.css.inaccessibleStylesheets.push({
+          index,
+          href: sheet.href || '(inline)',
+          reason: String(error)
+        });
+      }
+    }
+
+    if (diagnostics.css.inaccessibleStylesheets.length) {
+      diagnostics.warnings.push(
+        '部分样式表无法读取，导出页面可能存在样式缺失。'
+      );
+    }
+
+    const pageCss = cssParts.join('\n\n');
+
+    // --------------------------------------------------
+    // 5. 获取主题变量
+    // --------------------------------------------------
+
+    const rootProperties = getCustomProperties(
+      document.documentElement
+    );
+
+    diagnostics.css.customPropertyCount =
+      rootProperties.length;
+
+    const theme = document.documentElement.getAttribute(
+      'data-theme'
+    ) || 'light';
+
+    const htmlClass = document.documentElement.className || '';
+
+    const rootVariableCss = rootProperties.join(';');
+
+    // --------------------------------------------------
+    // 6. 生成独立 HTML 文档
+    // --------------------------------------------------
+
+    const exportDocument = `<!DOCTYPE html>
+<html lang="zh-CN"
+      class="${escapeAttribute(htmlClass)}"
+      data-theme="${escapeAttribute(theme)}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ChatGPT DOM Clone Test v${VERSION}</title>
+
+<style>
+:root {
+  ${rootVariableCss}
+}
+
+${pageCss}
+
+/* ----------------------------------------
+   导出文档布局
+---------------------------------------- */
+
+html {
+  min-height: 100%;
+  background: #fff;
+}
+
+body {
+  margin: 0;
+  padding: 12mm;
+  background: #fff;
+  color: #0d0d0d;
+}
+
+.export-page {
+  width: 100%;
+  max-width: 186mm;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.export-message {
+  width: 100%;
+  min-width: 0;
+  margin: 0 auto 28px;
+  box-sizing: border-box;
+  overflow: visible;
+}
+
+.export-message > * {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.export-message [data-virtualized-turn] {
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  margin-top: 0 !important;
+  contain: none !important;
+  overflow: visible !important;
+  content-visibility: visible !important;
+}
+
+.export-message .MarkdownRoot-rZKhxa {
+  width: 100%;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+.export-message pre,
+.export-message code {
+  max-width: 100%;
+}
+
+.export-message [data-code-block="true"] {
+  max-width: 100%;
+}
+
+.export-message [data-code-block="true"] [data-code-block-source],
+.export-message [data-code-block="true"] .InlineCodePane-EYx4bd {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.export-message table {
+  max-width: 100%;
+}
+
+.export-message img,
+.export-message video {
+  max-width: 100%;
+  height: auto;
+}
+
+@media print {
+  body {
+    padding: 0;
+  }
+
+  .export-page {
+    width: 100%;
+    max-width: none;
+  }
+
+  .export-message {
+    break-inside: auto;
+  }
+
+  pre,
+  table,
+  blockquote {
+    break-inside: avoid;
+  }
+}
+
+@page {
+  size: A4;
+  margin: 12mm;
+}
+</style>
+</head>
+
+<body>
+<main class="export-page">
+${exportMessages.map(message => message.outerHTML).join('\n')}
+</main>
+</body>
+</html>`;
+
+    // --------------------------------------------------
+    // 7. 导出前最终检查
+    // --------------------------------------------------
+
+    if (
+      /<section[^>]*>\\s*<html[\\s>]/i.test(exportDocument)
+    ) {
+      fail('检测到文档根节点被错误嵌套，已终止导出。');
+      return;
+    }
+
+    if (
+      !exportDocument.startsWith('<!DOCTYPE html>')
+    ) {
+      fail('生成的 HTML 文档缺少 DOCTYPE。');
+      return;
+    }
+
+    const parser = new DOMParser();
+    const parsed = parser.parseFromString(
+      exportDocument,
+      'text/html'
+    );
+
+    const parsedRoots = getMarkdownRoots(parsed);
+    const parsedTextLength = getTextLength(parsed.body);
+
+    if (parsedRoots.length !== originalRootCount) {
+      fail(
+        `最终 HTML 解析后的 MarkdownRoot 数量异常：${parsedRoots.length}。`
+      );
+      return;
+    }
+
+    if (parsedTextLength < clonedTextLength * 0.9) {
+      fail(
+        `最终 HTML 文本长度异常：预期约 ${clonedTextLength}，实际 ${parsedTextLength}。`
+      );
+      return;
+    }
+
+    // --------------------------------------------------
+    // 8. 下载 HTML
+    // --------------------------------------------------
+
+    const blob = new Blob(
+      [exportDocument],
+      { type: 'text/html;charset=utf-8' }
+    );
+
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+
+    link.href = url;
+    link.download = `ChatGPT-DOM-Clone-Test-v${VERSION}.html`;
+
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+
+    setTimeout(() => URL.revokeObjectURL(url), 30000);
+
+    diagnostics.result = {
+      success: true,
+      filename: link.download,
+      htmlLength: exportDocument.length,
+      cssLength: pageCss.length,
+      sampleCount: exportMessages.length,
+      originalMarkdownRootCount: originalRootCount,
+      clonedMarkdownRootCount: clonedRootCount,
+      parsedMarkdownRootCount: parsedRoots.length,
+      originalTextLength,
+      clonedTextLength,
+      parsedTextLength
+    };
+
+    log();
+
+  } catch (error) {
+    diagnostics.errors.push({
+      name: error?.name || 'Error',
+      message: error?.message || String(error),
+      stack: error?.stack || ''
+    });
+
+    diagnostics.result = {
+      success: false,
+      reason: '脚本执行过程中发生异常。'
+    };
+
+    log();
+  }
+
+  // --------------------------------------------------
+  // 辅助函数
+  // --------------------------------------------------
+
+  function escapeAttribute(value) {
+    return String(value)
+      .replace(/&/g, '&amp;')
+      .replace(/"/g, '&quot;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  }
+})();
