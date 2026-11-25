@@ -678,20 +678,22 @@
       let finished = false;
       let mutationDetected = false;
       let stableDetected = false;
-      let finishReason = null;
+      let latestSignature = getVirtualizedSignature();
+      let minimumTimer = null;
       let fallbackTimer = null;
       let stableTimer = null;
       let hardTimeoutTimer = null;
-      let latestSignature = getVirtualizedSignature();
+      let completionPoll = null;
 
-      const finish = reason => {
+      const finish = finishReason => {
         if (finished) return;
         finished = true;
-        finishReason = reason;
         observer.disconnect();
+        clearTimeout(minimumTimer);
         clearTimeout(fallbackTimer);
         clearTimeout(stableTimer);
         clearTimeout(hardTimeoutTimer);
+        clearInterval(completionPoll);
         resolve({
           changed: getVirtualizedSignature() !== previousSignature,
           waitedMs: Math.round(performance.now() - startedAt),
@@ -708,7 +710,9 @@
         stableTimer = setTimeout(() => {
           if (getVirtualizedSignature() !== previousSignature) {
             stableDetected = true;
-            if (performance.now() - startedAt >= minimumDelay) finish('dom-stable-and-minimum-delay-met');
+            if (performance.now() - startedAt >= minimumDelay) {
+              finish('dom-stable-and-minimum-delay-met');
+            }
           }
         }, 250);
       };
@@ -731,17 +735,27 @@
         });
       }
 
-      const minimumTimer = setTimeout(() => {
+      minimumTimer = setTimeout(() => {
         const currentSignature = getVirtualizedSignature();
         if (currentSignature !== previousSignature) {
           mutationDetected = true;
+          latestSignature = currentSignature;
           checkStable();
         } else {
           fallbackTimer = setTimeout(() => finish('no-dom-change-fallback'), 250);
         }
       }, minimumDelay);
 
-      hardTimeoutTimer = setTimeout(() => finish('hard-timeout'), Math.max(timeout, minimumDelay + 1500));
+      hardTimeoutTimer = setTimeout(
+        () => finish('hard-timeout'),
+        Math.max(timeout, minimumDelay + 1500)
+      );
+
+      completionPoll = setInterval(() => {
+        if (!finished && stableDetected && performance.now() - startedAt >= minimumDelay) {
+          finish('dom-stable-and-minimum-delay-met');
+        }
+      }, 40);
 
       requestAnimationFrame(() => requestAnimationFrame(() => {
         const currentSignature = getVirtualizedSignature();
@@ -751,18 +765,6 @@
           checkStable();
         }
       }));
-
-      const originalFinish = finish;
-      const finishAfterMinimum = () => {
-        if (finished) return;
-        if (performance.now() - startedAt >= minimumDelay && stableDetected) originalFinish('dom-stable-and-minimum-delay-met');
-      };
-      const completionPoll = setInterval(finishAfterMinimum, 40);
-      const cleanupResolve = resolve;
-      resolve = value => {
-        clearInterval(completionPoll);
-        cleanupResolve(value);
-      };
     });
   }
 
