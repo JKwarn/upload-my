@@ -517,7 +517,7 @@
         const horizontallyClipped = ['hidden', 'clip'].includes(before.overflowX);
         const internallyOverflowing = sourceNode.scrollHeight > sourceNode.clientHeight + 2;
         const isCodeSurface = sourceNode.matches('[data-code-block="true"]') ||
-          (typeof sourceNode.className === 'string' && /(?:^|\\s)CodeSurface(?:-|\\s|$)/.test(sourceNode.className));
+          (typeof sourceNode.className === 'string' && sourceNode.className.includes('CodeSurface-'));
         const shouldExpand = maxHeightLimited || verticallyScrollable ||
           verticallyClipped || horizontallyClipped || internallyOverflowing || isCodeSurface;
         let changed = false;
