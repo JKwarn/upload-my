@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT 会话 HTML 导出器
 // @namespace    https://github.com/JKwarn/upload-my
-// @version      2.5.1
+// @version      2.5.2
 // @description  通过会话接口校验消息，并复用 ChatGPT 原生 DOM 与 CSS 导出独立 HTML
 // @match        https://chatgpt.com/c/*
 // @run-at       document-idle
@@ -11,7 +11,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '2.5.1';
+  const VERSION = '2.5.2';
   const PREFIX = '[ChatGPT 会话 HTML 导出器]';
   const IDS = {
     button: 'chatgpt-html-exporter-button',
@@ -458,17 +458,107 @@
       node.style.removeProperty('overflow-y');
       node.style.removeProperty('content-visibility');
       if (node.hasAttribute('data-virtualized-turn')) {
-        node.style.height = 'auto';
-        node.style.minHeight = '0';
-        node.style.overflow = 'visible';
+        node.style.setProperty('height', 'auto', 'important');
+        node.style.setProperty('min-height', '0', 'important');
+        node.style.setProperty('max-height', 'none', 'important');
+        node.style.setProperty('overflow', 'visible', 'important');
       }
     }
   }
 
+  function describeCodeNode(element) {
+    const style = getComputedStyle(element);
+    const attributes = {};
+    for (const attribute of [...element.attributes]) {
+      if (attribute.name.startsWith('data-')) attributes[attribute.name] = attribute.value.slice(0, 120);
+    }
+    return {
+      tag: element.tagName.toLowerCase(),
+      className: typeof element.className === 'string' ? element.className.slice(0, 180) : '',
+      testId: element.getAttribute('data-testid'),
+      attributes,
+      height: style.height,
+      maxHeight: style.maxHeight,
+      overflowY: style.overflowY,
+      overflowX: style.overflowX,
+      scrollHeight: element.scrollHeight,
+      clientHeight: element.clientHeight,
+      scrollTop: element.scrollTop
+    };
+  }
+
+  function expandNativeCodeContainers(sourceRoot, cloneRoot) {
+    const sourceNodes = [sourceRoot, ...sourceRoot.querySelectorAll('*')];
+    const cloneNodes = [cloneRoot, ...cloneRoot.querySelectorAll('*')];
+    const diagnosticsForBlocks = [];
+    const codeBlocks = [...sourceRoot.querySelectorAll('pre')].slice(0, 20);
+    let overriddenNodeCount = 0;
+
+    for (const [blockIndex, pre] of codeBlocks.entries()) {
+      const preIndex = sourceNodes.indexOf(pre);
+      const chain = [];
+      let current = pre;
+      while (current && sourceRoot.contains(current)) {
+        chain.push(current);
+        if (current === sourceRoot) break;
+        current = current.parentElement;
+      }
+      const ancestors = [];
+      for (const sourceNode of chain) {
+        const cloneNode = cloneNodes[sourceNodes.indexOf(sourceNode)];
+        if (!(sourceNode instanceof HTMLElement) || !(cloneNode instanceof HTMLElement)) continue;
+        const before = describeCodeNode(sourceNode);
+        const maxHeightLimited = before.maxHeight !== 'none' &&
+          Number.parseFloat(before.maxHeight) > 0;
+        const verticallyScrollable = ['auto', 'scroll', 'overlay'].includes(before.overflowY);
+        const clipped = sourceNode.scrollHeight > sourceNode.clientHeight + 2 &&
+          ['hidden', 'clip'].includes(before.overflowY);
+        const internallyOverflowing = sourceNode.scrollHeight > sourceNode.clientHeight + 2;
+        const shouldExpand = maxHeightLimited || verticallyScrollable || clipped || internallyOverflowing;
+        let changed = false;
+        if (shouldExpand) {
+          cloneNode.style.setProperty('max-height', 'none', 'important');
+          cloneNode.style.setProperty('height', 'auto', 'important');
+          cloneNode.style.setProperty('min-height', '0', 'important');
+          cloneNode.style.setProperty('overflow-y', 'visible', 'important');
+          cloneNode.style.setProperty('contain', 'none', 'important');
+          changed = true;
+          overriddenNodeCount++;
+        }
+        ancestors.push({
+          before,
+          overridden: changed,
+          after: changed ? {
+            maxHeight: cloneNode.style.getPropertyValue('max-height'),
+            height: cloneNode.style.getPropertyValue('height'),
+            overflowY: cloneNode.style.getPropertyValue('overflow-y'),
+            priority: cloneNode.style.getPropertyPriority('max-height')
+          } : null
+        });
+      }
+      diagnosticsForBlocks.push({
+        index: blockIndex,
+        sourcePathDepth: chain.length,
+        sourcePre: describeCodeNode(pre),
+        clonePre: preIndex >= 0 && cloneNodes[preIndex] ? describeCodeNode(cloneNodes[preIndex]) : null,
+        ancestors
+      });
+    }
+    return { codeBlockCount: sourceRoot.querySelectorAll('pre').length,
+      diagnosedBlockCount: diagnosticsForBlocks.length, overriddenNodeCount,
+      blocks: diagnosticsForBlocks };
+  }
+
   function removeNonContentControls(root) {
     root.querySelectorAll(
-      'button,[role="toolbar"],[data-testid*="action-bar"],[data-testid*="copy-button"],.sr-only'
-    ).forEach(node => node.remove());
+      '[data-testid*="action-bar"],[role="toolbar"],.sr-only'
+    ).forEach(node => {
+      if (node.closest('pre,code,[data-testid*="code"],[class*="code-block"]')) return;
+      node.remove();
+    });
+    root.querySelectorAll('[data-testid*="copy-button"]').forEach(node => {
+      if (!node.closest('pre,code,[data-testid*="code"],[class*="code-block"]')) node.remove();
+    });
   }
 
 
@@ -575,53 +665,104 @@
   }
 
 
-  function waitForVirtualizedUpdate(previousSignature, timeout = 2500, minimumDelay = CONFIG.defaultScrollDelay) {
+  function getVirtualizedSignature() {
+    return [...document.querySelectorAll('[data-virtualized-turn]')]
+      .map(node => (node.getAttribute('data-testid') || '') + ':' + (node.innerText || '').length)
+      .join('|');
+  }
+
+  function waitForVirtualizedUpdate(previousSignature, timeout = 2500,
+      minimumDelay = CONFIG.defaultScrollDelay, observedRoot = document.documentElement) {
     return new Promise(resolve => {
+      const startedAt = performance.now();
       let finished = false;
-      let updateReady = false;
-      let delayReady = false;
-      let timeoutTimer;
-      let stableTimer;
-      let delayTimer;
-      const signature = () => [...document.querySelectorAll('[data-virtualized-turn]')]
-        .map(node => (node.getAttribute('data-testid') || '') + ':' + (node.innerText || '').length)
-        .join('|');
-      const finishIfReady = () => {
-        if (finished || !updateReady || !delayReady) return;
+      let mutationDetected = false;
+      let stableDetected = false;
+      let finishReason = null;
+      let fallbackTimer = null;
+      let stableTimer = null;
+      let hardTimeoutTimer = null;
+      let latestSignature = getVirtualizedSignature();
+
+      const finish = reason => {
+        if (finished) return;
         finished = true;
+        finishReason = reason;
         observer.disconnect();
-        clearTimeout(timeoutTimer);
+        clearTimeout(fallbackTimer);
         clearTimeout(stableTimer);
-        clearTimeout(delayTimer);
-        resolve({ changed: signature() !== previousSignature, waitedAtLeastMs: minimumDelay });
+        clearTimeout(hardTimeoutTimer);
+        resolve({
+          changed: getVirtualizedSignature() !== previousSignature,
+          waitedMs: Math.round(performance.now() - startedAt),
+          configuredMinimumDelayMs: minimumDelay,
+          mutationDetected,
+          stableDetected,
+          finishReason,
+          fallbackWaitMs: 250
+        });
       };
-      const observer = new MutationObserver(() => {
+
+      const checkStable = () => {
         clearTimeout(stableTimer);
         stableTimer = setTimeout(() => {
-          if (signature() !== previousSignature) {
-            updateReady = true;
-            finishIfReady();
+          if (getVirtualizedSignature() !== previousSignature) {
+            stableDetected = true;
+            if (performance.now() - startedAt >= minimumDelay) finish('dom-stable-and-minimum-delay-met');
           }
         }, 250);
+      };
+
+      const observer = new MutationObserver(() => {
+        const currentSignature = getVirtualizedSignature();
+        if (currentSignature === latestSignature) return;
+        latestSignature = currentSignature;
+        mutationDetected = currentSignature !== previousSignature;
+        if (mutationDetected) checkStable();
       });
-      observer.observe(document.documentElement, { childList: true, subtree: true, attributes: true });
-      timeoutTimer = setTimeout(() => {
-        updateReady = true;
-        finishIfReady();
-      }, timeout);
-      delayTimer = setTimeout(() => {
-        delayReady = true;
-        finishIfReady();
+
+      try {
+        observer.observe(observedRoot || document.documentElement, {
+          childList: true, subtree: true, characterData: true
+        });
+      } catch {
+        observer.observe(document.documentElement, {
+          childList: true, subtree: true, characterData: true
+        });
+      }
+
+      const minimumTimer = setTimeout(() => {
+        const currentSignature = getVirtualizedSignature();
+        if (currentSignature !== previousSignature) {
+          mutationDetected = true;
+          checkStable();
+        } else {
+          fallbackTimer = setTimeout(() => finish('no-dom-change-fallback'), 250);
+        }
       }, minimumDelay);
+
+      hardTimeoutTimer = setTimeout(() => finish('hard-timeout'), Math.max(timeout, minimumDelay + 1500));
+
       requestAnimationFrame(() => requestAnimationFrame(() => {
-        if (signature() !== previousSignature) {
-          clearTimeout(stableTimer);
-          stableTimer = setTimeout(() => {
-            updateReady = true;
-            finishIfReady();
-          }, 250);
+        const currentSignature = getVirtualizedSignature();
+        if (currentSignature !== previousSignature) {
+          mutationDetected = true;
+          latestSignature = currentSignature;
+          checkStable();
         }
       }));
+
+      const originalFinish = finish;
+      const finishAfterMinimum = () => {
+        if (finished) return;
+        if (performance.now() - startedAt >= minimumDelay && stableDetected) originalFinish('dom-stable-and-minimum-delay-met');
+      };
+      const completionPoll = setInterval(finishAfterMinimum, 40);
+      const cleanupResolve = resolve;
+      resolve = value => {
+        clearInterval(completionPoll);
+        cleanupResolve(value);
+      };
     });
   }
 
@@ -640,6 +781,7 @@
       const sourceRoot = getCloneRoot(result.element);
       const clone = sourceRoot.cloneNode(true);
       removeVirtualizationArtifacts(clone);
+      const codeDiagnostics = expandNativeCodeContainers(sourceRoot, clone);
       removeNonContentControls(clone);
       const wrapper = document.createElement('section');
       wrapper.className = 'export-message';
@@ -647,7 +789,7 @@
       wrapper.dataset.messageId = messageId;
       wrapper.dataset.role = item.role;
       wrapper.appendChild(clone);
-      captured.set(messageId, { index, messageId, role: item.role, source: sourceRoot, clone: wrapper });
+      captured.set(messageId, { index, messageId, role: item.role, source: sourceRoot, clone: wrapper, codeDiagnostics });
       newlyCaptured++;
     }
     return newlyCaptured;
@@ -663,7 +805,8 @@
       strategy: 'reset-to-top-then-forward-scan',
       container: null, initialScrollTop: null, finalScrollTop: null,
       maxScrollTop: null, stepSize: null, stepCount: 0,
-      mutationWaitTimeoutMs: 2500, configuredMinimumDelayMs: scrollDelay, capturedPerStep: [],
+      mutationWaitTimeoutMs: 2500, fallbackWaitMs: 250, configuredMinimumDelayMs: scrollDelay,
+      capturedPerStep: [], initialTopWait: null, codeBlocks: [],
       reachedTop: false, reachedBottom: false,
       restoredOriginalScrollTop: false, failure: null
     };
@@ -681,8 +824,13 @@
       traversal.maxScrollTop = Math.max(0, scrollElement.scrollHeight - scrollElement.clientHeight);
       traversal.stepSize = Math.max(240, Math.floor(scrollElement.clientHeight * 0.68));
       try {
+        const topWaitSignature = getVirtualizedSignature();
+        const topWaitStartedAt = performance.now();
         scrollElement.scrollTop = 0;
-        await new Promise(resolve => setTimeout(resolve, scrollDelay));
+        traversal.initialTopWait = await waitForVirtualizedUpdate(
+          topWaitSignature, traversal.mutationWaitTimeoutMs, scrollDelay, scrollElement
+        );
+        traversal.initialTopWait.elapsedFromStartMs = Math.round(performance.now() - topWaitStartedAt);
         captureVisibleMessages(selected, captured, duplicates);
         traversal.reachedTop = scrollElement.scrollTop <= 2;
         let previousTop = scrollElement.scrollTop;
@@ -694,11 +842,11 @@
             traversal.reachedBottom = true;
             break;
           }
-          const beforeSignature = [...document.querySelectorAll('[data-virtualized-turn]')]
-            .map(node => (node.getAttribute('data-testid') || '') + ':' + (node.innerText || '').length)
-            .join('|');
+          const beforeSignature = getVirtualizedSignature();
           scrollElement.scrollTop = nextTop;
-          const waitResult = await waitForVirtualizedUpdate(beforeSignature, traversal.mutationWaitTimeoutMs, scrollDelay);
+          const waitResult = await waitForVirtualizedUpdate(
+            beforeSignature, traversal.mutationWaitTimeoutMs, scrollDelay, scrollElement
+          );
           const capturedNow = captureVisibleMessages(selected, captured, duplicates);
           traversal.stepCount++;
           traversal.capturedPerStep.push({
@@ -741,6 +889,11 @@
     }
 
     const exported = selected.map(item => captured.get(item.message.id)).filter(Boolean);
+    traversal.codeBlocks = exported.slice(0, 20).map(item => ({
+      messageIndex: item.index + 1,
+      role: item.role,
+      ...item.codeDiagnostics
+    }));
     const missing = selected.map((item, index) => ({
       index, messageId: item.message?.id || null, role: item.role
     })).filter(item => item.messageId && !captured.has(item.messageId));
