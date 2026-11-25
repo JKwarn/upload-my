@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT 会话 HTML 导出器
 // @namespace    https://github.com/JKwarn/upload-my
-// @version      2.5.3
+// @version      2.5.4
 // @description  通过会话接口校验消息，并复用 ChatGPT 原生 DOM 与 CSS 导出独立 HTML
 // @match        https://chatgpt.com/c/*
 // @run-at       document-idle
@@ -11,7 +11,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '2.5.3';
+  const VERSION = '2.5.4';
   const PREFIX = '[ChatGPT 会话 HTML 导出器]';
   const IDS = {
     button: 'chatgpt-html-exporter-button',
@@ -229,6 +229,19 @@
     return data;
   }
 
+  function summarizeApiMessage(message) {
+    return {
+      id: typeof message?.id === 'string' ? message.id : null,
+      parentId: typeof message?.parent_id === 'string' ? message.parent_id : null,
+      conversationId: message?.conversation_id ?? message?.conversationId ?? null,
+      role: roleOf(message),
+      createTime: message?.create_time ?? null,
+      updateTime: message?.update_time ?? null,
+      contentType: message?.content?.content_type ?? null,
+      channel: channelOf(message)
+    };
+  }
+
   async function fetchMessages(conversationId) {
     const auth = await getAuthentication();
     const base = CONFIG.conversationApi + encodeURIComponent(conversationId);
@@ -243,6 +256,17 @@
       `${base}/messages?before=${encodeURIComponent(cursor)}&num_turns=${CONFIG.numTurns}&include_has_versions=true`,
       auth
     );
+
+    const pageSummary = page => ({
+      messageCount: page.messages.length,
+      pageInfo: {
+        startCursor: page.page_info?.start_cursor ?? null,
+        endCursor: page.page_info?.end_cursor ?? null,
+        hasPreviousPage: page.page_info?.has_previous_page ?? null,
+        hasNextPage: page.page_info?.has_next_page ?? null
+      },
+      messages: page.messages.map(summarizeApiMessage)
+    });
 
     const merged = [];
     const seen = new Set();
@@ -269,6 +293,11 @@
     diagnostics.api = {
       newerMessageCount: newer.messages.length,
       olderMessageCount: older.messages.length,
+      requestPageCount: 2,
+      pages: {
+        newer: pageSummary(newer),
+        older: pageSummary(older)
+      },
       mergedMessageCount: merged.length,
       duplicateCount,
       missingIdCount,
@@ -286,7 +315,7 @@
       hasUnfetchedPages
     };
     if (missingIdCount) warn(`${missingIdCount} 条消息缺少 ID，无法进行精确 DOM 对应。`);
-    if (hasUnfetchedPages) warn('接口分页标志表明可能仍有未获取的消息；按两阶段约束未继续请求。');
+    if (hasUnfetchedPages) warn('接口分页标志仍提示可能存在其他分页；本诊断版本不据此单独判定当前会话不完整，将结合原生 DOM 消息 ID 对照分析。');
     return merged;
   }
 
@@ -779,7 +808,30 @@
     });
   }
 
-  function captureVisibleMessages(selected, captured, duplicates) {
+  function collectVisibleDomMessageIds(target) {
+    const roleNodes = [...document.querySelectorAll(
+      ROLE_SELECTORS + ',[data-user-message-bubble="true"],[data-chatgpt-search-unit-key]'
+    )];
+    for (const roleElement of roleNodes) {
+      const role = normalizedRole(roleElement);
+      if (!role) continue;
+      let current = roleElement;
+      for (let depth = 0; current && depth < 9; depth++, current = current.parentElement) {
+        for (const name of ID_ATTRIBUTES) {
+          const value = current.getAttribute(name);
+          if (!value) continue;
+          const values = name === 'data-chatgpt-search-message-ids'
+            ? value.split(/[\\s,]+/).filter(Boolean) : [value];
+          for (const id of values) {
+            if (!target.has(id)) target.set(id, { id, role, attribute: name });
+          }
+        }
+      }
+    }
+  }
+
+  function captureVisibleMessages(selected, captured, duplicates, observedDom) {
+    collectVisibleDomMessageIds(observedDom);
     let newlyCaptured = 0;
     for (const [index, item] of selected.entries()) {
       const messageId = item.message?.id;
@@ -813,6 +865,7 @@
     const scrollDelay = getScrollDelay();
     const captured = new Map();
     const duplicates = new Map();
+    const observedDom = new Map();
     const traversal = {
       startedAt: new Date().toISOString(),
       strategy: 'reset-to-top-then-forward-scan',
@@ -823,7 +876,7 @@
       reachedTop: false, reachedBottom: false,
       restoredOriginalScrollTop: false, failure: null
     };
-    traversal.initialCaptureCount = captureVisibleMessages(selected, captured, duplicates);
+    traversal.initialCaptureCount = captureVisibleMessages(selected, captured, duplicates, observedDom);
     const found = findConversationScrollContainer();
     const scrollElement = found.element;
     traversal.container = found.details;
@@ -844,7 +897,7 @@
           topWaitSignature, traversal.mutationWaitTimeoutMs, scrollDelay, scrollElement
         );
         traversal.initialTopWait.elapsedFromStartMs = Math.round(performance.now() - topWaitStartedAt);
-        captureVisibleMessages(selected, captured, duplicates);
+        captureVisibleMessages(selected, captured, duplicates, observedDom);
         traversal.reachedTop = scrollElement.scrollTop <= 2;
         let previousTop = scrollElement.scrollTop;
         const maxSteps = Math.min(600, Math.ceil(traversal.maxScrollTop / Math.max(1, traversal.stepSize)) + 8);
@@ -860,7 +913,7 @@
           const waitResult = await waitForVirtualizedUpdate(
             beforeSignature, traversal.mutationWaitTimeoutMs, scrollDelay, scrollElement
           );
-          const capturedNow = captureVisibleMessages(selected, captured, duplicates);
+          const capturedNow = captureVisibleMessages(selected, captured, duplicates, observedDom);
           traversal.stepCount++;
           traversal.capturedPerStep.push({
             step: traversal.stepCount, requestedScrollTop: nextTop,
@@ -921,6 +974,14 @@
       matchedMessageCount: exported.length, missingMessageCount: missing.length,
       duplicateMessageCount: duplicates.size, missing,
       duplicate: [...duplicates.values()],
+      observedDomMessageCount: observedDom.size,
+      observedDomMessages: [...observedDom.values()].slice(0, 5000),
+      apiSelectedIdsNotObservedInDom: selected
+        .filter(item => item.message?.id && !observedDom.has(item.message.id))
+        .map(item => ({ id: item.message.id, role: item.role })),
+      observedDomIdsNotInApiSelection: [...observedDom.values()]
+        .filter(item => !selected.some(selectedItem => selectedItem.message?.id === item.id))
+        .slice(0, 5000),
       mapping: exported.map(({ index, messageId, role }) => ({ index, messageId, role }))
     };
     return exported;
@@ -1140,7 +1201,7 @@ ${messages}
       const selected = selectMessages(allMessages);
       if (!selected.length) throw new Error('没有找到可导出的用户消息或 assistant 最终回答。');
       if (diagnostics.api.hasUnfetchedPages) {
-        throw new Error('接口分页标志表明仍可能存在未获取消息。为避免导出不完整，本次停止。');
+        warn('分页标志存在未解决状态；继续进行 DOM 对照诊断。该状态本身不作为失败依据。');
       }
       if (selected.some(item => !item.message?.id)) {
         throw new Error('部分目标消息缺少 ID，无法与原生 DOM 精确对应。');
