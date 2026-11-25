@@ -1,0 +1,266 @@
+//[ChatGPT 会话 HTML 导出器] SUCCESS ChatGPT 会话 HTML 导出器.user.js:219:17
+{
+  "version": "2.2.2",
+  "timestamp": "2026-11-25T05:59:11.757Z",
+  "conversationId": "6afedfeb-7034-83ec-81f2-51b83a2598b2",
+  "errors": [],
+  "warnings": [
+    "current_node 的父节点链目前无法验证完整性：父节点 6fcbb0a5-e3ee-4e4c-97ea-b35dd7888825 不在本次获取的消息集合中。这只能证明该节点不在当前两段分页数据内，不能证明真实会话中不存在该节点。当前分页标志表明仍可能存在未获取的分页数据，因此缺失节点可能位于分页边界之外。",
+    "当前没有可靠的 API 消息 ID 与 DOM 节点映射关系，DOM 节点数量不能证明 API 消息完整性。",
+    "当前 DOM 克隆节点数少于 API 中 user 与 assistant final 的候选消息总数；页面可能只保留了部分虚拟滚动节点。",
+    "本次导出不能证明会话完整性，HTML 将明确标记为部分导出。"
+  ],
+  "authentication": {
+    "success": true
+  },
+  "api": {
+    "metadataMessageCount": 15,
+    "olderMessageCount": 19,
+    "mergedMessageCount": 34,
+    "duplicateCount": 0,
+    "conflicts": [],
+    "pagination": {
+      "newerPage": {
+        "start_cursor": "14f4aa67-4d42-4c7e-82ea-e436e649f403",
+        "end_cursor": "f21f8714-e00a-4f1f-920c-98aa2c078c5d",
+        "has_previous_page": true,
+        "has_next_page": false
+      },
+      "olderPage": {
+        "start_cursor": "8d3e701a-398e-4556-9960-0b1d28eb6ab5",
+        "end_cursor": "654281db-b3e0-4175-8d6b-d96ae858ee5f",
+        "has_previous_page": false,
+        "has_next_page": true
+      },
+      "checks": {
+        "newerPageHasPrevious": true,
+        "newerPageHasNoNext": true,
+        "olderPageHasNoPrevious": true,
+        "olderPageHasNext": true
+      },
+      "expectedPattern": true
+    },
+    "currentNode": "f21f8714-e00a-4f1f-920c-98aa2c078c5d",
+    "branch": {
+      "currentNode": "f21f8714-e00a-4f1f-920c-98aa2c078c5d",
+      "currentNodeExists": true,
+      "visitedNodes": [
+        {
+          "id": "f21f8714-e00a-4f1f-920c-98aa2c078c5d",
+          "role": "assistant",
+          "messageType": "next",
+          "parentId": "f060e9c9-a448-4406-9f70-0db4ee4a984b"
+        },
+        {
+          "id": "f060e9c9-a448-4406-9f70-0db4ee4a984b",
+          "role": "assistant",
+          "messageType": "next",
+          "parentId": "6fcbb0a5-e3ee-4e4c-97ea-b35dd7888825"
+        }
+      ],
+      "reachableIds": [
+        "f21f8714-e00a-4f1f-920c-98aa2c078c5d",
+        "f060e9c9-a448-4406-9f70-0db4ee4a984b"
+      ],
+      "missingParentId": "6fcbb0a5-e3ee-4e4c-97ea-b35dd7888825",
+      "missingParentInFetchedRange": false,
+      "paginationBoundary": {
+        "newerPageHasPrevious": true,
+        "newerPageHasNext": false,
+        "olderPageHasPrevious": false,
+        "olderPageHasNext": true,
+        "missingParentCouldBeOutsideFetchedRange": true,
+        "explanation": "第二阶段响应的 has_next_page=true，表示该分页方向仍有后续页面；缺失父节点可能位于当前获取范围之外。"
+      },
+      "cycleDetected": false,
+      "cycleAt": null,
+      "reachedRoot": false,
+      "branchConclusion": "无法验证完整性",
+      "conclusionReason": "父节点 6fcbb0a5-e3ee-4e4c-97ea-b35dd7888825 不在本次获取的消息集合中。这只能证明该节点不在当前两段分页数据内，不能证明真实会话中不存在该节点。当前分页标志表明仍可能存在未获取的分页数据，因此缺失节点可能位于分页边界之外。"
+    },
+    "roleCounts": {
+      "user": 10,
+      "assistant": 23,
+      "assistantFinal": 0,
+      "system": 1
+    },
+    "selectedUserCount": 10,
+    "selectedAssistantFinalCount": 0,
+    "apiCandidateMessageCount": 10
+  },
+  "container": {
+    "selected": {
+      "tag": "DIV",
+      "className": "relative flex flex-1 shrink-0 flex-col transcriptContent-l_FOQD [--thread-content-max-width:var(--thread-content-responsive-max-width,inherit)] [--thread-body-max-width:calc(var(--thread-content-max-width)+var(--thread-body-inline-padding,0px)*2)] mx-auto w-full max-w-(--thread-body-max-width) px-[var(--thread-body-inline-padding,var(--padding-toolbar))] pb-8 has-[[data-compact-status-slot-clearance]]:pb-0",
+      "id": "",
+      "textLength": 2746,
+      "childElementCount": 1,
+      "markdownRootCount": 2,
+      "rect": {
+        "width": 808,
+        "height": 78215
+      },
+      "display": "flex",
+      "position": "relative",
+      "dataTheme": null
+    },
+    "candidateCount": 41,
+    "validCandidateCount": 41,
+    "otherCandidates": [
+      {
+        "tag": "DIV",
+        "className": "relative flex flex-col [--app-shell-left-panel-width:var(--app-shell-animated-left-panel-width)] [--app-shell-titlebar-height:var(--height-toolbar)] max-[768px]:[--app-shell-left-panel-width:0px]",
+        "id": "",
+        "textLength": 2891,
+        "childElementCount": 3,
+        "markdownRootCount": 2,
+        "rect": {
+          "width": 1486,
+          "height": 748
+        },
+        "display": "flex",
+        "position": "relative",
+        "dataTheme": null
+      },
+      {
+        "tag": "DIV",
+        "className": "relative flex max-h-full min-h-0 w-full flex-1 isolate",
+        "id": "",
+        "textLength": 2885,
+        "childElementCount": 1,
+        "markdownRootCount": 2,
+        "rect": {
+          "width": 1486,
+          "height": 748
+        },
+        "display": "flex",
+        "position": "relative",
+        "dataTheme": null
+      },
+      {
+        "tag": "DIV",
+        "className": "relative flex min-h-0 min-w-0 flex-1",
+        "id": "",
+        "textLength": 2885,
+        "childElementCount": 2,
+        "markdownRootCount": 2,
+        "rect": {
+          "width": 1486,
+          "height": 748
+        },
+        "display": "flex",
+        "position": "relative",
+        "dataTheme": null
+      },
+      {
+        "tag": "DIV",
+        "className": "contents",
+        "id": "",
+        "textLength": 2871,
+        "childElementCount": 1,
+        "markdownRootCount": 2,
+        "rect": {
+          "width": 0,
+          "height": 0
+        },
+        "display": "contents",
+        "position": "static",
+        "dataTheme": null
+      },
+      {
+        "tag": "DIV",
+        "className": "contents [--app-shell-content-fade-height:--spacing(4)] [--app-shell-content-fade:linear-gradient(to_bottom,currentColor,transparent)]",
+        "id": "",
+        "textLength": 2871,
+        "childElementCount": 3,
+        "markdownRootCount": 2,
+        "rect": {
+          "width": 0,
+          "height": 0
+        },
+        "display": "contents",
+        "position": "static",
+        "dataTheme": null
+      }
+    ],
+    "originalMarkdownRootCount": 2,
+    "clonedMarkdownRootCount": 2,
+    "originalTextLength": 2746,
+    "clonedTextLength": 2432,
+    "clonedTurnCount": 2,
+    "domTurnCount": 2,
+    "domMarkdownRootCount": 2,
+    "apiCandidateMessageCount": 10,
+    "domApiCountComparable": false
+  },
+  "messages": [
+    {
+      "index": 0,
+      "tag": "DIV",
+      "className": "",
+      "id": "",
+      "textLength": 1418,
+      "childElementCount": 1,
+      "markdownRootCount": 1,
+      "rect": {
+        "width": 768,
+        "height": 2323
+      },
+      "display": "block",
+      "position": "static",
+      "dataTheme": null,
+      "clonedMarkdownRootCount": 1,
+      "clonedTextLength": 1274,
+      "htmlLength": 20588,
+      "exportHtmlLength": 20653
+    },
+    {
+      "index": 1,
+      "tag": "DIV",
+      "className": "",
+      "id": "",
+      "textLength": 1326,
+      "childElementCount": 1,
+      "markdownRootCount": 1,
+      "rect": {
+        "width": 768,
+        "height": 1848
+      },
+      "display": "block",
+      "position": "static",
+      "dataTheme": null,
+      "clonedMarkdownRootCount": 1,
+      "clonedTextLength": 1158,
+      "htmlLength": 19922,
+      "exportHtmlLength": 19987
+    }
+  ],
+  "css": {
+    "stylesheetCount": 27,
+    "accessibleStylesheets": 27,
+    "inaccessibleStylesheets": [],
+    "cssLength": 3405895,
+    "customPropertyCount": 1713
+  },
+  "result": {
+    "success": true,
+    "completeness": {
+      "isComplete": false,
+      "status": "partial",
+      "reason": [
+        "当前 DOM 与 API 消息尚无可靠的一一映射关系。",
+        "父节点链判断：无法验证完整性。"
+      ]
+    },
+    "filename": "ChatGPT-部分导出-2026-11-25T05-59-13-308Z.html",
+    "htmlLength": 3521559,
+    "cssLength": 3405947,
+    "sampleCount": 2,
+    "originalMarkdownRootCount": 2,
+    "clonedMarkdownRootCount": 2,
+    "parsedMarkdownRootCount": 2,
+    "originalTextLength": 2746,
+    "clonedTextLength": 2432,
+    "parsedTextLength": 2984
+  }
+}
