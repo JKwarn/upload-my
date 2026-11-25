@@ -891,11 +891,17 @@
     }
 
     const exported = selected.map(item => captured.get(item.message.id)).filter(Boolean);
-    traversal.codeBlocks = exported.slice(0, 20).map(item => ({
-      messageIndex: item.index + 1,
-      role: item.role,
-      ...item.codeDiagnostics
-    }));
+    traversal.codeBlocks = exported.flatMap(item =>
+      item.codeDiagnostics.blocks.map(block => ({
+        messageIndex: item.index + 1,
+        role: item.role,
+        ...block
+      }))
+    ).slice(0, 20);
+    traversal.codeBlockDiagnosticLimit = 20;
+    traversal.codeBlockCountTotal = exported.reduce(
+      (total, item) => total + item.codeDiagnostics.codeBlockCount, 0
+    );
     const missing = selected.map((item, index) => ({
       index, messageId: item.message?.id || null, role: item.role
     })).filter(item => item.messageId && !captured.has(item.messageId));
