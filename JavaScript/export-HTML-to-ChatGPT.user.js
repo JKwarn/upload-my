@@ -20,7 +20,8 @@
     style: 'chatgpt-html-exporter-style',
     toast: 'chatgpt-html-exporter-toast',
     logDownload: 'chatgpt-html-exporter-log-download',
-    logToggle: 'chatgpt-html-exporter-log-toggle'
+    logToggle: 'chatgpt-html-exporter-log-toggle',
+    logToggleLabel: 'chatgpt-html-exporter-log-toggle-label'
   };
   const CONFIG = {
     sessionApi: '/api/auth/session',
