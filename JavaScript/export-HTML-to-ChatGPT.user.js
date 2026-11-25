@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT 会话 HTML 导出器
 // @namespace    https://github.com/JKwarn/upload-my
-// @version      2.6.3
+// @version      2.6.4
 // @description  通过会话接口校验消息，并复用 ChatGPT 原生 DOM 与 CSS 导出独立 HTML
 // @match        https://chatgpt.com/c/*
 // @run-at       document-idle
@@ -11,7 +11,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '2.6.3';
+  const VERSION = '2.6.4';
   const PREFIX = '[ChatGPT 会话 HTML 导出器]';
   const IDS = {
     button: 'chatgpt-html-exporter-button',
@@ -19,7 +19,8 @@
     speed: 'chatgpt-html-exporter-speed',
     style: 'chatgpt-html-exporter-style',
     toast: 'chatgpt-html-exporter-toast',
-    logDownload: 'chatgpt-html-exporter-log-download'
+    logDownload: 'chatgpt-html-exporter-log-download',
+    logToggle: 'chatgpt-html-exporter-log-toggle'
   };
   const CONFIG = {
     sessionApi: '/api/auth/session',
@@ -77,6 +78,8 @@
   }
 
   function log() {
+    const logToggle = document.getElementById(IDS.logToggle);
+    if (!logToggle?.checked) return;
     const success = Boolean(diagnostics.result && diagnostics.result.success);
     try {
       const file = downloadDiagnostics();
@@ -162,6 +165,8 @@
         #${IDS.speed}{width:76px;height:34px;box-sizing:border-box;padding:0 7px;border:1px solid rgba(255,255,255,.24);border-radius:7px;background:#fff;color:#202123;font:13px inherit;text-align:center;outline:none}
         #${IDS.speed}:focus{border-color:#10a37f;box-shadow:0 0 0 2px rgba(16,163,127,.2)}
         #${IDS.speed}:disabled{opacity:.6}
+        #${IDS.logToggleLabel}{display:flex;align-items:center;gap:5px;padding:0 4px;color:#fff;font-family:inherit;font-size:12px;white-space:nowrap;cursor:pointer}
+        #${IDS.logToggle}{width:15px;height:15px;margin:0;accent-color:#10a37f;cursor:pointer}
         #${IDS.button}{display:flex;align-items:center;justify-content:center;gap:8px;min-width:148px;height:40px;padding:0 15px;border:1px solid rgba(255,255,255,.15);border-radius:9px;background:#10a37f;color:#fff;font-family:inherit;font-size:14px;font-weight:600;line-height:1.2;cursor:pointer}
         #${IDS.button}:hover{background:#0d8f70}
         #${IDS.button}:disabled{opacity:.65;cursor:wait}
@@ -174,7 +179,7 @@
         #${IDS.toast}[data-type="success"]{border-left:4px solid #10a37f}
         #${IDS.toast}[data-type="error"]{border-left:4px solid #ef4444}
         #${IDS.toast}[data-type="info"]{border-left:4px solid #3b82f6}
-        @media(max-width:520px){#${IDS.controls}{right:10px;bottom:10px;gap:5px}#${IDS.controls} label{font-size:11px}#${IDS.speed}{width:64px}#${IDS.button}{min-width:128px;padding:0 10px;font-size:13px}#${IDS.logDownload}{padding:0 8px;font-size:11px}#${IDS.toast}{right:10px;bottom:72px}}
+        @media(max-width:520px){#${IDS.controls}{right:10px;bottom:10px;gap:5px}#${IDS.controls} label{font-size:11px}#${IDS.speed}{width:64px}#${IDS.logToggleLabel}{font-size:11px}#${IDS.button}{min-width:128px;padding:0 10px;font-size:13px}#${IDS.logDownload}{padding:0 8px;font-size:11px}#${IDS.toast}{right:10px;bottom:72px}}
       `;
       (document.head || document.documentElement).appendChild(style);
     }
@@ -205,6 +210,21 @@
       label.appendChild(unit);
       controls.appendChild(label);
       document.body.appendChild(controls);
+    }
+    if (!document.getElementById(IDS.logToggle)) {
+      const logLabel = document.createElement('label');
+      logLabel.id = IDS.logToggleLabel;
+      logLabel.htmlFor = IDS.logToggle;
+      logLabel.title = '开启后，导出成功或失败时自动下载 JSON 诊断日志';
+      const logCheckbox = document.createElement('input');
+      logCheckbox.id = IDS.logToggle;
+      logCheckbox.type = 'checkbox';
+      logCheckbox.checked = false;
+      logCheckbox.setAttribute('aria-label', '自动下载诊断日志');
+      const logText = document.createElement('span');
+      logText.textContent = '日志';
+      logLabel.append(logCheckbox, logText);
+      controls.appendChild(logLabel);
     }
     if (!document.getElementById(IDS.button)) {
       const button = document.createElement('button');
@@ -1314,12 +1334,18 @@ document.addEventListener('click',e=>{if(!e.target.closest('.menu-wrap'))menu.cl
     return validation;
   }
 
+  function getConversationTitle() {
+    const rawTitle = (document.title || '').replace(/\\s*\\|\\s*ChatGPT\\s*$/i, '').trim();
+    const fallback = document.querySelector('main h1')?.textContent?.trim() || '未命名会话';
+    return (rawTitle || fallback).replace(/[\\\\/:*?"<>|\\u0000-\\u001F]/g, '-').replace(/\\s+/g, ' ').replace(/[. ]+$/g, '').slice(0, 120) || '未命名会话';
+  }
+
   function downloadHTML(html, conversationId) {
     const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `ChatGPT-${conversationId}-v${VERSION}.html`;
+    link.download = `ChatGPT-${getConversationTitle()}-v${VERSION}.html`;
     document.body.appendChild(link);
     link.click();
     link.remove();
@@ -1342,6 +1368,8 @@ document.addEventListener('click',e=>{if(!e.target.closest('.menu-wrap'))menu.cl
     }
     const speedInput = document.getElementById(IDS.speed);
     if (speedInput) speedInput.disabled = true;
+    const logToggle = document.getElementById(IDS.logToggle);
+    if (logToggle) logToggle.disabled = true;
     resetDiagnostics(conversationId);
     diagnostics.dom.configuredScrollDelayMs = getScrollDelay();
 
@@ -1404,6 +1432,8 @@ document.addEventListener('click',e=>{if(!e.target.closest('.menu-wrap'))menu.cl
       }
       const currentSpeedInput = document.getElementById(IDS.speed);
       if (currentSpeedInput) currentSpeedInput.disabled = false;
+      const currentLogToggle = document.getElementById(IDS.logToggle);
+      if (currentLogToggle) currentLogToggle.disabled = false;
     }
   }
 
