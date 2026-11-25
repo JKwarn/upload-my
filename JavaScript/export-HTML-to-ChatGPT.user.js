@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT 会话 HTML 导出器
 // @namespace    https://github.com/JKwarn/upload-my
-// @version      2.6.1
+// @version      2.6.2
 // @description  通过会话接口校验消息，并复用 ChatGPT 原生 DOM 与 CSS 导出独立 HTML
 // @match        https://chatgpt.com/c/*
 // @run-at       document-idle
@@ -11,14 +11,15 @@
 (() => {
   'use strict';
 
-  const VERSION = '2.6.1';
+  const VERSION = '2.6.2';
   const PREFIX = '[ChatGPT 会话 HTML 导出器]';
   const IDS = {
     button: 'chatgpt-html-exporter-button',
     controls: 'chatgpt-html-exporter-controls',
     speed: 'chatgpt-html-exporter-speed',
     style: 'chatgpt-html-exporter-style',
-    toast: 'chatgpt-html-exporter-toast'
+    toast: 'chatgpt-html-exporter-toast',
+    logDownload: 'chatgpt-html-exporter-log-download'
   };
   const CONFIG = {
     sessionApi: '/api/auth/session',
@@ -46,14 +47,56 @@
     result: null
   };
 
-  function log() {
-    const method = diagnostics.result?.success ? 'log' : 'error';
-    console[method](
-      `${PREFIX} ${diagnostics.result?.success ? 'SUCCESS' : 'FAILED'}`,
-      JSON.stringify(diagnostics, null, 2)
-    );
+  function createDiagnosticFilename() {
+    const timestamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d{3}Z$/, 'Z');
+    const conversation = String(diagnostics.conversationId || 'unknown').replace(/[^a-zA-Z0-9_-]/g, '-');
+    return 'ChatGPT-export-v' + VERSION + '-' + conversation + '-' + timestamp + '.json';
   }
 
+  function downloadDiagnostics() {
+    const filename = createDiagnosticFilename();
+    const content = JSON.stringify(diagnostics, null, 2);
+    const blob = new Blob([content], { type: 'application/json;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    link.style.display = 'none';
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 30000);
+    const manualButton = document.getElementById(IDS.logDownload);
+    if (manualButton) {
+      manualButton.dataset.filename = filename;
+      manualButton.hidden = false;
+      manualButton.disabled = false;
+      manualButton.textContent = '↓ 重新下载日志';
+    }
+    return { filename, size: blob.size };
+  }
+
+  function log() {
+    const success = Boolean(diagnostics.result && diagnostics.result.success);
+    try {
+      const file = downloadDiagnostics();
+      const selectedCount = (diagnostics.api.selectedUserCount || 0) + (diagnostics.api.selectedAssistantFinalCount || 0);
+      console[success ? 'log' : 'error'](PREFIX + ' ' + (success ? 'SUCCESS' : 'FAILED'), {
+        version: VERSION, conversationId: diagnostics.conversationId, diagnosticFile: file.filename,
+        diagnosticBytes: file.size, requestCount: diagnostics.api.requestPageCount || 0,
+        apiMessageCount: diagnostics.api.mergedMessageCount || 0, selectedMessageCount: selectedCount,
+        exportedMessageCount: diagnostics.result.exportedMessageCount || 0,
+        errors: diagnostics.errors.length, warnings: diagnostics.warnings.length,
+        result: diagnostics.result.reason || (success ? 'success' : 'failed')
+      });
+      setStatus('诊断日志已下载：' + file.filename, 'success');
+    } catch (error) {
+      console.error(PREFIX + ' 诊断日志自动下载失败', error);
+      const manualButton = document.getElementById(IDS.logDownload);
+      if (manualButton) { manualButton.hidden = false; manualButton.disabled = false; manualButton.textContent = '↓ 手动下载诊断日志'; }
+      setStatus('诊断日志自动下载失败，请点击“手动下载诊断日志”。', 'error');
+    }
+  }
   function resetDiagnostics(conversationId) {
     Object.assign(diagnostics, {
       timestamp: new Date().toISOString(),
@@ -122,12 +165,16 @@
         #${IDS.button}{display:flex;align-items:center;justify-content:center;gap:8px;min-width:148px;height:40px;padding:0 15px;border:1px solid rgba(255,255,255,.15);border-radius:9px;background:#10a37f;color:#fff;font-family:inherit;font-size:14px;font-weight:600;line-height:1.2;cursor:pointer}
         #${IDS.button}:hover{background:#0d8f70}
         #${IDS.button}:disabled{opacity:.65;cursor:wait}
+        #${IDS.logDownload}{height:40px;padding:0 11px;border:1px solid rgba(255,255,255,.2);border-radius:9px;background:rgba(255,255,255,.12);color:#fff;font-family:inherit;font-size:12px;cursor:pointer}
+        #${IDS.logDownload}:hover{background:rgba(255,255,255,.2)}
+        #${IDS.logDownload}:disabled{opacity:.6;cursor:wait}
+        #${IDS.logDownload}[hidden]{display:none!important}
         #${IDS.toast}{position:fixed;right:24px;bottom:84px;z-index:2147483647;max-width:min(460px,calc(100vw - 32px));padding:11px 15px;border-radius:9px;background:#202123;color:#fff;font-family:inherit;font-size:13px;line-height:1.5;box-shadow:0 4px 16px rgba(0,0,0,.2);opacity:0;pointer-events:none;transform:translateY(8px);transition:opacity .18s ease,transform .18s ease}
         #${IDS.toast}.visible{opacity:1;transform:translateY(0)}
         #${IDS.toast}[data-type="success"]{border-left:4px solid #10a37f}
         #${IDS.toast}[data-type="error"]{border-left:4px solid #ef4444}
         #${IDS.toast}[data-type="info"]{border-left:4px solid #3b82f6}
-        @media(max-width:520px){#${IDS.controls}{right:10px;bottom:10px;gap:5px}#${IDS.controls} label{font-size:11px}#${IDS.speed}{width:64px}#${IDS.button}{min-width:128px;padding:0 10px;font-size:13px}#${IDS.toast}{right:10px;bottom:72px}}
+        @media(max-width:520px){#${IDS.controls}{right:10px;bottom:10px;gap:5px}#${IDS.controls} label{font-size:11px}#${IDS.speed}{width:64px}#${IDS.button}{min-width:128px;padding:0 10px;font-size:13px}#${IDS.logDownload}{padding:0 8px;font-size:11px}#${IDS.toast}{right:10px;bottom:72px}}
       `;
       (document.head || document.documentElement).appendChild(style);
     }
@@ -169,6 +216,23 @@
     } else {
       const button = document.getElementById(IDS.button);
       if (button.parentElement !== controls) controls.appendChild(button);
+    }
+    if (!document.getElementById(IDS.logDownload)) {
+      const logButton = document.createElement('button');
+      logButton.id = IDS.logDownload;
+      logButton.type = 'button';
+      logButton.textContent = '↓ 下载诊断日志';
+      logButton.hidden = true;
+      logButton.addEventListener('click', () => {
+        try {
+          const file = downloadDiagnostics();
+          setStatus('诊断日志已下载：' + file.filename, 'success');
+        } catch (error) {
+          console.error(PREFIX + ' 手动下载诊断日志失败', error);
+          setStatus('日志下载失败：' + (error && error.message ? error.message : String(error)), 'error');
+        }
+      });
+      controls.appendChild(logButton);
     }
   }
 
