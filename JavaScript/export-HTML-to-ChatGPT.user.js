@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT 会话 HTML 导出器
 // @namespace    https://github.com/JKwarn/upload-my
-// @version      2.3.2
+// @version      2.3.3
 // @description  通过两阶段会话接口导出消息，保留 Markdown、静态 DIL 布局和 Mermaid 图表
 // @match        https://chatgpt.com/c/*
 // @run-at       document-idle
@@ -14,7 +14,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '2.3.2';
+  const VERSION = '2.3.3';
   const PREFIX = '[ChatGPT 会话 HTML 导出器]';
   const IDS = {
     button: 'chatgpt-html-exporter-button',
@@ -239,9 +239,8 @@
     const oldPage = older.page_info || {};
     const newPage = newer.page_info || {};
     const hasUnfetchedPages =
-      oldPage.has_next_page === true ||
-      newPage.has_next_page === true ||
-      oldPage.has_previous_page === true;
+      oldPage.has_previous_page === true ||
+      newPage.has_next_page === true;
 
     diagnostics.api = {
       newerMessageCount: newer.messages.length,
@@ -818,6 +817,15 @@
     return element;
   }
 
+  function extractMermaidBlocks(markdown) {
+    const blocks = [];
+    const pattern = /^\s*```mermaid\s*\r?\n([\s\S]*?)^\s*```\s*$/gim;
+    for (const match of String(markdown || '').matchAll(pattern)) {
+      blocks.push(match[1].replace(/\r\n/g, '\n').trim());
+    }
+    return blocks;
+  }
+
   function renderMessage(item, index) {
     const markdown = getMessageMarkdown(item.message);
     const article = document.createElement('article');
@@ -840,6 +848,18 @@
     if (modelTree) {
       content.appendChild(renderStaticDILNode(modelTree));
       diagnostics.rendering.modelDILRenderedCount++;
+      const fallbackMarkdown = item.message?.metadata?.model_dil_v2?.fallbackMarkdown;
+      const mermaidSources = extractMermaidBlocks(typeof fallbackMarkdown === 'string' ? fallbackMarkdown : markdown);
+      let recoveredCount = 0;
+      for (const source of mermaidSources) {
+        if (!source.trim() || content.textContent.includes(source.trim())) continue;
+        const block = document.createElement('pre');
+        block.className = 'mermaid';
+        block.textContent = source;
+        content.appendChild(block);
+        recoveredCount++;
+      }
+      diagnostics.rendering.recoveredMermaidBlockCount += recoveredCount;
     } else {
       content.innerHTML = renderMarkdown(markdown);
     }
@@ -1012,6 +1032,7 @@
       unsupportedDILExpressionCount: 0,
       mermaidBlockCount: 0,
       mermaidRenderedCount: 0,
+      recoveredMermaidBlockCount: 0,
       mermaidErrors: []
     };
 
