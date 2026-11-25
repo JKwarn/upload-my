@@ -2,7 +2,7 @@
 // @name         ChatGPT 会话 HTML 导出器
 // @namespace    https://github.com/JKwarn/upload-my
 // @version      2.6.0
-// @description  通过会话接口校验消息，并复用 ChatGPT 原生 DOM 与 CSS 导出独立 HTML
+// @description  手动采集多个 ChatGPT 会话，复用原生 DOM 与 CSS 合并导出独立 HTML
 // @match        https://chatgpt.com/c/*
 // @run-at       document-idle
 // @grant        none
@@ -215,7 +215,7 @@
   function installObserver() {
     if (state.observer || !document.documentElement) return;
     state.observer = new MutationObserver(() => {
-      if (!document.getElementById(IDS.button) || !document.getElementById(IDS.style)) injectUI();
+      if (!document.getElementById(IDS.button) || !document.getElementById(IDS.style) || !document.getElementById(IDS.mergeButton) || !document.getElementById(IDS.mergeListButton)) injectUI();
     });
     state.observer.observe(document.documentElement, { childList: true, subtree: true });
   }
@@ -1568,7 +1568,7 @@ ${messages}
       const bodyVars = (record.styles?.bodyProperties || []).join(';');
       const style = (rootVars + ';' + bodyVars).replace(/"/g, '&quot;');
       const messages = record.messages.join('\n');
-      return '<section class="merge-session" id="merge-session-' + index + '" data-conversation-id="' +
+      return '<section class="merge-session ' + escapeHTML(record.styles?.rootClass || '') + '" id="merge-session-' + index + '" data-conversation-id="' +
         escapeHTML(record.conversationId) + '" data-theme="' + escapeHTML(record.styles?.rootTheme || '') +
         '" style="' + style + '">' +
         '<header class="merge-session-header"><div class="merge-session-number">会话 ' + String(index + 1).padStart(2, '0') +
