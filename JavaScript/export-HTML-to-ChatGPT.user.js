@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT 会话 HTML 导出器
 // @namespace    https://github.com/JKwarn/upload-my
-// @version      2.5.9
+// @version      2.6.0
 // @description  通过会话接口校验消息，并复用 ChatGPT 原生 DOM 与 CSS 导出独立 HTML
 // @match        https://chatgpt.com/c/*
 // @run-at       document-idle
@@ -11,7 +11,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '2.5.9';
+  const VERSION = '2.6.0';
   const PREFIX = '[ChatGPT 会话 HTML 导出器]';
   const IDS = {
     button: 'chatgpt-html-exporter-button',
@@ -24,6 +24,7 @@
     sessionApi: '/api/auth/session',
     conversationApi: '/backend-api/conversations/',
     numTurns: 10,
+    maxPaginationPages: 100,
     requestTimeout: 30000,
     maxMessageLength: 20000000,
     defaultScrollDelay: 1500,
@@ -245,77 +246,52 @@
   async function fetchMessages(conversationId) {
     const auth = await getAuthentication();
     const base = CONFIG.conversationApi + encodeURIComponent(conversationId);
-    const newer = await requestConversation(
-      `${base}?num_turns=${CONFIG.numTurns}&include_has_versions=true`, auth
-    );
-    const cursor = newer?.page_info?.start_cursor;
-    if (typeof cursor !== 'string' || !cursor) {
-      throw new Error('第一阶段响应缺少 page_info.start_cursor，无法执行第二阶段请求。');
-    }
-    const older = await requestConversation(
-      `${base}/messages?before=${encodeURIComponent(cursor)}&num_turns=${CONFIG.numTurns}&include_has_versions=true`,
-      auth
-    );
-
-    const pageSummary = page => ({
-      messageCount: page.messages.length,
-      pageInfo: {
-        startCursor: page.page_info?.start_cursor ?? null,
-        endCursor: page.page_info?.end_cursor ?? null,
-        hasPreviousPage: page.page_info?.has_previous_page ?? null,
-        hasNextPage: page.page_info?.has_next_page ?? null
-      },
-      messages: page.messages.map(summarizeApiMessage)
-    });
-
-    const merged = [];
-    const seen = new Set();
-    let duplicateCount = 0;
-    let missingIdCount = 0;
-    for (const message of [...older.messages, ...newer.messages]) {
-      if (!message || typeof message !== 'object') continue;
-      const id = typeof message.id === 'string' ? message.id : null;
-      if (id && seen.has(id)) {
-        duplicateCount++;
-        continue;
+    const requests = [];
+    const requestPage = async (url, label) => { requests.push({label,url}); return requestConversation(url,auth); };
+    const newer = await requestPage(`${base}?num_turns=${CONFIG.numTurns}&include_has_versions=true`,'newer');
+    const firstCursor = newer?.page_info?.start_cursor;
+    if (typeof firstCursor !== 'string' || !firstCursor) throw new Error('第一阶段响应缺少 page_info.start_cursor。');
+    const olderPages=[]; const seenCursors=new Set([firstCursor]); let cursor=firstCursor;
+    let boundaryMessageId=typeof newer.boundary_message_id==='string'?newer.boundary_message_id:null;
+    let boundaryReached=false; let stopReason=null;
+    for(let i=0;i<CONFIG.maxPaginationPages;i++){
+      const url=`${base}/messages?before=${encodeURIComponent(cursor)}&num_turns=${CONFIG.numTurns}&include_has_versions=true`;
+      const page=await requestPage(url,`older-${i+1}`); olderPages.push(page);
+      if(!boundaryMessageId&&typeof page.boundary_message_id==='string') boundaryMessageId=page.boundary_message_id;
+      const pageStart=page?.page_info?.start_cursor??null;
+      const ids=new Set(page.messages.map(m=>m?.id).filter(id=>typeof id==='string'));
+      if(boundaryMessageId&&(ids.has(boundaryMessageId)||pageStart===boundaryMessageId)){
+        boundaryReached=true; stopReason=ids.has(boundaryMessageId)?'boundary-message-in-response':'page-start-cursor-equals-boundary'; break;
       }
-      if (id) seen.add(id);
-      else missingIdCount++;
-      merged.push(message);
+      if(page?.page_info?.has_previous_page===false){stopReason='has_previous_page-false';break;}
+      if(typeof pageStart!=='string'||!pageStart){stopReason='missing-start-cursor';warn('历史分页响应缺少 start_cursor，已停止继续请求。');break;}
+      if(seenCursors.has(pageStart)){stopReason='repeated-start-cursor';warn('历史分页返回重复 start_cursor，已停止继续请求。');break;}
+      seenCursors.add(pageStart);cursor=pageStart;
+      if(i===CONFIG.maxPaginationPages-1){stopReason='max-pagination-pages-reached';warn(`历史分页达到安全上限 ${CONFIG.maxPaginationPages} 页。`);}
     }
-
-    const oldPage = older.page_info || {};
-    const newPage = newer.page_info || {};
-    const hasUnfetchedPages =
-      oldPage.has_previous_page === true ||
-      newPage.has_next_page === true;
-
-    diagnostics.api = {
-      newerMessageCount: newer.messages.length,
-      olderMessageCount: older.messages.length,
-      requestPageCount: 2,
-      pages: {
-        newer: pageSummary(newer),
-        older: pageSummary(older)
-      },
-      mergedMessageCount: merged.length,
-      duplicateCount,
-      missingIdCount,
-      responseOrder: ['第二阶段旧消息 response', '第一阶段新消息 response'],
-      pagination: {
-        newerPage: {
-          hasPreviousPage: newPage.has_previous_page ?? null,
-          hasNextPage: newPage.has_next_page ?? null
-        },
-        olderPage: {
-          hasPreviousPage: oldPage.has_previous_page ?? null,
-          hasNextPage: oldPage.has_next_page ?? null
-        }
-      },
-      hasUnfetchedPages
-    };
-    if (missingIdCount) warn(`${missingIdCount} 条消息缺少 ID，无法进行精确 DOM 对应。`);
-    if (hasUnfetchedPages) warn('接口分页标志仍提示可能存在其他分页；本诊断版本不据此单独判定当前会话不完整，将结合原生 DOM 消息 ID 对照分析。');
+    const summarizePage=page=>({messageCount:page.messages.length,boundaryMessageId:page.boundary_message_id??null,
+      pageInfo:{startCursor:page.page_info?.start_cursor??null,endCursor:page.page_info?.end_cursor??null,
+      hasPreviousPage:page.page_info?.has_previous_page??null,hasNextPage:page.page_info?.has_next_page??null},
+      messages:page.messages.map(summarizeApiMessage)});
+    const orderedPages=[...olderPages].reverse().concat(newer); const merged=[]; const seenIds=new Set();
+    let duplicateCount=0,missingIdCount=0;
+    for(const page of orderedPages) for(const message of page.messages){
+      if(!message||typeof message!=='object')continue; const id=typeof message.id==='string'?message.id:null;
+      if(id&&seenIds.has(id)){duplicateCount++;continue;} if(id)seenIds.add(id);else missingIdCount++; merged.push(message);
+    }
+    const newestInfo=newer.page_info||{}; const oldestInfo=olderPages.length?olderPages[olderPages.length-1].page_info||{}:{};
+    const hasUnfetchedPages=['max-pagination-pages-reached','missing-start-cursor','repeated-start-cursor'].includes(stopReason)||
+      (!boundaryReached&&oldestInfo.has_previous_page===true);
+    diagnostics.api={newerMessageCount:newer.messages.length,olderMessageCount:olderPages.reduce((n,p)=>n+p.messages.length,0),
+      requestPageCount:requests.length,requests,pages:{newer:summarizePage(newer),older:olderPages.map(summarizePage)},
+      mergedMessageCount:merged.length,duplicateCount,missingIdCount,responseOrder:['最旧历史页到较新历史页','第一阶段新消息 response'],
+      boundary:{boundaryMessageId,reached:boundaryReached,stopReason},
+      pagination:{newerPage:{hasPreviousPage:newestInfo.has_previous_page??null,hasNextPage:newestInfo.has_next_page??null},
+      oldestFetchedPage:{hasPreviousPage:oldestInfo.has_previous_page??null,hasNextPage:oldestInfo.has_next_page??null},fetchedOlderPageCount:olderPages.length},
+      hasUnfetchedPages};
+    if(missingIdCount)warn(`${missingIdCount} 条消息缺少 ID，无法精确匹配 DOM。`);
+    if(!boundaryMessageId)warn('响应未提供 boundary_message_id；使用 has_previous_page=false 作为分页终止条件。');
+    else if(!boundaryReached&&!hasUnfetchedPages)warn('分页已停止，但尚未观察到 boundary_message_id。');
     return merged;
   }
 
