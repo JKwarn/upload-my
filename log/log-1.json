@@ -1,29 +1,55 @@
 [ChatGPT 会话 HTML 导出器] FAILED 
 {
-  "version": "2.5.8",
-  "timestamp": "2026-11-25T15:44:18.255Z",
+  "version": "2.6.0",
+  "timestamp": "2026-11-25T16:13:36.037Z",
   "conversationId": "6b006027-ed74-83ee-89f6-d179c49e7292",
   "errors": [
     {
       "name": "Error",
-      "message": "虚拟滚动遍历后仍无法完整对应接口消息：目标 20 条，匹配 0 条，缺失或歧义 40 条。未生成不完整文件。",
-      "stack": "handleExport@moz-extension://3bd90dbb-ecdd-4b22-9532-9cd19de6ad7a/%20ChatGPT%20%E4%BC%9A%E8%AF%9D%20HTML%20%E5%AF%BC%E5%87%BA%E5%99%A8.user.js#31:1295:15\nasync*injectUI@moz-extension://3bd90dbb-ecdd-4b22-9532-9cd19de6ad7a/%20ChatGPT%20%E4%BC%9A%E8%AF%9D%20HTML%20%E5%AF%BC%E5%87%BA%E5%99%A8.user.js#31:166:14\ninitialize@moz-extension://3bd90dbb-ecdd-4b22-9532-9cd19de6ad7a/%20ChatGPT%20%E4%BC%9A%E8%AF%9D%20HTML%20%E5%AF%BC%E5%87%BA%E5%99%A8.user.js#31:1346:5\nd_0Pu63Dqmtvl_4eo/<@moz-extension://3bd90dbb-ecdd-4b22-9532-9cd19de6ad7a/%20ChatGPT%20%E4%BC%9A%E8%AF%9D%20HTML%20%E5%AF%BC%E5%87%BA%E5%99%A8.user.js#31:1350:3\nd_0Pu63Dqmtvl_4eo/<@moz-extension://3bd90dbb-ecdd-4b22-9532-9cd19de6ad7a/%20ChatGPT%20%E4%BC%9A%E8%AF%9D%20HTML%20%E5%AF%BC%E5%87%BA%E5%99%A8.user.js#31:1351:3\nd_0Pu63Dqmtvl_4eo@moz-extension://3bd90dbb-ecdd-4b22-9532-9cd19de6ad7a/%20ChatGPT%20%E4%BC%9A%E8%AF%9D%20HTML%20%E5%AF%BC%E5%87%BA%E5%99%A8.user.js#31:1352:3\nwn@moz-extension://3bd90dbb-ecdd-4b22-9532-9cd19de6ad7a/sandbox/injected-web.js:1:16625\n@moz-extension://3bd90dbb-ecdd-4b22-9532-9cd19de6ad7a/%20ChatGPT%20%E4%BC%9A%E8%AF%9D%20HTML%20%E5%AF%BC%E5%87%BA%E5%99%A8.user.js#31:1:1\n"
+      "message": "虚拟滚动遍历后仍无法完整对应接口消息：目标 51 条，匹配 50 条，缺失或歧义 1 条。未生成不完整文件。",
+      "stack": "handleExport@moz-extension://3bd90dbb-ecdd-4b22-9532-9cd19de6ad7a/%20ChatGPT%20%E4%BC%9A%E8%AF%9D%20HTML%20%E5%AF%BC%E5%87%BA%E5%99%A8.user.js#31:1281:15\nasync*injectUI@moz-extension://3bd90dbb-ecdd-4b22-9532-9cd19de6ad7a/%20ChatGPT%20%E4%BC%9A%E8%AF%9D%20HTML%20%E5%AF%BC%E5%87%BA%E5%99%A8.user.js#31:167:14\ninitialize@moz-extension://3bd90dbb-ecdd-4b22-9532-9cd19de6ad7a/%20ChatGPT%20%E4%BC%9A%E8%AF%9D%20HTML%20%E5%AF%BC%E5%87%BA%E5%99%A8.user.js#31:1332:5\ndnZkTqP6dZ16jfwmi/<@moz-extension://3bd90dbb-ecdd-4b22-9532-9cd19de6ad7a/%20ChatGPT%20%E4%BC%9A%E8%AF%9D%20HTML%20%E5%AF%BC%E5%87%BA%E5%99%A8.user.js#31:1336:3\ndnZkTqP6dZ16jfwmi/<@moz-extension://3bd90dbb-ecdd-4b22-9532-9cd19de6ad7a/%20ChatGPT%20%E4%BC%9A%E8%AF%9D%20HTML%20%E5%AF%BC%E5%87%BA%E5%99%A8.user.js#31:1337:3\ndnZkTqP6dZ16jfwmi@moz-extension://3bd90dbb-ecdd-4b22-9532-9cd19de6ad7a/%20ChatGPT%20%E4%BC%9A%E8%AF%9D%20HTML%20%E5%AF%BC%E5%87%BA%E5%99%A8.user.js#31:1338:3\nwn@moz-extension://3bd90dbb-ecdd-4b22-9532-9cd19de6ad7a/sandbox/injected-web.js:1:16625\n@moz-extension://3bd90dbb-ecdd-4b22-9532-9cd19de6ad7a/%20ChatGPT%20%E4%BC%9A%E8%AF%9D%20HTML%20%E5%AF%BC%E5%87%BA%E5%99%A8.user.js#31:1:1\n"
     }
   ],
   "warnings": [
-    "接口分页标志仍提示可能存在其他分页；本诊断版本不据此单独判定当前会话不完整，将结合原生 DOM 消息 ID 对照分析。",
-    "分页标志存在未解决状态；继续进行 DOM 对照诊断。该状态本身不作为失败依据。"
+    "响应未提供 boundary_message_id；使用 has_previous_page=false 作为分页终止条件。"
   ],
   "authentication": {
     "success": true
   },
   "api": {
     "newerMessageCount": 14,
-    "olderMessageCount": 13,
-    "requestPageCount": 2,
+    "olderMessageCount": 52,
+    "requestPageCount": 6,
+    "requests": [
+      {
+        "label": "newer",
+        "url": "/backend-api/conversations/6b006027-ed74-83ee-89f6-d179c49e7292?num_turns=10&include_has_versions=true"
+      },
+      {
+        "label": "older-1",
+        "url": "/backend-api/conversations/6b006027-ed74-83ee-89f6-d179c49e7292/messages?before=ccdb5937-5174-4307-aa4c-56c1403f9295&num_turns=10&include_has_versions=true"
+      },
+      {
+        "label": "older-2",
+        "url": "/backend-api/conversations/6b006027-ed74-83ee-89f6-d179c49e7292/messages?before=ebdbf9c0-69c6-41a6-a896-117f3ae05131&num_turns=10&include_has_versions=true"
+      },
+      {
+        "label": "older-3",
+        "url": "/backend-api/conversations/6b006027-ed74-83ee-89f6-d179c49e7292/messages?before=7a4c7660-24bc-4c19-b4f9-400ca39e61d2&num_turns=10&include_has_versions=true"
+      },
+      {
+        "label": "older-4",
+        "url": "/backend-api/conversations/6b006027-ed74-83ee-89f6-d179c49e7292/messages?before=5020cf84-de35-4762-bb30-190d7a048dce&num_turns=10&include_has_versions=true"
+      },
+      {
+        "label": "older-5",
+        "url": "/backend-api/conversations/6b006027-ed74-83ee-89f6-d179c49e7292/messages?before=2fe1be73-551f-47c7-ae34-2eaa9425c3e7&num_turns=10&include_has_versions=true"
+      }
+    ],
     "pages": {
       "newer": {
         "messageCount": 14,
+        "boundaryMessageId": null,
         "pageInfo": {
           "startCursor": "ccdb5937-5174-4307-aa4c-56c1403f9295",
           "endCursor": "c67eb43e-f8db-4a7d-84a8-5730fd213852",
@@ -173,188 +199,636 @@
           }
         ]
       },
-      "older": {
-        "messageCount": 13,
-        "pageInfo": {
-          "startCursor": "ebdbf9c0-69c6-41a6-a896-117f3ae05131",
-          "endCursor": "4c46738c-8617-48fc-ac16-539ec4b01fbc",
-          "hasPreviousPage": true,
-          "hasNextPage": true
+      "older": [
+        {
+          "messageCount": 13,
+          "boundaryMessageId": null,
+          "pageInfo": {
+            "startCursor": "ebdbf9c0-69c6-41a6-a896-117f3ae05131",
+            "endCursor": "4c46738c-8617-48fc-ac16-539ec4b01fbc",
+            "hasPreviousPage": true,
+            "hasNextPage": true
+          },
+          "messages": [
+            {
+              "id": "ebdbf9c0-69c6-41a6-a896-117f3ae05131",
+              "parentId": null,
+              "conversationId": null,
+              "role": "user",
+              "createTime": 1795187322.875,
+              "updateTime": 1795187338.625284,
+              "contentType": "text",
+              "channel": null
+            },
+            {
+              "id": "1b29a8b8-ad1e-4b8e-8976-338b120a9ee6",
+              "parentId": null,
+              "conversationId": null,
+              "role": "assistant",
+              "createTime": 1795187326.496824,
+              "updateTime": 1795187338.321066,
+              "contentType": "text",
+              "channel": "final"
+            },
+            {
+              "id": "13071b7e-6807-4361-91d6-cfc2eb909f57",
+              "parentId": null,
+              "conversationId": null,
+              "role": "user",
+              "createTime": 1795187366.243,
+              "updateTime": 1795187379.87592,
+              "contentType": "text",
+              "channel": null
+            },
+            {
+              "id": "deef0946-78f1-4a11-b2dd-6bc0c0a058dd",
+              "parentId": null,
+              "conversationId": null,
+              "role": "assistant",
+              "createTime": 1795187369.965602,
+              "updateTime": 1795187375.6528,
+              "contentType": "text",
+              "channel": "final"
+            },
+            {
+              "id": "49412971-5532-4077-9c43-9d79015269a4",
+              "parentId": null,
+              "conversationId": null,
+              "role": "user",
+              "createTime": 1795187381.737,
+              "updateTime": 1795187407.66953,
+              "contentType": "text",
+              "channel": null
+            },
+            {
+              "id": "ff597b3b-bf30-44e7-8d3f-604fdcd16b8c",
+              "parentId": null,
+              "conversationId": null,
+              "role": "assistant",
+              "createTime": 1795187390.405672,
+              "updateTime": 1795187391.91012,
+              "contentType": "thoughts",
+              "channel": null
+            },
+            {
+              "id": "2c794896-650b-4f86-82d0-495fcfb2da78",
+              "parentId": null,
+              "conversationId": null,
+              "role": "assistant",
+              "createTime": 1795187391.913346,
+              "updateTime": 1795187391.913346,
+              "contentType": "thoughts",
+              "channel": null
+            },
+            {
+              "id": "92115eca-acbb-4aba-ac79-c717358fa67e",
+              "parentId": null,
+              "conversationId": null,
+              "role": "assistant",
+              "createTime": 1795187391.91554,
+              "updateTime": 1795187391.91554,
+              "contentType": "reasoning_recap",
+              "channel": null
+            },
+            {
+              "id": "7bca35bc-b611-4f7c-a5ad-b9d0a4f69a2f",
+              "parentId": null,
+              "conversationId": null,
+              "role": "assistant",
+              "createTime": 1795187391.917769,
+              "updateTime": 1795187407.586875,
+              "contentType": "text",
+              "channel": "final"
+            },
+            {
+              "id": "7104dcb0-b873-40bf-9e53-447e35b969f2",
+              "parentId": null,
+              "conversationId": null,
+              "role": "user",
+              "createTime": 1795187529.594,
+              "updateTime": 1795187550.154242,
+              "contentType": "text",
+              "channel": null
+            },
+            {
+              "id": "1816055b-e525-4b4e-a519-e823e485d7ae",
+              "parentId": null,
+              "conversationId": null,
+              "role": "assistant",
+              "createTime": 1795187533.395789,
+              "updateTime": 1795187549.793105,
+              "contentType": "text",
+              "channel": "final"
+            },
+            {
+              "id": "537cd660-f468-4f1c-8c75-6d9843ba574b",
+              "parentId": null,
+              "conversationId": null,
+              "role": "user",
+              "createTime": 1795234078.181,
+              "updateTime": 1795234094.625535,
+              "contentType": "text",
+              "channel": null
+            },
+            {
+              "id": "4c46738c-8617-48fc-ac16-539ec4b01fbc",
+              "parentId": null,
+              "conversationId": null,
+              "role": "assistant",
+              "createTime": 1795234085.795972,
+              "updateTime": 1795234094.430771,
+              "contentType": "text",
+              "channel": "final"
+            }
+          ]
         },
-        "messages": [
-          {
-            "id": "ebdbf9c0-69c6-41a6-a896-117f3ae05131",
-            "parentId": null,
-            "conversationId": null,
-            "role": "user",
-            "createTime": 1795187322.875,
-            "updateTime": 1795187338.625284,
-            "contentType": "text",
-            "channel": null
+        {
+          "messageCount": 13,
+          "boundaryMessageId": null,
+          "pageInfo": {
+            "startCursor": "7a4c7660-24bc-4c19-b4f9-400ca39e61d2",
+            "endCursor": "84829981-b013-481b-b595-39fef81d8736",
+            "hasPreviousPage": true,
+            "hasNextPage": true
           },
-          {
-            "id": "1b29a8b8-ad1e-4b8e-8976-338b120a9ee6",
-            "parentId": null,
-            "conversationId": null,
-            "role": "assistant",
-            "createTime": 1795187326.496824,
-            "updateTime": 1795187338.321066,
-            "contentType": "text",
-            "channel": "final"
+          "messages": [
+            {
+              "id": "7a4c7660-24bc-4c19-b4f9-400ca39e61d2",
+              "parentId": null,
+              "conversationId": null,
+              "role": "user",
+              "createTime": 1795187167.097,
+              "updateTime": 1795187186.706176,
+              "contentType": "text",
+              "channel": null
+            },
+            {
+              "id": "152eed16-190b-4728-8ab6-9700a575f4b5",
+              "parentId": null,
+              "conversationId": null,
+              "role": "assistant",
+              "createTime": 1795187176.51419,
+              "updateTime": 1795187180.965418,
+              "contentType": "thoughts",
+              "channel": null
+            },
+            {
+              "id": "89d358e5-2b13-4541-b548-25ce3bc60596",
+              "parentId": null,
+              "conversationId": null,
+              "role": "assistant",
+              "createTime": 1795187180.969878,
+              "updateTime": 1795187180.969878,
+              "contentType": "thoughts",
+              "channel": null
+            },
+            {
+              "id": "91bbb289-e3bb-4c91-a269-69c8b5bb562b",
+              "parentId": null,
+              "conversationId": null,
+              "role": "assistant",
+              "createTime": 1795187180.980508,
+              "updateTime": 1795187180.980508,
+              "contentType": "reasoning_recap",
+              "channel": null
+            },
+            {
+              "id": "da0d1123-cbef-4702-a7ed-77e45f5cc226",
+              "parentId": null,
+              "conversationId": null,
+              "role": "assistant",
+              "createTime": 1795187181.013152,
+              "updateTime": 1795187186.455204,
+              "contentType": "text",
+              "channel": "final"
+            },
+            {
+              "id": "8a37a03e-dc13-4e4c-a799-8287c23d2f45",
+              "parentId": null,
+              "conversationId": null,
+              "role": "user",
+              "createTime": 1795187217.622,
+              "updateTime": 1795187229.881245,
+              "contentType": "text",
+              "channel": null
+            },
+            {
+              "id": "ecf87cb7-4748-44c2-aecb-c387f89bfd8d",
+              "parentId": null,
+              "conversationId": null,
+              "role": "assistant",
+              "createTime": 1795187221.203238,
+              "updateTime": 1795187229.3912,
+              "contentType": "text",
+              "channel": "final"
+            },
+            {
+              "id": "a4206293-4292-4df0-9fb7-810daf11f33e",
+              "parentId": null,
+              "conversationId": null,
+              "role": "user",
+              "createTime": 1795187232.308,
+              "updateTime": 1795187245.663494,
+              "contentType": "text",
+              "channel": null
+            },
+            {
+              "id": "5d6e609c-d908-4908-a2f2-62f540608c5e",
+              "parentId": null,
+              "conversationId": null,
+              "role": "assistant",
+              "createTime": 1795187236.04319,
+              "updateTime": 1795187243.283276,
+              "contentType": "text",
+              "channel": "final"
+            },
+            {
+              "id": "9be38ba0-4e67-4f15-9799-de32e21f8622",
+              "parentId": null,
+              "conversationId": null,
+              "role": "user",
+              "createTime": 1795187251.339,
+              "updateTime": 1795187263.547803,
+              "contentType": "text",
+              "channel": null
+            },
+            {
+              "id": "26458236-fd3b-4d71-b2e9-b7f366cdfbca",
+              "parentId": null,
+              "conversationId": null,
+              "role": "assistant",
+              "createTime": 1795187254.917508,
+              "updateTime": 1795187263.311919,
+              "contentType": "text",
+              "channel": "final"
+            },
+            {
+              "id": "7ba42adc-24ee-45e2-b54b-936c64532d7e",
+              "parentId": null,
+              "conversationId": null,
+              "role": "user",
+              "createTime": 1795187284.416,
+              "updateTime": 1795187302.64132,
+              "contentType": "text",
+              "channel": null
+            },
+            {
+              "id": "84829981-b013-481b-b595-39fef81d8736",
+              "parentId": null,
+              "conversationId": null,
+              "role": "assistant",
+              "createTime": 1795187288.064583,
+              "updateTime": 1795187302.5788,
+              "contentType": "text",
+              "channel": "final"
+            }
+          ]
+        },
+        {
+          "messageCount": 12,
+          "boundaryMessageId": null,
+          "pageInfo": {
+            "startCursor": "5020cf84-de35-4762-bb30-190d7a048dce",
+            "endCursor": "fd845e93-21e7-4650-b230-60428e6ca9f0",
+            "hasPreviousPage": true,
+            "hasNextPage": true
           },
-          {
-            "id": "13071b7e-6807-4361-91d6-cfc2eb909f57",
-            "parentId": null,
-            "conversationId": null,
-            "role": "user",
-            "createTime": 1795187366.243,
-            "updateTime": 1795187379.87592,
-            "contentType": "text",
-            "channel": null
+          "messages": [
+            {
+              "id": "5020cf84-de35-4762-bb30-190d7a048dce",
+              "parentId": null,
+              "conversationId": null,
+              "role": "user",
+              "createTime": 1795186925.557,
+              "updateTime": 1795186937.702797,
+              "contentType": "text",
+              "channel": null
+            },
+            {
+              "id": "0b25ab09-caa2-477d-b999-3b6f88b2c173",
+              "parentId": null,
+              "conversationId": null,
+              "role": "assistant",
+              "createTime": 1795186929.053498,
+              "updateTime": 1795186936.938543,
+              "contentType": "text",
+              "channel": "final"
+            },
+            {
+              "id": "0fcef279-6408-49e3-8eae-ee54581c8270",
+              "parentId": null,
+              "conversationId": null,
+              "role": "user",
+              "createTime": 1795186966.824,
+              "updateTime": 1795186982.419088,
+              "contentType": "text",
+              "channel": null
+            },
+            {
+              "id": "b79cfbb0-3913-4017-8c1c-e46940ffc205",
+              "parentId": null,
+              "conversationId": null,
+              "role": "assistant",
+              "createTime": 1795186975.016817,
+              "updateTime": 1795186975.016817,
+              "contentType": "reasoning_recap",
+              "channel": null
+            },
+            {
+              "id": "354b0e27-102a-4539-ada3-add84ea77610",
+              "parentId": null,
+              "conversationId": null,
+              "role": "assistant",
+              "createTime": 1795186975.024279,
+              "updateTime": 1795186982.111931,
+              "contentType": "text",
+              "channel": "final"
+            },
+            {
+              "id": "8399084b-0667-477a-9c5e-de9c94d1092f",
+              "parentId": null,
+              "conversationId": null,
+              "role": "user",
+              "createTime": 1795186987.759,
+              "updateTime": 1795187003.790024,
+              "contentType": "text",
+              "channel": null
+            },
+            {
+              "id": "aea2ac8d-993a-4dfd-bdb4-b91e0a0deb94",
+              "parentId": null,
+              "conversationId": null,
+              "role": "assistant",
+              "createTime": 1795186991.080355,
+              "updateTime": 1795187003.521229,
+              "contentType": "text",
+              "channel": "final"
+            },
+            {
+              "id": "116aa5d0-1a04-42b8-b849-26303100d7d7",
+              "parentId": null,
+              "conversationId": null,
+              "role": "user",
+              "createTime": 1795187021.771,
+              "updateTime": 1795187034.401256,
+              "contentType": "text",
+              "channel": null
+            },
+            {
+              "id": "fd047731-fb20-44a1-9c98-29fd69d5a6ce",
+              "parentId": null,
+              "conversationId": null,
+              "role": "assistant",
+              "createTime": 1795187027.085947,
+              "updateTime": 1795187027.085947,
+              "contentType": "reasoning_recap",
+              "channel": null
+            },
+            {
+              "id": "b9c053e0-eacd-41ac-b93e-072809478a38",
+              "parentId": null,
+              "conversationId": null,
+              "role": "assistant",
+              "createTime": 1795187027.089531,
+              "updateTime": 1795187033.806647,
+              "contentType": "text",
+              "channel": "final"
+            },
+            {
+              "id": "55e4bd23-8b39-4082-88d9-7b957e678c0c",
+              "parentId": null,
+              "conversationId": null,
+              "role": "user",
+              "createTime": 1795187146.113,
+              "updateTime": 1795187157.599972,
+              "contentType": "text",
+              "channel": null
+            },
+            {
+              "id": "fd845e93-21e7-4650-b230-60428e6ca9f0",
+              "parentId": null,
+              "conversationId": null,
+              "role": "assistant",
+              "createTime": 1795187149.841912,
+              "updateTime": 1795187156.34846,
+              "contentType": "text",
+              "channel": "final"
+            }
+          ]
+        },
+        {
+          "messageCount": 13,
+          "boundaryMessageId": null,
+          "pageInfo": {
+            "startCursor": "2fe1be73-551f-47c7-ae34-2eaa9425c3e7",
+            "endCursor": "8ac3642e-eb0c-4ba4-84f7-d33fab20f7cb",
+            "hasPreviousPage": true,
+            "hasNextPage": true
           },
-          {
-            "id": "deef0946-78f1-4a11-b2dd-6bc0c0a058dd",
-            "parentId": null,
-            "conversationId": null,
-            "role": "assistant",
-            "createTime": 1795187369.965602,
-            "updateTime": 1795187375.6528,
-            "contentType": "text",
-            "channel": "final"
+          "messages": [
+            {
+              "id": "2fe1be73-551f-47c7-ae34-2eaa9425c3e7",
+              "parentId": null,
+              "conversationId": null,
+              "role": "user",
+              "createTime": 1795186726.695,
+              "updateTime": 1795186739.794445,
+              "contentType": "text",
+              "channel": null
+            },
+            {
+              "id": "a745679c-c743-455b-809b-9923e0b54905",
+              "parentId": null,
+              "conversationId": null,
+              "role": "system",
+              "createTime": 1795186731.011131,
+              "updateTime": 1795186731.011131,
+              "contentType": "text",
+              "channel": null
+            },
+            {
+              "id": "962e4222-7a0d-4177-909a-630afc30a5d3",
+              "parentId": null,
+              "conversationId": null,
+              "role": "assistant",
+              "createTime": 1795186733.130899,
+              "updateTime": 1795186733.130899,
+              "contentType": "reasoning_recap",
+              "channel": null
+            },
+            {
+              "id": "c74652a4-4389-4384-9f47-654787e9a6b5",
+              "parentId": null,
+              "conversationId": null,
+              "role": "assistant",
+              "createTime": 1795186733.13589,
+              "updateTime": 1795186736.997986,
+              "contentType": "text",
+              "channel": "final"
+            },
+            {
+              "id": "a34b9789-c40a-489d-8b4b-1ff381542b89",
+              "parentId": null,
+              "conversationId": null,
+              "role": "user",
+              "createTime": 1795186768.02,
+              "updateTime": 1795186779.86306,
+              "contentType": "text",
+              "channel": null
+            },
+            {
+              "id": "e31ab26f-b017-4fd3-a45a-b3c6fd281575",
+              "parentId": null,
+              "conversationId": null,
+              "role": "assistant",
+              "createTime": 1795186771.393608,
+              "updateTime": 1795186776.325913,
+              "contentType": "text",
+              "channel": "final"
+            },
+            {
+              "id": "0cc3cf7b-9a3d-44db-9ea4-3ad3a0992206",
+              "parentId": null,
+              "conversationId": null,
+              "role": "user",
+              "createTime": 1795186823.669,
+              "updateTime": 1795186835.702012,
+              "contentType": "text",
+              "channel": null
+            },
+            {
+              "id": "bdd39a89-f528-459f-bcef-b739811157f3",
+              "parentId": null,
+              "conversationId": null,
+              "role": "assistant",
+              "createTime": 1795186827.091251,
+              "updateTime": 1795186835.484378,
+              "contentType": "text",
+              "channel": "final"
+            },
+            {
+              "id": "2b854a07-be44-48a9-a3d7-829771165a68",
+              "parentId": null,
+              "conversationId": null,
+              "role": "user",
+              "createTime": 1795186839.849,
+              "updateTime": 1795186854.884309,
+              "contentType": "text",
+              "channel": null
+            },
+            {
+              "id": "d32023a0-0d92-4b51-8ee8-82598b4957d2",
+              "parentId": null,
+              "conversationId": null,
+              "role": "assistant",
+              "createTime": 1795186844.458739,
+              "updateTime": 1795186844.458739,
+              "contentType": "reasoning_recap",
+              "channel": null
+            },
+            {
+              "id": "4dc8c252-15b5-4030-a287-96f85e518abc",
+              "parentId": null,
+              "conversationId": null,
+              "role": "assistant",
+              "createTime": 1795186844.463512,
+              "updateTime": 1795186853.905181,
+              "contentType": "text",
+              "channel": "final"
+            },
+            {
+              "id": "81b5a9a2-c5a2-4846-8911-98a95a2958bd",
+              "parentId": null,
+              "conversationId": null,
+              "role": "user",
+              "createTime": 1795186899.765,
+              "updateTime": 1795186912.85663,
+              "contentType": "text",
+              "channel": null
+            },
+            {
+              "id": "8ac3642e-eb0c-4ba4-84f7-d33fab20f7cb",
+              "parentId": null,
+              "conversationId": null,
+              "role": "assistant",
+              "createTime": 1795186903.899521,
+              "updateTime": 1795186911.664442,
+              "contentType": "text",
+              "channel": "final"
+            }
+          ]
+        },
+        {
+          "messageCount": 1,
+          "boundaryMessageId": null,
+          "pageInfo": {
+            "startCursor": "b06a2281-b94b-492f-89c9-a2db765547fe",
+            "endCursor": "b06a2281-b94b-492f-89c9-a2db765547fe",
+            "hasPreviousPage": false,
+            "hasNextPage": true
           },
-          {
-            "id": "49412971-5532-4077-9c43-9d79015269a4",
-            "parentId": null,
-            "conversationId": null,
-            "role": "user",
-            "createTime": 1795187381.737,
-            "updateTime": 1795187407.66953,
-            "contentType": "text",
-            "channel": null
-          },
-          {
-            "id": "ff597b3b-bf30-44e7-8d3f-604fdcd16b8c",
-            "parentId": null,
-            "conversationId": null,
-            "role": "assistant",
-            "createTime": 1795187390.405672,
-            "updateTime": 1795187391.91012,
-            "contentType": "thoughts",
-            "channel": null
-          },
-          {
-            "id": "2c794896-650b-4f86-82d0-495fcfb2da78",
-            "parentId": null,
-            "conversationId": null,
-            "role": "assistant",
-            "createTime": 1795187391.913346,
-            "updateTime": 1795187391.913346,
-            "contentType": "thoughts",
-            "channel": null
-          },
-          {
-            "id": "92115eca-acbb-4aba-ac79-c717358fa67e",
-            "parentId": null,
-            "conversationId": null,
-            "role": "assistant",
-            "createTime": 1795187391.91554,
-            "updateTime": 1795187391.91554,
-            "contentType": "reasoning_recap",
-            "channel": null
-          },
-          {
-            "id": "7bca35bc-b611-4f7c-a5ad-b9d0a4f69a2f",
-            "parentId": null,
-            "conversationId": null,
-            "role": "assistant",
-            "createTime": 1795187391.917769,
-            "updateTime": 1795187407.586875,
-            "contentType": "text",
-            "channel": "final"
-          },
-          {
-            "id": "7104dcb0-b873-40bf-9e53-447e35b969f2",
-            "parentId": null,
-            "conversationId": null,
-            "role": "user",
-            "createTime": 1795187529.594,
-            "updateTime": 1795187550.154242,
-            "contentType": "text",
-            "channel": null
-          },
-          {
-            "id": "1816055b-e525-4b4e-a519-e823e485d7ae",
-            "parentId": null,
-            "conversationId": null,
-            "role": "assistant",
-            "createTime": 1795187533.395789,
-            "updateTime": 1795187549.793105,
-            "contentType": "text",
-            "channel": "final"
-          },
-          {
-            "id": "537cd660-f468-4f1c-8c75-6d9843ba574b",
-            "parentId": null,
-            "conversationId": null,
-            "role": "user",
-            "createTime": 1795234078.181,
-            "updateTime": 1795234094.625535,
-            "contentType": "text",
-            "channel": null
-          },
-          {
-            "id": "4c46738c-8617-48fc-ac16-539ec4b01fbc",
-            "parentId": null,
-            "conversationId": null,
-            "role": "assistant",
-            "createTime": 1795234085.795972,
-            "updateTime": 1795234094.430771,
-            "contentType": "text",
-            "channel": "final"
-          }
-        ]
-      }
+          "messages": [
+            {
+              "id": "b06a2281-b94b-492f-89c9-a2db765547fe",
+              "parentId": null,
+              "conversationId": null,
+              "role": "assistant",
+              "createTime": 1795186711.169868,
+              "updateTime": 1795186713.111217,
+              "contentType": "text",
+              "channel": "final"
+            }
+          ]
+        }
+      ]
     },
-    "mergedMessageCount": 27,
+    "mergedMessageCount": 66,
     "duplicateCount": 0,
     "missingIdCount": 0,
     "responseOrder": [
-      "第二阶段旧消息 response",
+      "最旧历史页到较新历史页",
       "第一阶段新消息 response"
     ],
+    "boundary": {
+      "boundaryMessageId": null,
+      "reached": false,
+      "stopReason": "has_previous_page-false"
+    },
     "pagination": {
       "newerPage": {
         "hasPreviousPage": true,
         "hasNextPage": false
       },
-      "olderPage": {
-        "hasPreviousPage": true,
+      "oldestFetchedPage": {
+        "hasPreviousPage": false,
         "hasNextPage": true
-      }
+      },
+      "fetchedOlderPageCount": 5
     },
-    "hasUnfetchedPages": true,
+    "hasUnfetchedPages": false,
     "roleCounts": {
-      "user": 10,
-      "assistant": 17
+      "assistant": 40,
+      "user": 25,
+      "system": 1
     },
     "contentTypeCounts": {
-      "text": 20,
-      "thoughts": 3,
-      "reasoning_recap": 4
+      "text": 52,
+      "reasoning_recap": 9,
+      "thoughts": 5
     },
     "channelCounts": {
-      "(null)": 17,
-      "final": 10
+      "final": 26,
+      "(null)": 40
     },
-    "selectedUserCount": 10,
-    "selectedAssistantFinalCount": 10,
-    "ignoredReasoningRecapCount": 4,
-    "ignoredThoughtsCount": 3,
-    "ignoredOtherCount": 0
+    "selectedUserCount": 25,
+    "selectedAssistantFinalCount": 26,
+    "ignoredReasoningRecapCount": 9,
+    "ignoredThoughtsCount": 5,
+    "ignoredOtherCount": 1
   },
   "dom": {
     "discovery": {
-      "capturedAt": "2026-11-25T15:44:19.749Z",
+      "capturedAt": "2026-11-25T16:13:40.666Z",
       "document": {
         "url": "https://chatgpt.com/c/6b006027-ed74-83ee-89f6-d179c49e7292",
         "title": "设计AI软件团队工作流骨架 (2)",
@@ -3100,6 +3574,428 @@
       "selectedCandidates": [
         {
           "index": 0,
+          "messageId": "b06a2281-b94b-492f-89c9-a2db765547fe",
+          "expectedRole": "assistant",
+          "matchingIdAttributeElementCount": 0,
+          "matchingIdAttributeElements": [],
+          "matchingRoleDescendantCount": 0
+        },
+        {
+          "index": 1,
+          "messageId": "2fe1be73-551f-47c7-ae34-2eaa9425c3e7",
+          "expectedRole": "user",
+          "matchingIdAttributeElementCount": 1,
+          "matchingIdAttributeElements": [
+            {
+              "tag": "div",
+              "id": null,
+              "className": "group/user-message flex flex-col items-end gap-2",
+              "testId": null,
+              "role": "user",
+              "attributes": {
+                "data-chatgpt-search-unit-key": "434bace4-fafd-55d2-a5ae-b7512ed8698b:0:user",
+                "data-chatgpt-search-message-ids": "2fe1be73-551f-47c7-ae34-2eaa9425c3e7"
+              },
+              "textLength": 4,
+              "textPreview": "继续推进",
+              "hiddenAttribute": false,
+              "ariaHidden": null,
+              "hasClientRects": true,
+              "rect": {
+                "x": 385,
+                "y": 182,
+                "width": 768,
+                "height": 82
+              },
+              "visibility": {
+                "display": "flex",
+                "visibility": "visible",
+                "opacity": "1",
+                "contentVisibility": "visible"
+              }
+            }
+          ],
+          "matchingRoleDescendantCount": 1
+        },
+        {
+          "index": 2,
+          "messageId": "c74652a4-4389-4384-9f47-654787e9a6b5",
+          "expectedRole": "assistant",
+          "matchingIdAttributeElementCount": 2,
+          "matchingIdAttributeElements": [
+            {
+              "tag": "div",
+              "id": null,
+              "className": "",
+              "testId": null,
+              "role": "assistant",
+              "attributes": {
+                "data-content-search-unit-key": "434bace4-fafd-55d2-a5ae-b7512ed8698b:2:assistant",
+                "data-chatgpt-search-unit-key": "434bace4-fafd-55d2-a5ae-b7512ed8698b:2:assistant",
+                "data-chatgpt-search-message-ids": "c74652a4-4389-4384-9f47-654787e9a6b5 c74652a4-4389-4384-9f47-654787e9a6b5"
+              },
+              "textLength": 523,
+              "textPreview": "ChatGPT 说： Q19 已从第一阶段设计范围中排除。Q18 的批准持续有效规则保持不变。 接下来继续完善 Approval Governance。下一个需要明确的是审批记录的粒度。 Q20：一个 Approval Record 可以包含多个独立审批事项吗？ 例如，某次架构变更同时涉及： 修改模块 A 的接口。 调整模块 B 的数据结构。 改变模块 C 的生命周期管理方式。 这三个事项可能存在关联，但也可能分别批准或拒绝。 A — 一个 Approval Record 只",
+              "hiddenAttribute": false,
+              "ariaHidden": null,
+              "hasClientRects": true,
+              "rect": {
+                "x": 385,
+                "y": 268,
+                "width": 768,
+                "height": 758
+              },
+              "visibility": {
+                "display": "block",
+                "visibility": "visible",
+                "opacity": "1",
+                "contentVisibility": "visible"
+              }
+            },
+            {
+              "tag": "div",
+              "id": null,
+              "className": "group flex min-w-0 flex-col",
+              "testId": null,
+              "role": null,
+              "attributes": {
+                "data-chatgpt-selection-conversation-id": "6b006027-ed74-83ee-89f6-d179c49e7292",
+                "data-chatgpt-selection-message-id": "c74652a4-4389-4384-9f47-654787e9a6b5"
+              },
+              "textLength": 512,
+              "textPreview": "Q19 已从第一阶段设计范围中排除。Q18 的批准持续有效规则保持不变。 接下来继续完善 Approval Governance。下一个需要明确的是审批记录的粒度。 Q20：一个 Approval Record 可以包含多个独立审批事项吗？ 例如，某次架构变更同时涉及： 修改模块 A 的接口。 调整模块 B 的数据结构。 改变模块 C 的生命周期管理方式。 这三个事项可能存在关联，但也可能分别批准或拒绝。 A — 一个 Approval Record 只对应一个独立审批事项（",
+              "hiddenAttribute": false,
+              "ariaHidden": null,
+              "hasClientRects": true,
+              "rect": {
+                "x": 385,
+                "y": 268,
+                "width": 768,
+                "height": 758
+              },
+              "visibility": {
+                "display": "flex",
+                "visibility": "visible",
+                "opacity": "1",
+                "contentVisibility": "visible"
+              }
+            }
+          ],
+          "matchingRoleDescendantCount": 1
+        },
+        {
+          "index": 3,
+          "messageId": "a34b9789-c40a-489d-8b4b-1ff381542b89",
+          "expectedRole": "user",
+          "matchingIdAttributeElementCount": 1,
+          "matchingIdAttributeElements": [
+            {
+              "tag": "div",
+              "id": null,
+              "className": "group/user-message flex flex-col items-end gap-2",
+              "testId": null,
+              "role": "user",
+              "attributes": {
+                "data-chatgpt-search-unit-key": "a15469f7-f980-5b67-b461-020eb5b3397b:0:user",
+                "data-chatgpt-search-message-ids": "a34b9789-c40a-489d-8b4b-1ff381542b89"
+              },
+              "textLength": 3,
+              "textPreview": "选择A",
+              "hiddenAttribute": false,
+              "ariaHidden": null,
+              "hasClientRects": true,
+              "rect": {
+                "x": 385,
+                "y": 1082,
+                "width": 768,
+                "height": 82
+              },
+              "visibility": {
+                "display": "flex",
+                "visibility": "visible",
+                "opacity": "1",
+                "contentVisibility": "visible"
+              }
+            }
+          ],
+          "matchingRoleDescendantCount": 1
+        },
+        {
+          "index": 4,
+          "messageId": "e31ab26f-b017-4fd3-a45a-b3c6fd281575",
+          "expectedRole": "assistant",
+          "matchingIdAttributeElementCount": 2,
+          "matchingIdAttributeElements": [
+            {
+              "tag": "div",
+              "id": null,
+              "className": "",
+              "testId": null,
+              "role": "assistant",
+              "attributes": {
+                "data-content-search-unit-key": "a15469f7-f980-5b67-b461-020eb5b3397b:1:assistant",
+                "data-chatgpt-search-unit-key": "a15469f7-f980-5b67-b461-020eb5b3397b:1:assistant",
+                "data-chatgpt-search-message-ids": "e31ab26f-b017-4fd3-a45a-b3c6fd281575 e31ab26f-b017-4fd3-a45a-b3c6fd281575"
+              },
+              "textLength": 823,
+              "textPreview": "ChatGPT 说： 已确认 Q20：选择 A — 一个 Approval Record 只对应一个独立审批事项（Single Approval Item per Record）。 一、正式规则 建议纳入 FRAMEWORK_SPECIFICATION.md 的 Approval Governance 章节。 每个 Approval Record 只允许包含一个独立审批事项。 同一 Change Request 可以产生多个 Approval Record。 每个事项独立记录",
+              "hiddenAttribute": false,
+              "ariaHidden": null,
+              "hasClientRects": true,
+              "rect": {
+                "x": 385,
+                "y": 1168,
+                "width": 768,
+                "height": 1156
+              },
+              "visibility": {
+                "display": "block",
+                "visibility": "visible",
+                "opacity": "1",
+                "contentVisibility": "visible"
+              }
+            },
+            {
+              "tag": "div",
+              "id": null,
+              "className": "group flex min-w-0 flex-col",
+              "testId": null,
+              "role": null,
+              "attributes": {
+                "data-chatgpt-selection-conversation-id": "6b006027-ed74-83ee-89f6-d179c49e7292",
+                "data-chatgpt-selection-message-id": "e31ab26f-b017-4fd3-a45a-b3c6fd281575"
+              },
+              "textLength": 812,
+              "textPreview": "已确认 Q20：选择 A — 一个 Approval Record 只对应一个独立审批事项（Single Approval Item per Record）。 一、正式规则 建议纳入 FRAMEWORK_SPECIFICATION.md 的 Approval Governance 章节。 每个 Approval Record 只允许包含一个独立审批事项。 同一 Change Request 可以产生多个 Approval Record。 每个事项独立记录审批决定、批准范围、条",
+              "hiddenAttribute": false,
+              "ariaHidden": null,
+              "hasClientRects": true,
+              "rect": {
+                "x": 385,
+                "y": 1168,
+                "width": 768,
+                "height": 1156
+              },
+              "visibility": {
+                "display": "flex",
+                "visibility": "visible",
+                "opacity": "1",
+                "contentVisibility": "visible"
+              }
+            }
+          ],
+          "matchingRoleDescendantCount": 1
+        },
+        {
+          "index": 5,
+          "messageId": "0cc3cf7b-9a3d-44db-9ea4-3ad3a0992206",
+          "expectedRole": "user",
+          "matchingIdAttributeElementCount": 0,
+          "matchingIdAttributeElements": [],
+          "matchingRoleDescendantCount": 0
+        },
+        {
+          "index": 6,
+          "messageId": "bdd39a89-f528-459f-bcef-b739811157f3",
+          "expectedRole": "assistant",
+          "matchingIdAttributeElementCount": 0,
+          "matchingIdAttributeElements": [],
+          "matchingRoleDescendantCount": 0
+        },
+        {
+          "index": 7,
+          "messageId": "2b854a07-be44-48a9-a3d7-829771165a68",
+          "expectedRole": "user",
+          "matchingIdAttributeElementCount": 0,
+          "matchingIdAttributeElements": [],
+          "matchingRoleDescendantCount": 0
+        },
+        {
+          "index": 8,
+          "messageId": "4dc8c252-15b5-4030-a287-96f85e518abc",
+          "expectedRole": "assistant",
+          "matchingIdAttributeElementCount": 0,
+          "matchingIdAttributeElements": [],
+          "matchingRoleDescendantCount": 0
+        },
+        {
+          "index": 9,
+          "messageId": "81b5a9a2-c5a2-4846-8911-98a95a2958bd",
+          "expectedRole": "user",
+          "matchingIdAttributeElementCount": 0,
+          "matchingIdAttributeElements": [],
+          "matchingRoleDescendantCount": 0
+        },
+        {
+          "index": 10,
+          "messageId": "8ac3642e-eb0c-4ba4-84f7-d33fab20f7cb",
+          "expectedRole": "assistant",
+          "matchingIdAttributeElementCount": 0,
+          "matchingIdAttributeElements": [],
+          "matchingRoleDescendantCount": 0
+        },
+        {
+          "index": 11,
+          "messageId": "5020cf84-de35-4762-bb30-190d7a048dce",
+          "expectedRole": "user",
+          "matchingIdAttributeElementCount": 0,
+          "matchingIdAttributeElements": [],
+          "matchingRoleDescendantCount": 0
+        },
+        {
+          "index": 12,
+          "messageId": "0b25ab09-caa2-477d-b999-3b6f88b2c173",
+          "expectedRole": "assistant",
+          "matchingIdAttributeElementCount": 0,
+          "matchingIdAttributeElements": [],
+          "matchingRoleDescendantCount": 0
+        },
+        {
+          "index": 13,
+          "messageId": "0fcef279-6408-49e3-8eae-ee54581c8270",
+          "expectedRole": "user",
+          "matchingIdAttributeElementCount": 0,
+          "matchingIdAttributeElements": [],
+          "matchingRoleDescendantCount": 0
+        },
+        {
+          "index": 14,
+          "messageId": "354b0e27-102a-4539-ada3-add84ea77610",
+          "expectedRole": "assistant",
+          "matchingIdAttributeElementCount": 0,
+          "matchingIdAttributeElements": [],
+          "matchingRoleDescendantCount": 0
+        },
+        {
+          "index": 15,
+          "messageId": "8399084b-0667-477a-9c5e-de9c94d1092f",
+          "expectedRole": "user",
+          "matchingIdAttributeElementCount": 0,
+          "matchingIdAttributeElements": [],
+          "matchingRoleDescendantCount": 0
+        },
+        {
+          "index": 16,
+          "messageId": "aea2ac8d-993a-4dfd-bdb4-b91e0a0deb94",
+          "expectedRole": "assistant",
+          "matchingIdAttributeElementCount": 0,
+          "matchingIdAttributeElements": [],
+          "matchingRoleDescendantCount": 0
+        },
+        {
+          "index": 17,
+          "messageId": "116aa5d0-1a04-42b8-b849-26303100d7d7",
+          "expectedRole": "user",
+          "matchingIdAttributeElementCount": 0,
+          "matchingIdAttributeElements": [],
+          "matchingRoleDescendantCount": 0
+        },
+        {
+          "index": 18,
+          "messageId": "b9c053e0-eacd-41ac-b93e-072809478a38",
+          "expectedRole": "assistant",
+          "matchingIdAttributeElementCount": 0,
+          "matchingIdAttributeElements": [],
+          "matchingRoleDescendantCount": 0
+        },
+        {
+          "index": 19,
+          "messageId": "55e4bd23-8b39-4082-88d9-7b957e678c0c",
+          "expectedRole": "user",
+          "matchingIdAttributeElementCount": 0,
+          "matchingIdAttributeElements": [],
+          "matchingRoleDescendantCount": 0
+        },
+        {
+          "index": 20,
+          "messageId": "fd845e93-21e7-4650-b230-60428e6ca9f0",
+          "expectedRole": "assistant",
+          "matchingIdAttributeElementCount": 0,
+          "matchingIdAttributeElements": [],
+          "matchingRoleDescendantCount": 0
+        },
+        {
+          "index": 21,
+          "messageId": "7a4c7660-24bc-4c19-b4f9-400ca39e61d2",
+          "expectedRole": "user",
+          "matchingIdAttributeElementCount": 0,
+          "matchingIdAttributeElements": [],
+          "matchingRoleDescendantCount": 0
+        },
+        {
+          "index": 22,
+          "messageId": "da0d1123-cbef-4702-a7ed-77e45f5cc226",
+          "expectedRole": "assistant",
+          "matchingIdAttributeElementCount": 0,
+          "matchingIdAttributeElements": [],
+          "matchingRoleDescendantCount": 0
+        },
+        {
+          "index": 23,
+          "messageId": "8a37a03e-dc13-4e4c-a799-8287c23d2f45",
+          "expectedRole": "user",
+          "matchingIdAttributeElementCount": 0,
+          "matchingIdAttributeElements": [],
+          "matchingRoleDescendantCount": 0
+        },
+        {
+          "index": 24,
+          "messageId": "ecf87cb7-4748-44c2-aecb-c387f89bfd8d",
+          "expectedRole": "assistant",
+          "matchingIdAttributeElementCount": 0,
+          "matchingIdAttributeElements": [],
+          "matchingRoleDescendantCount": 0
+        },
+        {
+          "index": 25,
+          "messageId": "a4206293-4292-4df0-9fb7-810daf11f33e",
+          "expectedRole": "user",
+          "matchingIdAttributeElementCount": 0,
+          "matchingIdAttributeElements": [],
+          "matchingRoleDescendantCount": 0
+        },
+        {
+          "index": 26,
+          "messageId": "5d6e609c-d908-4908-a2f2-62f540608c5e",
+          "expectedRole": "assistant",
+          "matchingIdAttributeElementCount": 0,
+          "matchingIdAttributeElements": [],
+          "matchingRoleDescendantCount": 0
+        },
+        {
+          "index": 27,
+          "messageId": "9be38ba0-4e67-4f15-9799-de32e21f8622",
+          "expectedRole": "user",
+          "matchingIdAttributeElementCount": 0,
+          "matchingIdAttributeElements": [],
+          "matchingRoleDescendantCount": 0
+        },
+        {
+          "index": 28,
+          "messageId": "26458236-fd3b-4d71-b2e9-b7f366cdfbca",
+          "expectedRole": "assistant",
+          "matchingIdAttributeElementCount": 0,
+          "matchingIdAttributeElements": [],
+          "matchingRoleDescendantCount": 0
+        },
+        {
+          "index": 29,
+          "messageId": "7ba42adc-24ee-45e2-b54b-936c64532d7e",
+          "expectedRole": "user",
+          "matchingIdAttributeElementCount": 0,
+          "matchingIdAttributeElements": [],
+          "matchingRoleDescendantCount": 0
+        },
+        {
+          "index": 30,
+          "messageId": "84829981-b013-481b-b595-39fef81d8736",
+          "expectedRole": "assistant",
+          "matchingIdAttributeElementCount": 0,
+          "matchingIdAttributeElements": [],
+          "matchingRoleDescendantCount": 0
+        },
+        {
+          "index": 31,
           "messageId": "ebdbf9c0-69c6-41a6-a896-117f3ae05131",
           "expectedRole": "user",
           "matchingIdAttributeElementCount": 0,
@@ -3107,7 +4003,7 @@
           "matchingRoleDescendantCount": 0
         },
         {
-          "index": 1,
+          "index": 32,
           "messageId": "1b29a8b8-ad1e-4b8e-8976-338b120a9ee6",
           "expectedRole": "assistant",
           "matchingIdAttributeElementCount": 0,
@@ -3115,7 +4011,7 @@
           "matchingRoleDescendantCount": 0
         },
         {
-          "index": 2,
+          "index": 33,
           "messageId": "13071b7e-6807-4361-91d6-cfc2eb909f57",
           "expectedRole": "user",
           "matchingIdAttributeElementCount": 0,
@@ -3123,7 +4019,7 @@
           "matchingRoleDescendantCount": 0
         },
         {
-          "index": 3,
+          "index": 34,
           "messageId": "deef0946-78f1-4a11-b2dd-6bc0c0a058dd",
           "expectedRole": "assistant",
           "matchingIdAttributeElementCount": 0,
@@ -3131,7 +4027,7 @@
           "matchingRoleDescendantCount": 0
         },
         {
-          "index": 4,
+          "index": 35,
           "messageId": "49412971-5532-4077-9c43-9d79015269a4",
           "expectedRole": "user",
           "matchingIdAttributeElementCount": 0,
@@ -3139,7 +4035,7 @@
           "matchingRoleDescendantCount": 0
         },
         {
-          "index": 5,
+          "index": 36,
           "messageId": "7bca35bc-b611-4f7c-a5ad-b9d0a4f69a2f",
           "expectedRole": "assistant",
           "matchingIdAttributeElementCount": 0,
@@ -3147,7 +4043,7 @@
           "matchingRoleDescendantCount": 0
         },
         {
-          "index": 6,
+          "index": 37,
           "messageId": "7104dcb0-b873-40bf-9e53-447e35b969f2",
           "expectedRole": "user",
           "matchingIdAttributeElementCount": 0,
@@ -3155,7 +4051,7 @@
           "matchingRoleDescendantCount": 0
         },
         {
-          "index": 7,
+          "index": 38,
           "messageId": "1816055b-e525-4b4e-a519-e823e485d7ae",
           "expectedRole": "assistant",
           "matchingIdAttributeElementCount": 0,
@@ -3163,7 +4059,7 @@
           "matchingRoleDescendantCount": 0
         },
         {
-          "index": 8,
+          "index": 39,
           "messageId": "537cd660-f468-4f1c-8c75-6d9843ba574b",
           "expectedRole": "user",
           "matchingIdAttributeElementCount": 0,
@@ -3171,7 +4067,7 @@
           "matchingRoleDescendantCount": 0
         },
         {
-          "index": 9,
+          "index": 40,
           "messageId": "4c46738c-8617-48fc-ac16-539ec4b01fbc",
           "expectedRole": "assistant",
           "matchingIdAttributeElementCount": 0,
@@ -3179,7 +4075,7 @@
           "matchingRoleDescendantCount": 0
         },
         {
-          "index": 10,
+          "index": 41,
           "messageId": "ccdb5937-5174-4307-aa4c-56c1403f9295",
           "expectedRole": "user",
           "matchingIdAttributeElementCount": 0,
@@ -3187,7 +4083,7 @@
           "matchingRoleDescendantCount": 0
         },
         {
-          "index": 11,
+          "index": 42,
           "messageId": "7f04b08f-e052-4577-909e-c9e442cb2a5b",
           "expectedRole": "assistant",
           "matchingIdAttributeElementCount": 0,
@@ -3195,7 +4091,7 @@
           "matchingRoleDescendantCount": 0
         },
         {
-          "index": 12,
+          "index": 43,
           "messageId": "831f3aad-c4ba-46d4-ae50-ee2d7b499eee",
           "expectedRole": "user",
           "matchingIdAttributeElementCount": 0,
@@ -3203,7 +4099,7 @@
           "matchingRoleDescendantCount": 0
         },
         {
-          "index": 13,
+          "index": 44,
           "messageId": "7175934e-4e55-467c-9171-3ecf3f36533a",
           "expectedRole": "assistant",
           "matchingIdAttributeElementCount": 0,
@@ -3211,7 +4107,7 @@
           "matchingRoleDescendantCount": 0
         },
         {
-          "index": 14,
+          "index": 45,
           "messageId": "277509c7-8896-436f-a5f0-e2cffe38f8b9",
           "expectedRole": "user",
           "matchingIdAttributeElementCount": 0,
@@ -3219,7 +4115,7 @@
           "matchingRoleDescendantCount": 0
         },
         {
-          "index": 15,
+          "index": 46,
           "messageId": "7f606909-b2af-4468-871d-6b165a77ac12",
           "expectedRole": "assistant",
           "matchingIdAttributeElementCount": 0,
@@ -3227,7 +4123,7 @@
           "matchingRoleDescendantCount": 0
         },
         {
-          "index": 16,
+          "index": 47,
           "messageId": "5f256901-80a7-4b74-8479-9396f74822e0",
           "expectedRole": "user",
           "matchingIdAttributeElementCount": 0,
@@ -3235,7 +4131,7 @@
           "matchingRoleDescendantCount": 0
         },
         {
-          "index": 17,
+          "index": 48,
           "messageId": "c6a98726-365e-4a50-8c85-8f3694ce1194",
           "expectedRole": "assistant",
           "matchingIdAttributeElementCount": 0,
@@ -3243,7 +4139,7 @@
           "matchingRoleDescendantCount": 0
         },
         {
-          "index": 18,
+          "index": 49,
           "messageId": "50989465-0690-44e3-81b2-051b6f18334f",
           "expectedRole": "user",
           "matchingIdAttributeElementCount": 0,
@@ -3251,7 +4147,7 @@
           "matchingRoleDescendantCount": 0
         },
         {
-          "index": 19,
+          "index": 50,
           "messageId": "c67eb43e-f8db-4a7d-84a8-5730fd213852",
           "expectedRole": "assistant",
           "matchingIdAttributeElementCount": 0,
@@ -3261,7 +4157,7 @@
       ]
     },
     "traversal": {
-      "startedAt": "2026-11-25T15:44:19.750Z",
+      "startedAt": "2026-11-25T16:13:40.666Z",
       "strategy": "reset-to-top-then-forward-scan",
       "container": {
         "tag": "div",
@@ -3269,19 +4165,19 @@
         "className": "scrollContainer-fG6qEo thread-scroll-container peer/transcript overflow-x-hidden overflow-y-auto contain-pane-overscroll overscroll-y-contain browser:overscroll-y-auto [scroll-padding-bottom:var(--thread-scroll-padding-bottom,0px)] outline-none group-has-[[data-composer-expanded]]/thread-scroll-layo",
         "testId": null,
         "overflowY": "auto",
-        "scrollHeight": 32837,
+        "scrollHeight": 28047,
         "clientHeight": 748,
         "scrollTop": 0,
-        "scrollRange": 32089,
+        "scrollRange": 27299,
         "virtualizedTurnCount": 2,
         "candidateCount": 1,
         "ancestorDepth": 6
       },
       "initialScrollTop": 0,
       "finalScrollTop": 0.20000000298023224,
-      "maxScrollTop": 32089,
+      "maxScrollTop": 27299,
       "stepSize": 508,
-      "stepCount": 64,
+      "stepCount": 62,
       "mutationWaitTimeoutMs": 2500,
       "fallbackWaitMs": 250,
       "configuredMinimumDelayMs": 200,
@@ -3290,10 +4186,10 @@
           "step": 1,
           "requestedScrollTop": 508,
           "actualScrollTop": 508,
-          "maxScrollTop": 32089,
+          "maxScrollTop": 27299,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "totalCapturedMessageCount": 4,
           "waitResult": {
             "changed": false,
             "waitedMs": 453,
@@ -3308,13 +4204,13 @@
           "step": 2,
           "requestedScrollTop": 1016,
           "actualScrollTop": 1016,
-          "maxScrollTop": 32089,
+          "maxScrollTop": 27299,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "totalCapturedMessageCount": 4,
           "waitResult": {
             "changed": false,
-            "waitedMs": 454,
+            "waitedMs": 453,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": false,
             "stableDetected": false,
@@ -3326,13 +4222,13 @@
           "step": 3,
           "requestedScrollTop": 1524,
           "actualScrollTop": 1524,
-          "maxScrollTop": 32089,
+          "maxScrollTop": 27299,
           "virtualizedTurnCount": 3,
-          "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "newlyCapturedMessageCount": 2,
+          "totalCapturedMessageCount": 6,
           "waitResult": {
             "changed": true,
-            "waitedMs": 454,
+            "waitedMs": 453,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": true,
             "stableDetected": true,
@@ -3344,46 +4240,10 @@
           "step": 4,
           "requestedScrollTop": 2032,
           "actualScrollTop": 2032,
-          "maxScrollTop": 32089,
+          "maxScrollTop": 27299,
           "virtualizedTurnCount": 3,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
-          "waitResult": {
-            "changed": false,
-            "waitedMs": 453,
-            "configuredMinimumDelayMs": 200,
-            "mutationDetected": false,
-            "stableDetected": false,
-            "finishReason": "no-dom-change-fallback",
-            "fallbackWaitMs": 250
-          }
-        },
-        {
-          "step": 5,
-          "requestedScrollTop": 2540,
-          "actualScrollTop": 2540,
-          "maxScrollTop": 32089,
-          "virtualizedTurnCount": 3,
-          "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
-          "waitResult": {
-            "changed": true,
-            "waitedMs": 453,
-            "configuredMinimumDelayMs": 200,
-            "mutationDetected": true,
-            "stableDetected": true,
-            "finishReason": "dom-stable-and-minimum-delay-met",
-            "fallbackWaitMs": 250
-          }
-        },
-        {
-          "step": 6,
-          "requestedScrollTop": 3048,
-          "actualScrollTop": 3048,
-          "maxScrollTop": 32089,
-          "virtualizedTurnCount": 3,
-          "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "totalCapturedMessageCount": 6,
           "waitResult": {
             "changed": false,
             "waitedMs": 455,
@@ -3395,13 +4255,49 @@
           }
         },
         {
+          "step": 5,
+          "requestedScrollTop": 2540,
+          "actualScrollTop": 2540,
+          "maxScrollTop": 27299,
+          "virtualizedTurnCount": 3,
+          "newlyCapturedMessageCount": 2,
+          "totalCapturedMessageCount": 8,
+          "waitResult": {
+            "changed": true,
+            "waitedMs": 454,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": true,
+            "stableDetected": true,
+            "finishReason": "dom-stable-and-minimum-delay-met",
+            "fallbackWaitMs": 250
+          }
+        },
+        {
+          "step": 6,
+          "requestedScrollTop": 3048,
+          "actualScrollTop": 3048,
+          "maxScrollTop": 27299,
+          "virtualizedTurnCount": 3,
+          "newlyCapturedMessageCount": 0,
+          "totalCapturedMessageCount": 8,
+          "waitResult": {
+            "changed": false,
+            "waitedMs": 452,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
+          }
+        },
+        {
           "step": 7,
           "requestedScrollTop": 3556,
           "actualScrollTop": 3556,
-          "maxScrollTop": 32089,
+          "maxScrollTop": 27299,
           "virtualizedTurnCount": 3,
-          "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "newlyCapturedMessageCount": 2,
+          "totalCapturedMessageCount": 10,
           "waitResult": {
             "changed": true,
             "waitedMs": 453,
@@ -3416,46 +4312,10 @@
           "step": 8,
           "requestedScrollTop": 4064,
           "actualScrollTop": 4064,
-          "maxScrollTop": 32089,
+          "maxScrollTop": 27299,
           "virtualizedTurnCount": 4,
-          "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
-          "waitResult": {
-            "changed": true,
-            "waitedMs": 455,
-            "configuredMinimumDelayMs": 200,
-            "mutationDetected": true,
-            "stableDetected": true,
-            "finishReason": "dom-stable-and-minimum-delay-met",
-            "fallbackWaitMs": 250
-          }
-        },
-        {
-          "step": 9,
-          "requestedScrollTop": 4572,
-          "actualScrollTop": 4572,
-          "maxScrollTop": 32089,
-          "virtualizedTurnCount": 3,
-          "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
-          "waitResult": {
-            "changed": true,
-            "waitedMs": 455,
-            "configuredMinimumDelayMs": 200,
-            "mutationDetected": true,
-            "stableDetected": true,
-            "finishReason": "dom-stable-and-minimum-delay-met",
-            "fallbackWaitMs": 250
-          }
-        },
-        {
-          "step": 10,
-          "requestedScrollTop": 5080,
-          "actualScrollTop": 5080,
-          "maxScrollTop": 32089,
-          "virtualizedTurnCount": 4,
-          "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "newlyCapturedMessageCount": 2,
+          "totalCapturedMessageCount": 12,
           "waitResult": {
             "changed": true,
             "waitedMs": 453,
@@ -3467,16 +4327,52 @@
           }
         },
         {
+          "step": 9,
+          "requestedScrollTop": 4572,
+          "actualScrollTop": 4572,
+          "maxScrollTop": 27299,
+          "virtualizedTurnCount": 3,
+          "newlyCapturedMessageCount": 0,
+          "totalCapturedMessageCount": 12,
+          "waitResult": {
+            "changed": true,
+            "waitedMs": 454,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": true,
+            "stableDetected": true,
+            "finishReason": "dom-stable-and-minimum-delay-met",
+            "fallbackWaitMs": 250
+          }
+        },
+        {
+          "step": 10,
+          "requestedScrollTop": 5080,
+          "actualScrollTop": 5080,
+          "maxScrollTop": 27299,
+          "virtualizedTurnCount": 4,
+          "newlyCapturedMessageCount": 2,
+          "totalCapturedMessageCount": 14,
+          "waitResult": {
+            "changed": true,
+            "waitedMs": 454,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": true,
+            "stableDetected": true,
+            "finishReason": "dom-stable-and-minimum-delay-met",
+            "fallbackWaitMs": 250
+          }
+        },
+        {
           "step": 11,
           "requestedScrollTop": 5588,
           "actualScrollTop": 5588,
-          "maxScrollTop": 32089,
+          "maxScrollTop": 27299,
           "virtualizedTurnCount": 3,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "totalCapturedMessageCount": 14,
           "waitResult": {
             "changed": true,
-            "waitedMs": 455,
+            "waitedMs": 454,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": true,
             "stableDetected": true,
@@ -3488,13 +4384,13 @@
           "step": 12,
           "requestedScrollTop": 6096,
           "actualScrollTop": 6096,
-          "maxScrollTop": 32089,
+          "maxScrollTop": 27299,
           "virtualizedTurnCount": 4,
-          "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "newlyCapturedMessageCount": 2,
+          "totalCapturedMessageCount": 16,
           "waitResult": {
             "changed": true,
-            "waitedMs": 452,
+            "waitedMs": 455,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": true,
             "stableDetected": true,
@@ -3506,10 +4402,10 @@
           "step": 13,
           "requestedScrollTop": 6604,
           "actualScrollTop": 6604,
-          "maxScrollTop": 32089,
+          "maxScrollTop": 27299,
           "virtualizedTurnCount": 3,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "totalCapturedMessageCount": 16,
           "waitResult": {
             "changed": true,
             "waitedMs": 453,
@@ -3524,13 +4420,13 @@
           "step": 14,
           "requestedScrollTop": 7112,
           "actualScrollTop": 7112,
-          "maxScrollTop": 32089,
+          "maxScrollTop": 27299,
           "virtualizedTurnCount": 3,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "totalCapturedMessageCount": 16,
           "waitResult": {
             "changed": false,
-            "waitedMs": 453,
+            "waitedMs": 454,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": false,
             "stableDetected": false,
@@ -3542,13 +4438,13 @@
           "step": 15,
           "requestedScrollTop": 7620,
           "actualScrollTop": 7620,
-          "maxScrollTop": 32089,
+          "maxScrollTop": 27299,
           "virtualizedTurnCount": 3,
-          "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "newlyCapturedMessageCount": 2,
+          "totalCapturedMessageCount": 18,
           "waitResult": {
             "changed": true,
-            "waitedMs": 454,
+            "waitedMs": 453,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": true,
             "stableDetected": true,
@@ -3560,10 +4456,10 @@
           "step": 16,
           "requestedScrollTop": 8128,
           "actualScrollTop": 8128,
-          "maxScrollTop": 32089,
+          "maxScrollTop": 27299,
           "virtualizedTurnCount": 3,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "totalCapturedMessageCount": 18,
           "waitResult": {
             "changed": false,
             "waitedMs": 453,
@@ -3578,10 +4474,10 @@
           "step": 17,
           "requestedScrollTop": 8636,
           "actualScrollTop": 8636,
-          "maxScrollTop": 32089,
+          "maxScrollTop": 27299,
           "virtualizedTurnCount": 3,
-          "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "newlyCapturedMessageCount": 2,
+          "totalCapturedMessageCount": 20,
           "waitResult": {
             "changed": true,
             "waitedMs": 454,
@@ -3596,13 +4492,13 @@
           "step": 18,
           "requestedScrollTop": 9144,
           "actualScrollTop": 9144,
-          "maxScrollTop": 32089,
+          "maxScrollTop": 27299,
           "virtualizedTurnCount": 4,
-          "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "newlyCapturedMessageCount": 2,
+          "totalCapturedMessageCount": 22,
           "waitResult": {
             "changed": true,
-            "waitedMs": 455,
+            "waitedMs": 454,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": true,
             "stableDetected": true,
@@ -3614,13 +4510,13 @@
           "step": 19,
           "requestedScrollTop": 9652,
           "actualScrollTop": 9652,
-          "maxScrollTop": 32089,
+          "maxScrollTop": 27299,
           "virtualizedTurnCount": 4,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "totalCapturedMessageCount": 22,
           "waitResult": {
             "changed": false,
-            "waitedMs": 452,
+            "waitedMs": 453,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": false,
             "stableDetected": false,
@@ -3632,13 +4528,13 @@
           "step": 20,
           "requestedScrollTop": 10160,
           "actualScrollTop": 10160,
-          "maxScrollTop": 32089,
+          "maxScrollTop": 27299,
           "virtualizedTurnCount": 4,
-          "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "newlyCapturedMessageCount": 2,
+          "totalCapturedMessageCount": 24,
           "waitResult": {
             "changed": true,
-            "waitedMs": 455,
+            "waitedMs": 454,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": true,
             "stableDetected": true,
@@ -3650,13 +4546,13 @@
           "step": 21,
           "requestedScrollTop": 10668,
           "actualScrollTop": 10668,
-          "maxScrollTop": 32089,
+          "maxScrollTop": 27299,
           "virtualizedTurnCount": 3,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "totalCapturedMessageCount": 24,
           "waitResult": {
             "changed": true,
-            "waitedMs": 452,
+            "waitedMs": 453,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": true,
             "stableDetected": true,
@@ -3668,13 +4564,13 @@
           "step": 22,
           "requestedScrollTop": 11176,
           "actualScrollTop": 11176,
-          "maxScrollTop": 32089,
+          "maxScrollTop": 27299,
           "virtualizedTurnCount": 4,
-          "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "newlyCapturedMessageCount": 2,
+          "totalCapturedMessageCount": 26,
           "waitResult": {
             "changed": true,
-            "waitedMs": 455,
+            "waitedMs": 453,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": true,
             "stableDetected": true,
@@ -3686,13 +4582,13 @@
           "step": 23,
           "requestedScrollTop": 11684,
           "actualScrollTop": 11684,
-          "maxScrollTop": 32089,
+          "maxScrollTop": 27299,
           "virtualizedTurnCount": 4,
-          "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "newlyCapturedMessageCount": 2,
+          "totalCapturedMessageCount": 28,
           "waitResult": {
             "changed": true,
-            "waitedMs": 455,
+            "waitedMs": 456,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": true,
             "stableDetected": true,
@@ -3704,10 +4600,10 @@
           "step": 24,
           "requestedScrollTop": 12192,
           "actualScrollTop": 12192,
-          "maxScrollTop": 32089,
+          "maxScrollTop": 27299,
           "virtualizedTurnCount": 3,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "totalCapturedMessageCount": 28,
           "waitResult": {
             "changed": true,
             "waitedMs": 453,
@@ -3722,13 +4618,13 @@
           "step": 25,
           "requestedScrollTop": 12700,
           "actualScrollTop": 12700,
-          "maxScrollTop": 32089,
+          "maxScrollTop": 27299,
           "virtualizedTurnCount": 4,
-          "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "newlyCapturedMessageCount": 2,
+          "totalCapturedMessageCount": 30,
           "waitResult": {
             "changed": true,
-            "waitedMs": 456,
+            "waitedMs": 455,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": true,
             "stableDetected": true,
@@ -3740,10 +4636,10 @@
           "step": 26,
           "requestedScrollTop": 13208,
           "actualScrollTop": 13208,
-          "maxScrollTop": 32089,
+          "maxScrollTop": 27299,
           "virtualizedTurnCount": 3,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "totalCapturedMessageCount": 30,
           "waitResult": {
             "changed": true,
             "waitedMs": 454,
@@ -3758,13 +4654,13 @@
           "step": 27,
           "requestedScrollTop": 13716,
           "actualScrollTop": 13716,
-          "maxScrollTop": 32089,
+          "maxScrollTop": 27299,
           "virtualizedTurnCount": 3,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "totalCapturedMessageCount": 30,
           "waitResult": {
             "changed": false,
-            "waitedMs": 455,
+            "waitedMs": 460,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": false,
             "stableDetected": false,
@@ -3776,13 +4672,13 @@
           "step": 28,
           "requestedScrollTop": 14224,
           "actualScrollTop": 14224,
-          "maxScrollTop": 32089,
+          "maxScrollTop": 27299,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "totalCapturedMessageCount": 30,
           "waitResult": {
             "changed": true,
-            "waitedMs": 453,
+            "waitedMs": 452,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": true,
             "stableDetected": true,
@@ -3794,10 +4690,10 @@
           "step": 29,
           "requestedScrollTop": 14732,
           "actualScrollTop": 14732,
-          "maxScrollTop": 32089,
+          "maxScrollTop": 28562,
           "virtualizedTurnCount": 3,
-          "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "newlyCapturedMessageCount": 2,
+          "totalCapturedMessageCount": 32,
           "waitResult": {
             "changed": true,
             "waitedMs": 455,
@@ -3812,13 +4708,13 @@
           "step": 30,
           "requestedScrollTop": 15240,
           "actualScrollTop": 15240,
-          "maxScrollTop": 32089,
+          "maxScrollTop": 28562,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "totalCapturedMessageCount": 32,
           "waitResult": {
             "changed": true,
-            "waitedMs": 455,
+            "waitedMs": 453,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": true,
             "stableDetected": true,
@@ -3830,13 +4726,13 @@
           "step": 31,
           "requestedScrollTop": 15748,
           "actualScrollTop": 15748,
-          "maxScrollTop": 32089,
+          "maxScrollTop": 28562,
           "virtualizedTurnCount": 3,
-          "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "newlyCapturedMessageCount": 2,
+          "totalCapturedMessageCount": 34,
           "waitResult": {
             "changed": true,
-            "waitedMs": 454,
+            "waitedMs": 453,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": true,
             "stableDetected": true,
@@ -3848,13 +4744,13 @@
           "step": 32,
           "requestedScrollTop": 16256,
           "actualScrollTop": 16256,
-          "maxScrollTop": 32089,
+          "maxScrollTop": 28562,
           "virtualizedTurnCount": 3,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "totalCapturedMessageCount": 34,
           "waitResult": {
             "changed": false,
-            "waitedMs": 453,
+            "waitedMs": 452,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": false,
             "stableDetected": false,
@@ -3866,13 +4762,13 @@
           "step": 33,
           "requestedScrollTop": 16764,
           "actualScrollTop": 16764,
-          "maxScrollTop": 32089,
+          "maxScrollTop": 28562,
           "virtualizedTurnCount": 3,
-          "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "newlyCapturedMessageCount": 2,
+          "totalCapturedMessageCount": 36,
           "waitResult": {
             "changed": true,
-            "waitedMs": 455,
+            "waitedMs": 453,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": true,
             "stableDetected": true,
@@ -3884,10 +4780,10 @@
           "step": 34,
           "requestedScrollTop": 17272,
           "actualScrollTop": 17272,
-          "maxScrollTop": 32089,
+          "maxScrollTop": 28562,
           "virtualizedTurnCount": 3,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "totalCapturedMessageCount": 36,
           "waitResult": {
             "changed": false,
             "waitedMs": 453,
@@ -3902,13 +4798,13 @@
           "step": 35,
           "requestedScrollTop": 17780,
           "actualScrollTop": 17780,
-          "maxScrollTop": 32089,
+          "maxScrollTop": 28562,
           "virtualizedTurnCount": 3,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "totalCapturedMessageCount": 36,
           "waitResult": {
             "changed": false,
-            "waitedMs": 455,
+            "waitedMs": 453,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": false,
             "stableDetected": false,
@@ -3920,13 +4816,13 @@
           "step": 36,
           "requestedScrollTop": 18288,
           "actualScrollTop": 18288,
-          "maxScrollTop": 32089,
+          "maxScrollTop": 28562,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "totalCapturedMessageCount": 36,
           "waitResult": {
             "changed": true,
-            "waitedMs": 454,
+            "waitedMs": 453,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": true,
             "stableDetected": true,
@@ -3938,13 +4834,13 @@
           "step": 37,
           "requestedScrollTop": 18796,
           "actualScrollTop": 18796,
-          "maxScrollTop": 32089,
+          "maxScrollTop": 28562,
           "virtualizedTurnCount": 2,
-          "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "newlyCapturedMessageCount": 2,
+          "totalCapturedMessageCount": 38,
           "waitResult": {
             "changed": true,
-            "waitedMs": 455,
+            "waitedMs": 452,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": true,
             "stableDetected": true,
@@ -3956,10 +4852,10 @@
           "step": 38,
           "requestedScrollTop": 19304,
           "actualScrollTop": 19304,
-          "maxScrollTop": 32089,
+          "maxScrollTop": 28562,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "totalCapturedMessageCount": 38,
           "waitResult": {
             "changed": false,
             "waitedMs": 453,
@@ -3974,13 +4870,13 @@
           "step": 39,
           "requestedScrollTop": 19812,
           "actualScrollTop": 19812,
-          "maxScrollTop": 32089,
+          "maxScrollTop": 28562,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "totalCapturedMessageCount": 38,
           "waitResult": {
             "changed": false,
-            "waitedMs": 455,
+            "waitedMs": 454,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": false,
             "stableDetected": false,
@@ -3992,13 +4888,13 @@
           "step": 40,
           "requestedScrollTop": 20320,
           "actualScrollTop": 20320,
-          "maxScrollTop": 32089,
+          "maxScrollTop": 28562,
           "virtualizedTurnCount": 3,
-          "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "newlyCapturedMessageCount": 2,
+          "totalCapturedMessageCount": 40,
           "waitResult": {
             "changed": true,
-            "waitedMs": 454,
+            "waitedMs": 453,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": true,
             "stableDetected": true,
@@ -4010,10 +4906,10 @@
           "step": 41,
           "requestedScrollTop": 20828,
           "actualScrollTop": 20828,
-          "maxScrollTop": 32089,
+          "maxScrollTop": 28562,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "totalCapturedMessageCount": 40,
           "waitResult": {
             "changed": true,
             "waitedMs": 453,
@@ -4028,13 +4924,13 @@
           "step": 42,
           "requestedScrollTop": 21336,
           "actualScrollTop": 21336,
-          "maxScrollTop": 32089,
+          "maxScrollTop": 28562,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "totalCapturedMessageCount": 40,
           "waitResult": {
             "changed": false,
-            "waitedMs": 452,
+            "waitedMs": 455,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": false,
             "stableDetected": false,
@@ -4046,13 +4942,13 @@
           "step": 43,
           "requestedScrollTop": 21844,
           "actualScrollTop": 21844,
-          "maxScrollTop": 32089,
+          "maxScrollTop": 28562,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "totalCapturedMessageCount": 40,
           "waitResult": {
             "changed": false,
-            "waitedMs": 452,
+            "waitedMs": 453,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": false,
             "stableDetected": false,
@@ -4064,13 +4960,13 @@
           "step": 44,
           "requestedScrollTop": 22352,
           "actualScrollTop": 22352,
-          "maxScrollTop": 32089,
+          "maxScrollTop": 28562,
           "virtualizedTurnCount": 3,
-          "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "newlyCapturedMessageCount": 2,
+          "totalCapturedMessageCount": 42,
           "waitResult": {
             "changed": true,
-            "waitedMs": 454,
+            "waitedMs": 456,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": true,
             "stableDetected": true,
@@ -4082,10 +4978,10 @@
           "step": 45,
           "requestedScrollTop": 22860,
           "actualScrollTop": 22860,
-          "maxScrollTop": 32089,
+          "maxScrollTop": 28562,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "totalCapturedMessageCount": 42,
           "waitResult": {
             "changed": true,
             "waitedMs": 453,
@@ -4100,13 +4996,13 @@
           "step": 46,
           "requestedScrollTop": 23368,
           "actualScrollTop": 23368,
-          "maxScrollTop": 32089,
+          "maxScrollTop": 28562,
           "virtualizedTurnCount": 3,
-          "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "newlyCapturedMessageCount": 2,
+          "totalCapturedMessageCount": 44,
           "waitResult": {
             "changed": true,
-            "waitedMs": 455,
+            "waitedMs": 453,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": true,
             "stableDetected": true,
@@ -4118,10 +5014,10 @@
           "step": 47,
           "requestedScrollTop": 23876,
           "actualScrollTop": 23876,
-          "maxScrollTop": 32089,
+          "maxScrollTop": 28562,
           "virtualizedTurnCount": 3,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "totalCapturedMessageCount": 44,
           "waitResult": {
             "changed": false,
             "waitedMs": 453,
@@ -4136,13 +5032,13 @@
           "step": 48,
           "requestedScrollTop": 24384,
           "actualScrollTop": 24384,
-          "maxScrollTop": 32089,
+          "maxScrollTop": 28562,
           "virtualizedTurnCount": 3,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "totalCapturedMessageCount": 44,
           "waitResult": {
             "changed": false,
-            "waitedMs": 453,
+            "waitedMs": 454,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": false,
             "stableDetected": false,
@@ -4154,13 +5050,13 @@
           "step": 49,
           "requestedScrollTop": 24892,
           "actualScrollTop": 24892,
-          "maxScrollTop": 32089,
+          "maxScrollTop": 30336,
           "virtualizedTurnCount": 3,
-          "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "newlyCapturedMessageCount": 2,
+          "totalCapturedMessageCount": 46,
           "waitResult": {
             "changed": true,
-            "waitedMs": 455,
+            "waitedMs": 454,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": true,
             "stableDetected": true,
@@ -4172,13 +5068,13 @@
           "step": 50,
           "requestedScrollTop": 25400,
           "actualScrollTop": 25400,
-          "maxScrollTop": 32089,
+          "maxScrollTop": 30336,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "totalCapturedMessageCount": 46,
           "waitResult": {
             "changed": true,
-            "waitedMs": 453,
+            "waitedMs": 454,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": true,
             "stableDetected": true,
@@ -4190,13 +5086,13 @@
           "step": 51,
           "requestedScrollTop": 25908,
           "actualScrollTop": 25908,
-          "maxScrollTop": 32089,
+          "maxScrollTop": 30336,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "totalCapturedMessageCount": 46,
           "waitResult": {
             "changed": false,
-            "waitedMs": 452,
+            "waitedMs": 453,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": false,
             "stableDetected": false,
@@ -4208,10 +5104,10 @@
           "step": 52,
           "requestedScrollTop": 26416,
           "actualScrollTop": 26416,
-          "maxScrollTop": 32089,
+          "maxScrollTop": 30336,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "totalCapturedMessageCount": 46,
           "waitResult": {
             "changed": false,
             "waitedMs": 454,
@@ -4226,13 +5122,13 @@
           "step": 53,
           "requestedScrollTop": 26924,
           "actualScrollTop": 26924,
-          "maxScrollTop": 32089,
+          "maxScrollTop": 30857,
           "virtualizedTurnCount": 2,
-          "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "newlyCapturedMessageCount": 2,
+          "totalCapturedMessageCount": 48,
           "waitResult": {
             "changed": true,
-            "waitedMs": 710,
+            "waitedMs": 657,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": true,
             "stableDetected": true,
@@ -4244,13 +5140,13 @@
           "step": 54,
           "requestedScrollTop": 27432,
           "actualScrollTop": 27432,
-          "maxScrollTop": 32089,
+          "maxScrollTop": 30857,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "totalCapturedMessageCount": 48,
           "waitResult": {
             "changed": false,
-            "waitedMs": 455,
+            "waitedMs": 453,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": false,
             "stableDetected": false,
@@ -4262,10 +5158,10 @@
           "step": 55,
           "requestedScrollTop": 27940,
           "actualScrollTop": 27940,
-          "maxScrollTop": 32089,
+          "maxScrollTop": 30857,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "totalCapturedMessageCount": 48,
           "waitResult": {
             "changed": false,
             "waitedMs": 455,
@@ -4280,13 +5176,13 @@
           "step": 56,
           "requestedScrollTop": 28448,
           "actualScrollTop": 28448,
-          "maxScrollTop": 32089,
+          "maxScrollTop": 30857,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "totalCapturedMessageCount": 48,
           "waitResult": {
             "changed": false,
-            "waitedMs": 454,
+            "waitedMs": 455,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": false,
             "stableDetected": false,
@@ -4298,13 +5194,13 @@
           "step": 57,
           "requestedScrollTop": 28956,
           "actualScrollTop": 28956,
-          "maxScrollTop": 32089,
+          "maxScrollTop": 30857,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "totalCapturedMessageCount": 48,
           "waitResult": {
             "changed": true,
-            "waitedMs": 455,
+            "waitedMs": 452,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": true,
             "stableDetected": true,
@@ -4316,13 +5212,13 @@
           "step": 58,
           "requestedScrollTop": 29464,
           "actualScrollTop": 29464,
-          "maxScrollTop": 32089,
+          "maxScrollTop": 30857,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "totalCapturedMessageCount": 48,
           "waitResult": {
             "changed": false,
-            "waitedMs": 454,
+            "waitedMs": 453,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": false,
             "stableDetected": false,
@@ -4336,11 +5232,11 @@
           "actualScrollTop": 29972,
           "maxScrollTop": 32089,
           "virtualizedTurnCount": 2,
-          "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "newlyCapturedMessageCount": 2,
+          "totalCapturedMessageCount": 50,
           "waitResult": {
             "changed": true,
-            "waitedMs": 454,
+            "waitedMs": 456,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": true,
             "stableDetected": true,
@@ -4355,10 +5251,10 @@
           "maxScrollTop": 32089,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "totalCapturedMessageCount": 50,
           "waitResult": {
             "changed": false,
-            "waitedMs": 453,
+            "waitedMs": 456,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": false,
             "stableDetected": false,
@@ -4373,10 +5269,10 @@
           "maxScrollTop": 32089,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "totalCapturedMessageCount": 50,
           "waitResult": {
             "changed": false,
-            "waitedMs": 454,
+            "waitedMs": 453,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": false,
             "stableDetected": false,
@@ -4391,46 +5287,10 @@
           "maxScrollTop": 32089,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
+          "totalCapturedMessageCount": 50,
           "waitResult": {
             "changed": false,
             "waitedMs": 453,
-            "configuredMinimumDelayMs": 200,
-            "mutationDetected": false,
-            "stableDetected": false,
-            "finishReason": "no-dom-change-fallback",
-            "fallbackWaitMs": 250
-          }
-        },
-        {
-          "step": 63,
-          "requestedScrollTop": 32004,
-          "actualScrollTop": 32004,
-          "maxScrollTop": 32089,
-          "virtualizedTurnCount": 2,
-          "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
-          "waitResult": {
-            "changed": false,
-            "waitedMs": 453,
-            "configuredMinimumDelayMs": 200,
-            "mutationDetected": false,
-            "stableDetected": false,
-            "finishReason": "no-dom-change-fallback",
-            "fallbackWaitMs": 250
-          }
-        },
-        {
-          "step": 64,
-          "requestedScrollTop": 32089,
-          "actualScrollTop": 32089,
-          "maxScrollTop": 32089,
-          "virtualizedTurnCount": 2,
-          "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 0,
-          "waitResult": {
-            "changed": false,
-            "waitedMs": 454,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": false,
             "stableDetected": false,
@@ -4451,321 +5311,25 @@
       },
       "codeBlocks": [],
       "reachedTop": true,
-      "reachedBottom": true,
+      "reachedBottom": false,
       "restoredOriginalScrollTop": true,
-      "failure": null,
-      "initialCaptureCount": 0,
+      "failure": "maximum-scroll-steps-reached",
+      "initialCaptureCount": 4,
       "codeBlockDiagnosticLimit": 20,
       "codeBlockCountTotal": 0
     },
-    "expectedMessageCount": 20,
-    "matchedMessageCount": 0,
-    "missingMessageCount": 20,
-    "duplicateMessageCount": 20,
+    "expectedMessageCount": 51,
+    "matchedMessageCount": 50,
+    "missingMessageCount": 1,
+    "duplicateMessageCount": 0,
     "missing": [
       {
         "index": 0,
-        "messageId": "ebdbf9c0-69c6-41a6-a896-117f3ae05131",
-        "role": "user"
-      },
-      {
-        "index": 1,
-        "messageId": "1b29a8b8-ad1e-4b8e-8976-338b120a9ee6",
-        "role": "assistant"
-      },
-      {
-        "index": 2,
-        "messageId": "13071b7e-6807-4361-91d6-cfc2eb909f57",
-        "role": "user"
-      },
-      {
-        "index": 3,
-        "messageId": "deef0946-78f1-4a11-b2dd-6bc0c0a058dd",
-        "role": "assistant"
-      },
-      {
-        "index": 4,
-        "messageId": "49412971-5532-4077-9c43-9d79015269a4",
-        "role": "user"
-      },
-      {
-        "index": 5,
-        "messageId": "7bca35bc-b611-4f7c-a5ad-b9d0a4f69a2f",
-        "role": "assistant"
-      },
-      {
-        "index": 6,
-        "messageId": "7104dcb0-b873-40bf-9e53-447e35b969f2",
-        "role": "user"
-      },
-      {
-        "index": 7,
-        "messageId": "1816055b-e525-4b4e-a519-e823e485d7ae",
-        "role": "assistant"
-      },
-      {
-        "index": 8,
-        "messageId": "537cd660-f468-4f1c-8c75-6d9843ba574b",
-        "role": "user"
-      },
-      {
-        "index": 9,
-        "messageId": "4c46738c-8617-48fc-ac16-539ec4b01fbc",
-        "role": "assistant"
-      },
-      {
-        "index": 10,
-        "messageId": "ccdb5937-5174-4307-aa4c-56c1403f9295",
-        "role": "user"
-      },
-      {
-        "index": 11,
-        "messageId": "7f04b08f-e052-4577-909e-c9e442cb2a5b",
-        "role": "assistant"
-      },
-      {
-        "index": 12,
-        "messageId": "831f3aad-c4ba-46d4-ae50-ee2d7b499eee",
-        "role": "user"
-      },
-      {
-        "index": 13,
-        "messageId": "7175934e-4e55-467c-9171-3ecf3f36533a",
-        "role": "assistant"
-      },
-      {
-        "index": 14,
-        "messageId": "277509c7-8896-436f-a5f0-e2cffe38f8b9",
-        "role": "user"
-      },
-      {
-        "index": 15,
-        "messageId": "7f606909-b2af-4468-871d-6b165a77ac12",
-        "role": "assistant"
-      },
-      {
-        "index": 16,
-        "messageId": "5f256901-80a7-4b74-8479-9396f74822e0",
-        "role": "user"
-      },
-      {
-        "index": 17,
-        "messageId": "c6a98726-365e-4a50-8c85-8f3694ce1194",
-        "role": "assistant"
-      },
-      {
-        "index": 18,
-        "messageId": "50989465-0690-44e3-81b2-051b6f18334f",
-        "role": "user"
-      },
-      {
-        "index": 19,
-        "messageId": "c67eb43e-f8db-4a7d-84a8-5730fd213852",
+        "messageId": "b06a2281-b94b-492f-89c9-a2db765547fe",
         "role": "assistant"
       }
     ],
-    "duplicate": [
-      {
-        "index": 0,
-        "messageId": "ebdbf9c0-69c6-41a6-a896-117f3ae05131",
-        "role": "user",
-        "error": "clone-root-validation-failed",
-        "valid": false,
-        "roleNodeCount": 2,
-        "actualRole": null,
-        "messageIdAnchorFound": true
-      },
-      {
-        "index": 1,
-        "messageId": "1b29a8b8-ad1e-4b8e-8976-338b120a9ee6",
-        "role": "assistant",
-        "error": "clone-root-validation-failed",
-        "valid": false,
-        "roleNodeCount": 2,
-        "actualRole": null,
-        "messageIdAnchorFound": true
-      },
-      {
-        "index": 2,
-        "messageId": "13071b7e-6807-4361-91d6-cfc2eb909f57",
-        "role": "user",
-        "error": "clone-root-validation-failed",
-        "valid": false,
-        "roleNodeCount": 2,
-        "actualRole": null,
-        "messageIdAnchorFound": true
-      },
-      {
-        "index": 3,
-        "messageId": "deef0946-78f1-4a11-b2dd-6bc0c0a058dd",
-        "role": "assistant",
-        "error": "clone-root-validation-failed",
-        "valid": false,
-        "roleNodeCount": 2,
-        "actualRole": null,
-        "messageIdAnchorFound": true
-      },
-      {
-        "index": 4,
-        "messageId": "49412971-5532-4077-9c43-9d79015269a4",
-        "role": "user",
-        "error": "clone-root-validation-failed",
-        "valid": false,
-        "roleNodeCount": 2,
-        "actualRole": null,
-        "messageIdAnchorFound": true
-      },
-      {
-        "index": 5,
-        "messageId": "7bca35bc-b611-4f7c-a5ad-b9d0a4f69a2f",
-        "role": "assistant",
-        "error": "clone-root-validation-failed",
-        "valid": false,
-        "roleNodeCount": 2,
-        "actualRole": null,
-        "messageIdAnchorFound": true
-      },
-      {
-        "index": 6,
-        "messageId": "7104dcb0-b873-40bf-9e53-447e35b969f2",
-        "role": "user",
-        "error": "clone-root-validation-failed",
-        "valid": false,
-        "roleNodeCount": 2,
-        "actualRole": null,
-        "messageIdAnchorFound": true
-      },
-      {
-        "index": 7,
-        "messageId": "1816055b-e525-4b4e-a519-e823e485d7ae",
-        "role": "assistant",
-        "error": "clone-root-validation-failed",
-        "valid": false,
-        "roleNodeCount": 2,
-        "actualRole": null,
-        "messageIdAnchorFound": true
-      },
-      {
-        "index": 8,
-        "messageId": "537cd660-f468-4f1c-8c75-6d9843ba574b",
-        "role": "user",
-        "error": "clone-root-validation-failed",
-        "valid": false,
-        "roleNodeCount": 2,
-        "actualRole": null,
-        "messageIdAnchorFound": true
-      },
-      {
-        "index": 9,
-        "messageId": "4c46738c-8617-48fc-ac16-539ec4b01fbc",
-        "role": "assistant",
-        "error": "clone-root-validation-failed",
-        "valid": false,
-        "roleNodeCount": 2,
-        "actualRole": null,
-        "messageIdAnchorFound": true
-      },
-      {
-        "index": 10,
-        "messageId": "ccdb5937-5174-4307-aa4c-56c1403f9295",
-        "role": "user",
-        "error": "clone-root-validation-failed",
-        "valid": false,
-        "roleNodeCount": 2,
-        "actualRole": null,
-        "messageIdAnchorFound": true
-      },
-      {
-        "index": 11,
-        "messageId": "7f04b08f-e052-4577-909e-c9e442cb2a5b",
-        "role": "assistant",
-        "error": "clone-root-validation-failed",
-        "valid": false,
-        "roleNodeCount": 2,
-        "actualRole": null,
-        "messageIdAnchorFound": true
-      },
-      {
-        "index": 12,
-        "messageId": "831f3aad-c4ba-46d4-ae50-ee2d7b499eee",
-        "role": "user",
-        "error": "clone-root-validation-failed",
-        "valid": false,
-        "roleNodeCount": 2,
-        "actualRole": null,
-        "messageIdAnchorFound": true
-      },
-      {
-        "index": 13,
-        "messageId": "7175934e-4e55-467c-9171-3ecf3f36533a",
-        "role": "assistant",
-        "error": "clone-root-validation-failed",
-        "valid": false,
-        "roleNodeCount": 2,
-        "actualRole": null,
-        "messageIdAnchorFound": true
-      },
-      {
-        "index": 14,
-        "messageId": "277509c7-8896-436f-a5f0-e2cffe38f8b9",
-        "role": "user",
-        "error": "clone-root-validation-failed",
-        "valid": false,
-        "roleNodeCount": 2,
-        "actualRole": null,
-        "messageIdAnchorFound": true
-      },
-      {
-        "index": 15,
-        "messageId": "7f606909-b2af-4468-871d-6b165a77ac12",
-        "role": "assistant",
-        "error": "clone-root-validation-failed",
-        "valid": false,
-        "roleNodeCount": 2,
-        "actualRole": null,
-        "messageIdAnchorFound": true
-      },
-      {
-        "index": 16,
-        "messageId": "5f256901-80a7-4b74-8479-9396f74822e0",
-        "role": "user",
-        "error": "clone-root-validation-failed",
-        "valid": false,
-        "roleNodeCount": 2,
-        "actualRole": null,
-        "messageIdAnchorFound": true
-      },
-      {
-        "index": 17,
-        "messageId": "c6a98726-365e-4a50-8c85-8f3694ce1194",
-        "role": "assistant",
-        "error": "clone-root-validation-failed",
-        "valid": false,
-        "roleNodeCount": 2,
-        "actualRole": null,
-        "messageIdAnchorFound": true
-      },
-      {
-        "index": 18,
-        "messageId": "50989465-0690-44e3-81b2-051b6f18334f",
-        "role": "user",
-        "error": "clone-root-validation-failed",
-        "valid": false,
-        "roleNodeCount": 2,
-        "actualRole": null,
-        "messageIdAnchorFound": true
-      },
-      {
-        "index": 19,
-        "messageId": "c67eb43e-f8db-4a7d-84a8-5730fd213852",
-        "role": "assistant",
-        "error": "clone-root-validation-failed",
-        "valid": false,
-        "roleNodeCount": 2,
-        "actualRole": null,
-        "messageIdAnchorFound": true
-      }
-    ],
+    "duplicate": [],
     "observedDomMessageCount": 50,
     "observedDomMessages": [
       {
@@ -5021,6 +5585,70 @@
     ],
     "apiSelectedIdsNotObservedInDom": [
       {
+        "id": "b06a2281-b94b-492f-89c9-a2db765547fe",
+        "role": "assistant"
+      },
+      {
+        "id": "c74652a4-4389-4384-9f47-654787e9a6b5",
+        "role": "assistant"
+      },
+      {
+        "id": "e31ab26f-b017-4fd3-a45a-b3c6fd281575",
+        "role": "assistant"
+      },
+      {
+        "id": "bdd39a89-f528-459f-bcef-b739811157f3",
+        "role": "assistant"
+      },
+      {
+        "id": "4dc8c252-15b5-4030-a287-96f85e518abc",
+        "role": "assistant"
+      },
+      {
+        "id": "8ac3642e-eb0c-4ba4-84f7-d33fab20f7cb",
+        "role": "assistant"
+      },
+      {
+        "id": "0b25ab09-caa2-477d-b999-3b6f88b2c173",
+        "role": "assistant"
+      },
+      {
+        "id": "354b0e27-102a-4539-ada3-add84ea77610",
+        "role": "assistant"
+      },
+      {
+        "id": "aea2ac8d-993a-4dfd-bdb4-b91e0a0deb94",
+        "role": "assistant"
+      },
+      {
+        "id": "b9c053e0-eacd-41ac-b93e-072809478a38",
+        "role": "assistant"
+      },
+      {
+        "id": "fd845e93-21e7-4650-b230-60428e6ca9f0",
+        "role": "assistant"
+      },
+      {
+        "id": "da0d1123-cbef-4702-a7ed-77e45f5cc226",
+        "role": "assistant"
+      },
+      {
+        "id": "ecf87cb7-4748-44c2-aecb-c387f89bfd8d",
+        "role": "assistant"
+      },
+      {
+        "id": "5d6e609c-d908-4908-a2f2-62f540608c5e",
+        "role": "assistant"
+      },
+      {
+        "id": "26458236-fd3b-4d71-b2e9-b7f366cdfbca",
+        "role": "assistant"
+      },
+      {
+        "id": "84829981-b013-481b-b595-39fef81d8736",
+        "role": "assistant"
+      },
+      {
         "id": "1b29a8b8-ad1e-4b8e-8976-338b120a9ee6",
         "role": "assistant"
       },
@@ -5063,18 +5691,8 @@
     ],
     "observedDomIdsNotInApiSelection": [
       {
-        "id": "2fe1be73-551f-47c7-ae34-2eaa9425c3e7",
-        "role": "user",
-        "attribute": "data-chatgpt-search-message-ids"
-      },
-      {
         "id": "c74652a4-4389-4384-9f47-654787e9a6b5 c74652a4-4389-4384-9f47-654787e9a6b5",
         "role": "assistant",
-        "attribute": "data-chatgpt-search-message-ids"
-      },
-      {
-        "id": "a34b9789-c40a-489d-8b4b-1ff381542b89",
-        "role": "user",
         "attribute": "data-chatgpt-search-message-ids"
       },
       {
@@ -5083,18 +5701,8 @@
         "attribute": "data-chatgpt-search-message-ids"
       },
       {
-        "id": "0cc3cf7b-9a3d-44db-9ea4-3ad3a0992206",
-        "role": "user",
-        "attribute": "data-chatgpt-search-message-ids"
-      },
-      {
         "id": "bdd39a89-f528-459f-bcef-b739811157f3 bdd39a89-f528-459f-bcef-b739811157f3",
         "role": "assistant",
-        "attribute": "data-chatgpt-search-message-ids"
-      },
-      {
-        "id": "2b854a07-be44-48a9-a3d7-829771165a68",
-        "role": "user",
         "attribute": "data-chatgpt-search-message-ids"
       },
       {
@@ -5103,18 +5711,8 @@
         "attribute": "data-chatgpt-search-message-ids"
       },
       {
-        "id": "81b5a9a2-c5a2-4846-8911-98a95a2958bd",
-        "role": "user",
-        "attribute": "data-chatgpt-search-message-ids"
-      },
-      {
         "id": "8ac3642e-eb0c-4ba4-84f7-d33fab20f7cb 8ac3642e-eb0c-4ba4-84f7-d33fab20f7cb",
         "role": "assistant",
-        "attribute": "data-chatgpt-search-message-ids"
-      },
-      {
-        "id": "5020cf84-de35-4762-bb30-190d7a048dce",
-        "role": "user",
         "attribute": "data-chatgpt-search-message-ids"
       },
       {
@@ -5123,18 +5721,8 @@
         "attribute": "data-chatgpt-search-message-ids"
       },
       {
-        "id": "0fcef279-6408-49e3-8eae-ee54581c8270",
-        "role": "user",
-        "attribute": "data-chatgpt-search-message-ids"
-      },
-      {
         "id": "354b0e27-102a-4539-ada3-add84ea77610 354b0e27-102a-4539-ada3-add84ea77610",
         "role": "assistant",
-        "attribute": "data-chatgpt-search-message-ids"
-      },
-      {
-        "id": "8399084b-0667-477a-9c5e-de9c94d1092f",
-        "role": "user",
         "attribute": "data-chatgpt-search-message-ids"
       },
       {
@@ -5143,18 +5731,8 @@
         "attribute": "data-chatgpt-search-message-ids"
       },
       {
-        "id": "116aa5d0-1a04-42b8-b849-26303100d7d7",
-        "role": "user",
-        "attribute": "data-chatgpt-search-message-ids"
-      },
-      {
         "id": "b9c053e0-eacd-41ac-b93e-072809478a38 b9c053e0-eacd-41ac-b93e-072809478a38",
         "role": "assistant",
-        "attribute": "data-chatgpt-search-message-ids"
-      },
-      {
-        "id": "55e4bd23-8b39-4082-88d9-7b957e678c0c",
-        "role": "user",
         "attribute": "data-chatgpt-search-message-ids"
       },
       {
@@ -5163,18 +5741,8 @@
         "attribute": "data-chatgpt-search-message-ids"
       },
       {
-        "id": "7a4c7660-24bc-4c19-b4f9-400ca39e61d2",
-        "role": "user",
-        "attribute": "data-chatgpt-search-message-ids"
-      },
-      {
         "id": "da0d1123-cbef-4702-a7ed-77e45f5cc226 da0d1123-cbef-4702-a7ed-77e45f5cc226",
         "role": "assistant",
-        "attribute": "data-chatgpt-search-message-ids"
-      },
-      {
-        "id": "8a37a03e-dc13-4e4c-a799-8287c23d2f45",
-        "role": "user",
         "attribute": "data-chatgpt-search-message-ids"
       },
       {
@@ -5183,28 +5751,13 @@
         "attribute": "data-chatgpt-search-message-ids"
       },
       {
-        "id": "a4206293-4292-4df0-9fb7-810daf11f33e",
-        "role": "user",
-        "attribute": "data-chatgpt-search-message-ids"
-      },
-      {
         "id": "5d6e609c-d908-4908-a2f2-62f540608c5e 5d6e609c-d908-4908-a2f2-62f540608c5e",
         "role": "assistant",
         "attribute": "data-chatgpt-search-message-ids"
       },
       {
-        "id": "9be38ba0-4e67-4f15-9799-de32e21f8622",
-        "role": "user",
-        "attribute": "data-chatgpt-search-message-ids"
-      },
-      {
         "id": "26458236-fd3b-4d71-b2e9-b7f366cdfbca 26458236-fd3b-4d71-b2e9-b7f366cdfbca",
         "role": "assistant",
-        "attribute": "data-chatgpt-search-message-ids"
-      },
-      {
-        "id": "7ba42adc-24ee-45e2-b54b-936c64532d7e",
-        "role": "user",
         "attribute": "data-chatgpt-search-message-ids"
       },
       {
@@ -5263,12 +5816,263 @@
         "attribute": "data-chatgpt-search-message-ids"
       }
     ],
-    "mapping": []
+    "mapping": [
+      {
+        "index": 1,
+        "messageId": "2fe1be73-551f-47c7-ae34-2eaa9425c3e7",
+        "role": "user"
+      },
+      {
+        "index": 2,
+        "messageId": "c74652a4-4389-4384-9f47-654787e9a6b5",
+        "role": "assistant"
+      },
+      {
+        "index": 3,
+        "messageId": "a34b9789-c40a-489d-8b4b-1ff381542b89",
+        "role": "user"
+      },
+      {
+        "index": 4,
+        "messageId": "e31ab26f-b017-4fd3-a45a-b3c6fd281575",
+        "role": "assistant"
+      },
+      {
+        "index": 5,
+        "messageId": "0cc3cf7b-9a3d-44db-9ea4-3ad3a0992206",
+        "role": "user"
+      },
+      {
+        "index": 6,
+        "messageId": "bdd39a89-f528-459f-bcef-b739811157f3",
+        "role": "assistant"
+      },
+      {
+        "index": 7,
+        "messageId": "2b854a07-be44-48a9-a3d7-829771165a68",
+        "role": "user"
+      },
+      {
+        "index": 8,
+        "messageId": "4dc8c252-15b5-4030-a287-96f85e518abc",
+        "role": "assistant"
+      },
+      {
+        "index": 9,
+        "messageId": "81b5a9a2-c5a2-4846-8911-98a95a2958bd",
+        "role": "user"
+      },
+      {
+        "index": 10,
+        "messageId": "8ac3642e-eb0c-4ba4-84f7-d33fab20f7cb",
+        "role": "assistant"
+      },
+      {
+        "index": 11,
+        "messageId": "5020cf84-de35-4762-bb30-190d7a048dce",
+        "role": "user"
+      },
+      {
+        "index": 12,
+        "messageId": "0b25ab09-caa2-477d-b999-3b6f88b2c173",
+        "role": "assistant"
+      },
+      {
+        "index": 13,
+        "messageId": "0fcef279-6408-49e3-8eae-ee54581c8270",
+        "role": "user"
+      },
+      {
+        "index": 14,
+        "messageId": "354b0e27-102a-4539-ada3-add84ea77610",
+        "role": "assistant"
+      },
+      {
+        "index": 15,
+        "messageId": "8399084b-0667-477a-9c5e-de9c94d1092f",
+        "role": "user"
+      },
+      {
+        "index": 16,
+        "messageId": "aea2ac8d-993a-4dfd-bdb4-b91e0a0deb94",
+        "role": "assistant"
+      },
+      {
+        "index": 17,
+        "messageId": "116aa5d0-1a04-42b8-b849-26303100d7d7",
+        "role": "user"
+      },
+      {
+        "index": 18,
+        "messageId": "b9c053e0-eacd-41ac-b93e-072809478a38",
+        "role": "assistant"
+      },
+      {
+        "index": 19,
+        "messageId": "55e4bd23-8b39-4082-88d9-7b957e678c0c",
+        "role": "user"
+      },
+      {
+        "index": 20,
+        "messageId": "fd845e93-21e7-4650-b230-60428e6ca9f0",
+        "role": "assistant"
+      },
+      {
+        "index": 21,
+        "messageId": "7a4c7660-24bc-4c19-b4f9-400ca39e61d2",
+        "role": "user"
+      },
+      {
+        "index": 22,
+        "messageId": "da0d1123-cbef-4702-a7ed-77e45f5cc226",
+        "role": "assistant"
+      },
+      {
+        "index": 23,
+        "messageId": "8a37a03e-dc13-4e4c-a799-8287c23d2f45",
+        "role": "user"
+      },
+      {
+        "index": 24,
+        "messageId": "ecf87cb7-4748-44c2-aecb-c387f89bfd8d",
+        "role": "assistant"
+      },
+      {
+        "index": 25,
+        "messageId": "a4206293-4292-4df0-9fb7-810daf11f33e",
+        "role": "user"
+      },
+      {
+        "index": 26,
+        "messageId": "5d6e609c-d908-4908-a2f2-62f540608c5e",
+        "role": "assistant"
+      },
+      {
+        "index": 27,
+        "messageId": "9be38ba0-4e67-4f15-9799-de32e21f8622",
+        "role": "user"
+      },
+      {
+        "index": 28,
+        "messageId": "26458236-fd3b-4d71-b2e9-b7f366cdfbca",
+        "role": "assistant"
+      },
+      {
+        "index": 29,
+        "messageId": "7ba42adc-24ee-45e2-b54b-936c64532d7e",
+        "role": "user"
+      },
+      {
+        "index": 30,
+        "messageId": "84829981-b013-481b-b595-39fef81d8736",
+        "role": "assistant"
+      },
+      {
+        "index": 31,
+        "messageId": "ebdbf9c0-69c6-41a6-a896-117f3ae05131",
+        "role": "user"
+      },
+      {
+        "index": 32,
+        "messageId": "1b29a8b8-ad1e-4b8e-8976-338b120a9ee6",
+        "role": "assistant"
+      },
+      {
+        "index": 33,
+        "messageId": "13071b7e-6807-4361-91d6-cfc2eb909f57",
+        "role": "user"
+      },
+      {
+        "index": 34,
+        "messageId": "deef0946-78f1-4a11-b2dd-6bc0c0a058dd",
+        "role": "assistant"
+      },
+      {
+        "index": 35,
+        "messageId": "49412971-5532-4077-9c43-9d79015269a4",
+        "role": "user"
+      },
+      {
+        "index": 36,
+        "messageId": "7bca35bc-b611-4f7c-a5ad-b9d0a4f69a2f",
+        "role": "assistant"
+      },
+      {
+        "index": 37,
+        "messageId": "7104dcb0-b873-40bf-9e53-447e35b969f2",
+        "role": "user"
+      },
+      {
+        "index": 38,
+        "messageId": "1816055b-e525-4b4e-a519-e823e485d7ae",
+        "role": "assistant"
+      },
+      {
+        "index": 39,
+        "messageId": "537cd660-f468-4f1c-8c75-6d9843ba574b",
+        "role": "user"
+      },
+      {
+        "index": 40,
+        "messageId": "4c46738c-8617-48fc-ac16-539ec4b01fbc",
+        "role": "assistant"
+      },
+      {
+        "index": 41,
+        "messageId": "ccdb5937-5174-4307-aa4c-56c1403f9295",
+        "role": "user"
+      },
+      {
+        "index": 42,
+        "messageId": "7f04b08f-e052-4577-909e-c9e442cb2a5b",
+        "role": "assistant"
+      },
+      {
+        "index": 43,
+        "messageId": "831f3aad-c4ba-46d4-ae50-ee2d7b499eee",
+        "role": "user"
+      },
+      {
+        "index": 44,
+        "messageId": "7175934e-4e55-467c-9171-3ecf3f36533a",
+        "role": "assistant"
+      },
+      {
+        "index": 45,
+        "messageId": "277509c7-8896-436f-a5f0-e2cffe38f8b9",
+        "role": "user"
+      },
+      {
+        "index": 46,
+        "messageId": "7f606909-b2af-4468-871d-6b165a77ac12",
+        "role": "assistant"
+      },
+      {
+        "index": 47,
+        "messageId": "5f256901-80a7-4b74-8479-9396f74822e0",
+        "role": "user"
+      },
+      {
+        "index": 48,
+        "messageId": "c6a98726-365e-4a50-8c85-8f3694ce1194",
+        "role": "assistant"
+      },
+      {
+        "index": 49,
+        "messageId": "50989465-0690-44e3-81b2-051b6f18334f",
+        "role": "user"
+      },
+      {
+        "index": 50,
+        "messageId": "c67eb43e-f8db-4a7d-84a8-5730fd213852",
+        "role": "assistant"
+      }
+    ]
   },
   "css": {},
   "result": {
     "success": false,
-    "reason": "虚拟滚动遍历后仍无法完整对应接口消息：目标 20 条，匹配 0 条，缺失或歧义 40 条。未生成不完整文件。"
+    "reason": "虚拟滚动遍历后仍无法完整对应接口消息：目标 51 条，匹配 50 条，缺失或歧义 1 条。未生成不完整文件。"
   }
 }
 226913.52b9bcbf34.js:6:107089
