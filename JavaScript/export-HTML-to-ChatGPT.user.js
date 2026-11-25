@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT 会话 HTML 导出器
 // @namespace    https://github.com/JKwarn/upload-my
-// @version      2.6.5
+// @version      2.6.6
 // @description  通过会话接口校验消息，并复用 ChatGPT 原生 DOM 与 CSS 导出独立 HTML
 // @match        https://chatgpt.com/c/*
 // @run-at       document-idle
@@ -714,6 +714,11 @@
     });
     root.querySelectorAll('[data-testid*="copy-button"]').forEach(node => {
       if (!node.closest('pre,code,[data-testid*="code"],[class*="code-block"]')) node.remove();
+    });
+    root.querySelectorAll('[data-code-block-controls="true"]').forEach(node => {
+      const wrapper = node.closest('div.ms-auto.flex.items-center.min-w-0.max-w-full');
+      if (wrapper) wrapper.remove();
+      else node.remove();
     });
     root.querySelectorAll('div.flex.flex-row-reverse.items-center.gap-1').forEach(node => {
       node.remove();
