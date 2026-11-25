@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT 会话 HTML 导出器
 // @namespace    https://github.com/JKwarn/upload-my
-// @version      2.6.4
+// @version      2.6.5
 // @description  通过会话接口校验消息，并复用 ChatGPT 原生 DOM 与 CSS 导出独立 HTML
 // @match        https://chatgpt.com/c/*
 // @run-at       document-idle
@@ -11,7 +11,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '2.6.4';
+  const VERSION = '2.6.5';
   const PREFIX = '[ChatGPT 会话 HTML 导出器]';
   const IDS = {
     button: 'chatgpt-html-exporter-button',
@@ -166,8 +166,15 @@
         #${IDS.speed}{width:76px;height:34px;box-sizing:border-box;padding:0 7px;border:1px solid rgba(255,255,255,.24);border-radius:7px;background:#fff;color:#202123;font:13px inherit;text-align:center;outline:none}
         #${IDS.speed}:focus{border-color:#10a37f;box-shadow:0 0 0 2px rgba(16,163,127,.2)}
         #${IDS.speed}:disabled{opacity:.6}
-        #${IDS.logToggleLabel}{display:flex;align-items:center;gap:5px;padding:0 4px;color:#fff;font-family:inherit;font-size:12px;white-space:nowrap;cursor:pointer}
-        #${IDS.logToggle}{width:15px;height:15px;margin:0;accent-color:#10a37f;cursor:pointer}
+        #${IDS.logToggleLabel}{display:flex;align-items:center;gap:8px;padding:0 5px;color:#fff;font-family:inherit;font-size:12px;white-space:nowrap;cursor:pointer;user-select:none}
+        #${IDS.logToggle}{appearance:none!important;-webkit-appearance:none!important;position:relative;display:inline-block;flex:0 0 34px;width:34px!important;height:19px!important;box-sizing:border-box;margin:0!important;padding:0!important;border:1px solid rgba(255,255,255,.28)!important;border-radius:999px!important;background:#666!important;cursor:pointer;transition:background .18s ease,border-color .18s ease;vertical-align:middle}
+        #${IDS.logToggle}::before{content:"";position:absolute;top:2px;left:2px;width:13px;height:13px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);transition:transform .18s ease}
+        #${IDS.logToggle}:checked{background:#10a37f!important;border-color:#10a37f!important}
+        #${IDS.logToggle}:checked::before{transform:translateX(15px)}
+        #${IDS.logToggle}:focus-visible{outline:2px solid #fff;outline-offset:3px}
+        #${IDS.logToggle}:disabled{opacity:.55;cursor:not-allowed}
+        #${IDS.logToggleLabel}[data-enabled="true"]{color:#fff}
+        #${IDS.logToggleLabel}[data-enabled="false"]{color:rgba(255,255,255,.78)}
         #${IDS.button}{display:flex;align-items:center;justify-content:center;gap:8px;min-width:148px;height:40px;padding:0 15px;border:1px solid rgba(255,255,255,.15);border-radius:9px;background:#10a37f;color:#fff;font-family:inherit;font-size:14px;font-weight:600;line-height:1.2;cursor:pointer}
         #${IDS.button}:hover{background:#0d8f70}
         #${IDS.button}:disabled{opacity:.65;cursor:wait}
@@ -221,7 +228,18 @@
       logCheckbox.id = IDS.logToggle;
       logCheckbox.type = 'checkbox';
       logCheckbox.checked = false;
+      logCheckbox.setAttribute('role', 'switch');
+      logCheckbox.setAttribute('aria-checked', 'false');
       logCheckbox.setAttribute('aria-label', '自动下载诊断日志');
+      logLabel.dataset.enabled = 'false';
+      logCheckbox.addEventListener('change', () => {
+        const enabled = logCheckbox.checked;
+        logCheckbox.setAttribute('aria-checked', String(enabled));
+        logLabel.dataset.enabled = String(enabled);
+        logLabel.title = enabled
+          ? '日志开关：已开启。导出成功或失败时自动下载 JSON 诊断日志。'
+          : '日志开关：已关闭。导出时不会自动下载 JSON 诊断日志。';
+      });
       const logText = document.createElement('span');
       logText.textContent = '日志';
       logLabel.append(logCheckbox, logText);
