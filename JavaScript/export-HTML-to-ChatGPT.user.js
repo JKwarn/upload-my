@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT 会话 HTML 导出器
 // @namespace    https://github.com/JKwarn/upload-my
-// @version      2.5.8
+// @version      2.5.9
 // @description  通过会话接口校验消息，并复用 ChatGPT 原生 DOM 与 CSS 导出独立 HTML
 // @match        https://chatgpt.com/c/*
 // @run-at       document-idle
@@ -11,7 +11,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '2.5.8';
+  const VERSION = '2.5.9';
   const PREFIX = '[ChatGPT 会话 HTML 导出器]';
   const IDS = {
     button: 'chatgpt-html-exporter-button',
@@ -403,85 +403,95 @@
   }
 
   function findRoleElement(anchor, role) {
+    // 新版 ChatGPT 的 data-chatgpt-search-unit-key 是最明确的消息边界，
+    // 优先使用它，避免把隐藏的“你说/ChatGPT 说”标签误判为消息正文节点。
+    const keyed = [
+      ...(anchor.matches?.('[data-chatgpt-search-unit-key]') ? [anchor] : []),
+      ...anchor.querySelectorAll('[data-chatgpt-search-unit-key]')
+    ].find(element => normalizedRole(element) === role);
+    if (keyed) return keyed;
+
     const ownRole = normalizedRole(anchor);
-    if (ownRole === role) return anchor;
-    const descendants = [...anchor.querySelectorAll(ROLE_SELECTORS + ',[data-user-message-bubble="true"],[data-chatgpt-search-unit-key]')];
+    if (ownRole === role && !anchor.matches('[data-conversation-role]')) return anchor;
+    const descendants = [...anchor.querySelectorAll(
+      '[data-message-author-role],[data-role],[data-user-message-bubble="true"]'
+    )];
     return descendants.find(element => normalizedRole(element) === role) || null;
   }
 
   function findDomMessage(item) {
     const messageId = item.message?.id;
     if (!messageId) return null;
+
+    const keyedMatches = [...document.querySelectorAll('[data-chatgpt-search-unit-key]')]
+      .filter(element => normalizedRole(element) === item.role)
+      .filter(element => {
+        let ancestor = element;
+        for (let depth = 0; ancestor && depth < 10; depth++, ancestor = ancestor.parentElement) {
+          if (idAttributeMatches(ancestor, messageId)) return true;
+        }
+        return false;
+      });
+
+    if (keyedMatches.length === 1) return { element: keyedMatches[0], matchSource: 'data-chatgpt-search-unit-key' };
+    if (keyedMatches.length > 1) {
+      return { error: 'duplicate-keyed-dom-match', matchCount: keyedMatches.length };
+    }
+
     const anchors = [...document.querySelectorAll(
       '[data-message-id],[data-message-uuid],[data-chatgpt-selection-message-id],[data-chatgpt-search-message-ids],[data-turn-id]'
     )].filter(element => idAttributeMatches(element, messageId));
-
     const matches = [];
     for (const anchor of anchors) {
       const roleElement = findRoleElement(anchor, item.role);
       if (roleElement && !matches.includes(roleElement)) matches.push(roleElement);
     }
-    if (!matches.length) {
-      const roleNodes = [...document.querySelectorAll(ROLE_SELECTORS + ',[data-user-message-bubble="true"],[data-chatgpt-search-unit-key]')];
-      for (const roleElement of roleNodes) {
-        if (normalizedRole(roleElement) !== item.role) continue;
-        let ancestor = roleElement;
-        for (let depth = 0; ancestor && depth < 9; depth++, ancestor = ancestor.parentElement) {
-          if (idAttributeMatches(ancestor, messageId)) {
-            if (!matches.includes(roleElement)) matches.push(roleElement);
-            break;
-          }
-        }
-      }
-    }
     if (matches.length !== 1) {
       return { error: matches.length > 1 ? 'duplicate-dom-match' : 'not-found', matchCount: matches.length };
     }
-    return { element: matches[0] };
+    return { element: matches[0], matchSource: 'legacy-id-anchor' };
   }
 
   function getCloneRoot(roleElement, messageId, expectedRole) {
-    const roleSelector = ROLE_SELECTORS +
-      ',[data-user-message-bubble="true"],[data-chatgpt-search-unit-key]';
-    let current = roleElement;
-    let best = roleElement;
-
-    // 从目标消息节点向外寻找最近的、具有目标消息 ID 且只包含一个消息角色节点的容器。
-    // 不再把整个 data-virtualized-turn 当作默认克隆边界。
-    for (let depth = 0; current && depth < 10; depth++, current = current.parentElement) {
-      if (!idAttributeMatches(current, messageId)) continue;
-      const roleNodes = [
-        ...(normalizedRole(current) ? [current] : []),
-        ...current.querySelectorAll(roleSelector)
-      ].filter(node => normalizedRole(node));
-      const uniqueRoleNodes = [...new Set(roleNodes)];
-      if (uniqueRoleNodes.length === 1 && uniqueRoleNodes[0] === roleElement &&
-          normalizedRole(uniqueRoleNodes[0]) === expectedRole) {
-        best = current;
-        break;
-      }
+    // data-chatgpt-search-unit-key 本身就是当前页面中最精确的单条消息容器。
+    if (roleElement.matches?.('[data-chatgpt-search-unit-key]') &&
+        normalizedRole(roleElement) === expectedRole) {
+      return roleElement;
     }
-
-    // 找不到带有独立消息 ID 的外层容器时，退回精确匹配到的角色节点本身。
-    return best;
+    return roleElement;
   }
 
   function validateMessageCloneRoot(root, roleElement, messageId, expectedRole) {
-    const roleSelector = ROLE_SELECTORS +
-      ',[data-user-message-bubble="true"],[data-chatgpt-search-unit-key]';
+    const keyedRoot = root.matches?.('[data-chatgpt-search-unit-key]');
+    const keyedRole = normalizedRole(root);
+    const keyedIdMatch = keyedRoot && idAttributeMatches(root, messageId);
+    if (keyedRoot) {
+      const nestedUnits = root.querySelectorAll('[data-chatgpt-search-unit-key]');
+      return {
+        valid: keyedRole === expectedRole && keyedIdMatch &&
+          root === roleElement && nestedUnits.length === 0,
+        roleNodeCount: 1 + nestedUnits.length,
+        actualRole: keyedRole,
+        messageIdAnchorFound: keyedIdMatch,
+        validationMode: 'keyed-message-unit'
+      };
+    }
+
+    // 旧版 DOM 的兼容回退：忽略 data-conversation-role 隐藏说话人标签，
+    // 仅统计真正承载消息正文的 role 节点。
+    const roleSelector = '[data-message-author-role],[data-role],[data-user-message-bubble="true"]';
     const roleNodes = [
-      ...(normalizedRole(root) ? [root] : []),
+      ...(root.matches(roleSelector) ? [root] : []),
       ...root.querySelectorAll(roleSelector)
     ].filter(node => normalizedRole(node));
     const uniqueRoleNodes = [...new Set(roleNodes)];
     return {
-      valid: uniqueRoleNodes.length === 1 &&
-        uniqueRoleNodes[0] === roleElement &&
-        normalizedRole(uniqueRoleNodes[0]) === expectedRole &&
-        root.contains(roleElement),
+      valid: uniqueRoleNodes.length === 1 && uniqueRoleNodes[0] === roleElement &&
+        normalizedRole(uniqueRoleNodes[0]) === expectedRole && root.contains(roleElement),
       roleNodeCount: uniqueRoleNodes.length,
       actualRole: uniqueRoleNodes.length === 1 ? normalizedRole(uniqueRoleNodes[0]) : null,
-      messageIdAnchorFound: idAttributeMatches(root, messageId)
+      messageIdAnchorFound: idAttributeMatches(root, messageId),
+      validationMode: 'legacy-role-node'
     };
   }
 
