@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT 会话 HTML 导出器
 // @namespace    https://github.com/JKwarn/upload-my
-// @version      2.5.0
+// @version      2.5.1
 // @description  通过会话接口校验消息，并复用 ChatGPT 原生 DOM 与 CSS 导出独立 HTML
 // @match        https://chatgpt.com/c/*
 // @run-at       document-idle
@@ -11,10 +11,12 @@
 (() => {
   'use strict';
 
-  const VERSION = '2.5.0';
+  const VERSION = '2.5.1';
   const PREFIX = '[ChatGPT 会话 HTML 导出器]';
   const IDS = {
     button: 'chatgpt-html-exporter-button',
+    controls: 'chatgpt-html-exporter-controls',
+    speed: 'chatgpt-html-exporter-speed',
     style: 'chatgpt-html-exporter-style',
     toast: 'chatgpt-html-exporter-toast'
   };
@@ -23,7 +25,11 @@
     conversationApi: '/backend-api/conversations/',
     numTurns: 10,
     requestTimeout: 30000,
-    maxMessageLength: 20000000
+    maxMessageLength: 20000000,
+    defaultScrollDelay: 1500,
+    minScrollDelay: 200,
+    maxScrollDelay: 10000,
+    scrollDelayStorageKey: 'chatgpt-html-exporter-scroll-delay'
   };
   const state = { running: false, observer: null };
   const diagnostics = {
@@ -90,22 +96,65 @@
     setStatus.timer = setTimeout(() => node.classList.remove('visible'), 6000);
   }
 
+
+  function getScrollDelay() {
+    const input = document.getElementById(IDS.speed);
+    const raw = input?.value ?? localStorage.getItem(CONFIG.scrollDelayStorageKey);
+    const value = Number(raw);
+    if (!Number.isFinite(value)) return CONFIG.defaultScrollDelay;
+    return Math.min(CONFIG.maxScrollDelay, Math.max(CONFIG.minScrollDelay, Math.round(value)));
+  }
+
   function injectUI() {
     if (!document.body) return;
     if (!document.getElementById(IDS.style)) {
       const style = document.createElement('style');
       style.id = IDS.style;
       style.textContent = `
-        #${IDS.button}{position:fixed;right:24px;bottom:24px;z-index:2147483646;display:flex;align-items:center;gap:8px;min-width:148px;height:42px;padding:0 17px;border:1px solid rgba(255,255,255,.15);border-radius:11px;background:#10a37f;color:#fff;font-family:inherit;font-size:14px;font-weight:600;line-height:1.2;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.18)}
-        #${IDS.button}:hover{background:#0d8f70}
-        #${IDS.button}:disabled{opacity:.65;cursor:wait}
-        #${IDS.toast}{position:fixed;right:24px;bottom:76px;z-index:2147483647;max-width:min(460px,calc(100vw - 32px));padding:11px 15px;border-radius:9px;background:#202123;color:#fff;font-family:inherit;font-size:13px;line-height:1.5;box-shadow:0 4px 16px rgba(0,0,0,.2);opacity:0;pointer-events:none;transform:translateY(8px);transition:opacity .18s ease,transform .18s ease}
-        #${IDS.toast}.visible{opacity:1;transform:translateY(0)}
-        #${IDS.toast}[data-type="success"]{border-left:4px solid #10a37f}
-        #${IDS.toast}[data-type="error"]{border-left:4px solid #ef4444}
-        #${IDS.toast}[data-type="info"]{border-left:4px solid #3b82f6}
+        #\${IDS.controls}{position:fixed;right:24px;bottom:24px;z-index:2147483646;display:flex;align-items:center;gap:9px;padding:6px;border:1px solid rgba(128,128,128,.2);border-radius:13px;background:rgba(32,33,35,.94);box-shadow:0 4px 16px rgba(0,0,0,.2);backdrop-filter:blur(8px)}
+        #\${IDS.controls} label{display:flex;align-items:center;gap:6px;padding-left:7px;color:#fff;font-family:inherit;font-size:12px;white-space:nowrap}
+        #\${IDS.speed}{width:76px;height:34px;box-sizing:border-box;padding:0 7px;border:1px solid rgba(255,255,255,.24);border-radius:7px;background:#fff;color:#202123;font:13px inherit;text-align:center;outline:none}
+        #\${IDS.speed}:focus{border-color:#10a37f;box-shadow:0 0 0 2px rgba(16,163,127,.2)}
+        #\${IDS.speed}:disabled{opacity:.6}
+        #\${IDS.button}{display:flex;align-items:center;justify-content:center;gap:8px;min-width:148px;height:40px;padding:0 15px;border:1px solid rgba(255,255,255,.15);border-radius:9px;background:#10a37f;color:#fff;font-family:inherit;font-size:14px;font-weight:600;line-height:1.2;cursor:pointer}
+        #\${IDS.button}:hover{background:#0d8f70}
+        #\${IDS.button}:disabled{opacity:.65;cursor:wait}
+        #\${IDS.toast}{position:fixed;right:24px;bottom:84px;z-index:2147483647;max-width:min(460px,calc(100vw - 32px));padding:11px 15px;border-radius:9px;background:#202123;color:#fff;font-family:inherit;font-size:13px;line-height:1.5;box-shadow:0 4px 16px rgba(0,0,0,.2);opacity:0;pointer-events:none;transform:translateY(8px);transition:opacity .18s ease,transform .18s ease}
+        #\${IDS.toast}.visible{opacity:1;transform:translateY(0)}
+        #\${IDS.toast}[data-type="success"]{border-left:4px solid #10a37f}
+        #\${IDS.toast}[data-type="error"]{border-left:4px solid #ef4444}
+        #\${IDS.toast}[data-type="info"]{border-left:4px solid #3b82f6}
+        @media(max-width:520px){#\${IDS.controls}{right:10px;bottom:10px;gap:5px}#\${IDS.controls} label{font-size:11px}#\${IDS.speed}{width:64px}#\${IDS.button}{min-width:128px;padding:0 10px;font-size:13px}#\${IDS.toast}{right:10px;bottom:72px}}
       `;
       (document.head || document.documentElement).appendChild(style);
+    }
+    let controls = document.getElementById(IDS.controls);
+    if (!controls) {
+      controls = document.createElement('div');
+      controls.id = IDS.controls;
+      const label = document.createElement('label');
+      label.htmlFor = IDS.speed;
+      label.textContent = '滚动等待';
+      const input = document.createElement('input');
+      input.id = IDS.speed;
+      input.type = 'number';
+      input.min = String(CONFIG.minScrollDelay);
+      input.max = String(CONFIG.maxScrollDelay);
+      input.step = '100';
+      input.value = String(getScrollDelay());
+      input.title = '每次滚动后至少等待的毫秒数（200–10000 ms）';
+      input.setAttribute('aria-label', '滚动等待时间，单位毫秒');
+      input.addEventListener('change', () => {
+        const value = getScrollDelay();
+        input.value = String(value);
+        try { localStorage.setItem(CONFIG.scrollDelayStorageKey, String(value)); } catch {}
+      });
+      label.appendChild(input);
+      const unit = document.createElement('span');
+      unit.textContent = 'ms';
+      label.appendChild(unit);
+      controls.appendChild(label);
+      document.body.appendChild(controls);
     }
     if (!document.getElementById(IDS.button)) {
       const button = document.createElement('button');
@@ -113,7 +162,10 @@
       button.type = 'button';
       button.textContent = '↓ 导出会话 HTML';
       button.addEventListener('click', handleExport);
-      document.body.appendChild(button);
+      controls.appendChild(button);
+    } else {
+      const button = document.getElementById(IDS.button);
+      if (button.parentElement !== controls) controls.appendChild(button);
     }
   }
 
@@ -520,30 +572,53 @@
     };
   }
 
-  function waitForVirtualizedUpdate(previousSignature, timeout = 700) {
+
+  function waitForVirtualizedUpdate(previousSignature, timeout = 2500, minimumDelay = CONFIG.defaultScrollDelay) {
     return new Promise(resolve => {
       let finished = false;
-      let timer;
+      let updateReady = false;
+      let delayReady = false;
+      let timeoutTimer;
       let stableTimer;
+      let delayTimer;
       const signature = () => [...document.querySelectorAll('[data-virtualized-turn]')]
         .map(node => (node.getAttribute('data-testid') || '') + ':' + (node.innerText || '').length)
         .join('|');
-      const observer = new MutationObserver(() => {
-        clearTimeout(stableTimer);
-        stableTimer = setTimeout(() => finish(signature() !== previousSignature), 100);
-      });
-      const finish = changed => {
-        if (finished) return;
+      const finishIfReady = () => {
+        if (finished || !updateReady || !delayReady) return;
         finished = true;
         observer.disconnect();
-        clearTimeout(timer);
+        clearTimeout(timeoutTimer);
         clearTimeout(stableTimer);
-        resolve(changed);
+        clearTimeout(delayTimer);
+        resolve({ changed: signature() !== previousSignature, waitedAtLeastMs: minimumDelay });
       };
+      const observer = new MutationObserver(() => {
+        clearTimeout(stableTimer);
+        stableTimer = setTimeout(() => {
+          if (signature() !== previousSignature) {
+            updateReady = true;
+            finishIfReady();
+          }
+        }, 250);
+      });
       observer.observe(document.documentElement, { childList: true, subtree: true, attributes: true });
-      timer = setTimeout(() => finish(signature() !== previousSignature), timeout);
+      timeoutTimer = setTimeout(() => {
+        updateReady = true;
+        finishIfReady();
+      }, timeout);
+      delayTimer = setTimeout(() => {
+        delayReady = true;
+        finishIfReady();
+      }, minimumDelay);
       requestAnimationFrame(() => requestAnimationFrame(() => {
-        if (signature() !== previousSignature) stableTimer = setTimeout(() => finish(true), 100);
+        if (signature() !== previousSignature) {
+          clearTimeout(stableTimer);
+          stableTimer = setTimeout(() => {
+            updateReady = true;
+            finishIfReady();
+          }, 250);
+        }
       }));
     });
   }
@@ -578,6 +653,7 @@
 
   async function cloneNativeMessages(selected) {
     const discovery = diagnoseDom(selected);
+    const scrollDelay = getScrollDelay();
     const captured = new Map();
     const duplicates = new Map();
     const traversal = {
@@ -585,7 +661,7 @@
       strategy: 'reset-to-top-then-forward-scan',
       container: null, initialScrollTop: null, finalScrollTop: null,
       maxScrollTop: null, stepSize: null, stepCount: 0,
-      mutationWaitTimeoutMs: 700, capturedPerStep: [],
+      mutationWaitTimeoutMs: 2500, configuredMinimumDelayMs: scrollDelay, capturedPerStep: [],
       reachedTop: false, reachedBottom: false,
       restoredOriginalScrollTop: false, failure: null
     };
@@ -604,7 +680,7 @@
       traversal.stepSize = Math.max(240, Math.floor(scrollElement.clientHeight * 0.68));
       try {
         scrollElement.scrollTop = 0;
-        await new Promise(resolve => setTimeout(resolve, 180));
+        await new Promise(resolve => setTimeout(resolve, scrollDelay));
         captureVisibleMessages(selected, captured, duplicates);
         traversal.reachedTop = scrollElement.scrollTop <= 2;
         let previousTop = scrollElement.scrollTop;
@@ -620,7 +696,7 @@
             .map(node => (node.getAttribute('data-testid') || '') + ':' + (node.innerText || '').length)
             .join('|');
           scrollElement.scrollTop = nextTop;
-          await waitForVirtualizedUpdate(beforeSignature, traversal.mutationWaitTimeoutMs);
+          const waitResult = await waitForVirtualizedUpdate(beforeSignature, traversal.mutationWaitTimeoutMs, scrollDelay);
           const capturedNow = captureVisibleMessages(selected, captured, duplicates);
           traversal.stepCount++;
           traversal.capturedPerStep.push({
@@ -629,7 +705,8 @@
             maxScrollTop: Math.max(0, scrollElement.scrollHeight - scrollElement.clientHeight),
             virtualizedTurnCount: document.querySelectorAll('[data-virtualized-turn]').length,
             newlyCapturedMessageCount: capturedNow,
-            totalCapturedMessageCount: captured.size
+            totalCapturedMessageCount: captured.size,
+            waitResult
           });
           const actualTop = scrollElement.scrollTop;
           if (actualTop <= previousTop + 1) {
@@ -876,7 +953,10 @@ ${messages}
       button.disabled = true;
       button.textContent = '正在导出…';
     }
+    const speedInput = document.getElementById(IDS.speed);
+    if (speedInput) speedInput.disabled = true;
     resetDiagnostics(conversationId);
+    diagnostics.dom.configuredScrollDelayMs = getScrollDelay();
 
     try {
       setStatus('正在获取会话数据…');
@@ -935,6 +1015,8 @@ ${messages}
         currentButton.disabled = false;
         currentButton.textContent = '↓ 导出会话 HTML';
       }
+      const currentSpeedInput = document.getElementById(IDS.speed);
+      if (currentSpeedInput) currentSpeedInput.disabled = false;
     }
   }
 
