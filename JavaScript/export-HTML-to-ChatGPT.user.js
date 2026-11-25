@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT 会话 HTML 导出器
 // @namespace    https://github.com/JKwarn/upload-my
-// @version      2.5.2
+// @version      2.5.3
 // @description  通过会话接口校验消息，并复用 ChatGPT 原生 DOM 与 CSS 导出独立 HTML
 // @match        https://chatgpt.com/c/*
 // @run-at       document-idle
@@ -11,7 +11,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '2.5.2';
+  const VERSION = '2.5.3';
   const PREFIX = '[ChatGPT 会话 HTML 导出器]';
   const IDS = {
     button: 'chatgpt-html-exporter-button',
@@ -493,6 +493,7 @@
     const diagnosticsForBlocks = [];
     const codeBlocks = [...sourceRoot.querySelectorAll('pre')].slice(0, 20);
     let overriddenNodeCount = 0;
+    let codeSurfaceCount = 0;
 
     for (const [blockIndex, pre] of codeBlocks.entries()) {
       const preIndex = sourceNodes.indexOf(pre);
@@ -505,34 +506,41 @@
       }
       const ancestors = [];
       for (const sourceNode of chain) {
-        const cloneNode = cloneNodes[sourceNodes.indexOf(sourceNode)];
+        const sourceIndex = sourceNodes.indexOf(sourceNode);
+        const cloneNode = cloneNodes[sourceIndex];
         if (!(sourceNode instanceof HTMLElement) || !(cloneNode instanceof HTMLElement)) continue;
         const before = describeCodeNode(sourceNode);
         const maxHeightLimited = before.maxHeight !== 'none' &&
           Number.parseFloat(before.maxHeight) > 0;
         const verticallyScrollable = ['auto', 'scroll', 'overlay'].includes(before.overflowY);
-        const clipped = sourceNode.scrollHeight > sourceNode.clientHeight + 2 &&
-          ['hidden', 'clip'].includes(before.overflowY);
+        const verticallyClipped = ['hidden', 'clip'].includes(before.overflowY);
+        const horizontallyClipped = ['hidden', 'clip'].includes(before.overflowX);
         const internallyOverflowing = sourceNode.scrollHeight > sourceNode.clientHeight + 2;
-        const shouldExpand = maxHeightLimited || verticallyScrollable || clipped || internallyOverflowing;
+        const isCodeSurface = sourceNode.matches('[data-code-block="true"]') ||
+          (typeof sourceNode.className === 'string' && /(?:^|\\s)CodeSurface(?:-|\\s|$)/.test(sourceNode.className));
+        const shouldExpand = maxHeightLimited || verticallyScrollable ||
+          verticallyClipped || horizontallyClipped || internallyOverflowing || isCodeSurface;
         let changed = false;
         if (shouldExpand) {
           cloneNode.style.setProperty('max-height', 'none', 'important');
           cloneNode.style.setProperty('height', 'auto', 'important');
           cloneNode.style.setProperty('min-height', '0', 'important');
-          cloneNode.style.setProperty('overflow-y', 'visible', 'important');
+          cloneNode.style.setProperty('overflow', 'visible', 'important');
           cloneNode.style.setProperty('contain', 'none', 'important');
           changed = true;
           overriddenNodeCount++;
+          if (isCodeSurface) codeSurfaceCount++;
         }
         ancestors.push({
           before,
+          isCodeSurface,
           overridden: changed,
           after: changed ? {
             maxHeight: cloneNode.style.getPropertyValue('max-height'),
             height: cloneNode.style.getPropertyValue('height'),
-            overflowY: cloneNode.style.getPropertyValue('overflow-y'),
-            priority: cloneNode.style.getPropertyPriority('max-height')
+            overflow: cloneNode.style.getPropertyValue('overflow'),
+            contain: cloneNode.style.getPropertyValue('contain'),
+            priority: cloneNode.style.getPropertyPriority('overflow')
           } : null
         });
       }
@@ -544,11 +552,14 @@
         ancestors
       });
     }
-    return { codeBlockCount: sourceRoot.querySelectorAll('pre').length,
-      diagnosedBlockCount: diagnosticsForBlocks.length, overriddenNodeCount,
-      blocks: diagnosticsForBlocks };
+    return {
+      codeBlockCount: sourceRoot.querySelectorAll('pre').length,
+      diagnosedBlockCount: diagnosticsForBlocks.length,
+      overriddenNodeCount,
+      codeSurfaceCount,
+      blocks: diagnosticsForBlocks
+    };
   }
-
   function removeNonContentControls(root) {
     root.querySelectorAll(
       '[data-testid*="action-bar"],[role="toolbar"],.sr-only'
@@ -1043,6 +1054,8 @@ body{margin:0;padding:12mm;background:var(--main-surface-primary,#fff);color:var
 .export-message>*{width:100%;min-width:0;max-width:100%}
 .export-message [data-virtualized-turn]{height:auto!important;min-height:0!important;max-height:none!important;margin-top:0!important;contain:none!important;overflow:visible!important;content-visibility:visible!important}
 .export-message pre,.export-message code,.export-message table{max-width:100%}
+.export-message [data-code-block="true"],.export-message [class*="CodeSurface"],.export-message [class*="InlineCodePane"],.export-message .chatgpt-code-scrollport{height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;contain:none!important}
+.export-message [data-code-block="true"] pre,.export-message [class*="CodeSurface"] pre{height:auto!important;max-height:none!important;overflow:visible!important}
 .export-message img,.export-message video,.export-message svg{max-width:100%;height:auto}
 @media print{body{padding:0}.export-page{max-width:none}.export-message{break-inside:auto}pre,table,blockquote{break-inside:avoid}}
 @page{size:A4;margin:12mm}
