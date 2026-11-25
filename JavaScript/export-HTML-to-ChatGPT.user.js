@@ -1,20 +1,20 @@
 // ==UserScript==
 // @name         ChatGPT 会话 HTML 导出器
 // @namespace    https://github.com/JKwarn/upload-my
-// @version      2.3.0
+// @version      2.3.1
 // @description  通过两阶段会话接口导出消息，保留 Markdown、静态 DIL 布局和 Mermaid 图表
 // @match        https://chatgpt.com/c/*
 // @run-at       document-idle
 // @grant        none
 // @require      https://cdn.jsdelivr.net/npm/marked@15.0.7/marked.min.js
 // @require      https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js
-// @require      https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.min.js
+// @require      https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.3/mermaid.min.js
 // ==/UserScript==
 
 (() => {
   'use strict';
 
-  const VERSION = '2.3.0';
+  const VERSION = '2.3.1';
   const PREFIX = '[ChatGPT 会话 HTML 导出器]';
   const IDS = {
     button: 'chatgpt-html-exporter-button',
