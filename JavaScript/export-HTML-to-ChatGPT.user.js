@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT 会话 HTML 导出器
 // @namespace    https://github.com/JKwarn/upload-my
-// @version      2.5.7
+// @version      2.5.8
 // @description  通过会话接口校验消息，并复用 ChatGPT 原生 DOM 与 CSS 导出独立 HTML
 // @match        https://chatgpt.com/c/*
 // @run-at       document-idle
@@ -11,7 +11,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '2.5.7';
+  const VERSION = '2.5.8';
   const PREFIX = '[ChatGPT 会话 HTML 导出器]';
   const IDS = {
     button: 'chatgpt-html-exporter-button',
@@ -440,38 +440,49 @@
     return { element: matches[0] };
   }
 
-  function getCloneRoot(roleElement) {
-    const selectors = [
-      '[data-virtualized-turn]',
-      '[data-testid^="conversation-turn-"]',
-      'article[data-turn]',
-      'section[data-turn-id][data-turn]',
-      '[data-turn-key]'
-    ];
-    for (const selector of selectors) {
-      const shell = roleElement.closest(selector);
-      if (!shell) continue;
-      const roleNodes = [...shell.querySelectorAll(ROLE_SELECTORS + ',[data-user-message-bubble="true"],[data-chatgpt-search-unit-key]')]
-        .filter(node => normalizedRole(node));
-      const ids = new Set();
-      for (const node of roleNodes) {
-        let current = node;
-        for (let depth = 0; current && current !== shell.parentElement && depth < 8; depth++, current = current.parentElement) {
-          for (const name of ID_ATTRIBUTES) {
-            const value = current.getAttribute(name);
-            if (!value) continue;
-            if (name === 'data-chatgpt-search-message-ids') {
-              value.split(/[\s,]+/).filter(Boolean).forEach(id => ids.add(id));
-            } else {
-              ids.add(value);
-            }
-          }
-          if (current === shell) break;
-        }
+  function getCloneRoot(roleElement, messageId, expectedRole) {
+    const roleSelector = ROLE_SELECTORS +
+      ',[data-user-message-bubble="true"],[data-chatgpt-search-unit-key]';
+    let current = roleElement;
+    let best = roleElement;
+
+    // 从目标消息节点向外寻找最近的、具有目标消息 ID 且只包含一个消息角色节点的容器。
+    // 不再把整个 data-virtualized-turn 当作默认克隆边界。
+    for (let depth = 0; current && depth < 10; depth++, current = current.parentElement) {
+      if (!idAttributeMatches(current, messageId)) continue;
+      const roleNodes = [
+        ...(normalizedRole(current) ? [current] : []),
+        ...current.querySelectorAll(roleSelector)
+      ].filter(node => normalizedRole(node));
+      const uniqueRoleNodes = [...new Set(roleNodes)];
+      if (uniqueRoleNodes.length === 1 && uniqueRoleNodes[0] === roleElement &&
+          normalizedRole(uniqueRoleNodes[0]) === expectedRole) {
+        best = current;
+        break;
       }
-      if (ids.size <= 1) return shell;
     }
-    return roleElement;
+
+    // 找不到带有独立消息 ID 的外层容器时，退回精确匹配到的角色节点本身。
+    return best;
+  }
+
+  function validateMessageCloneRoot(root, roleElement, messageId, expectedRole) {
+    const roleSelector = ROLE_SELECTORS +
+      ',[data-user-message-bubble="true"],[data-chatgpt-search-unit-key]';
+    const roleNodes = [
+      ...(normalizedRole(root) ? [root] : []),
+      ...root.querySelectorAll(roleSelector)
+    ].filter(node => normalizedRole(node));
+    const uniqueRoleNodes = [...new Set(roleNodes)];
+    return {
+      valid: uniqueRoleNodes.length === 1 &&
+        uniqueRoleNodes[0] === roleElement &&
+        normalizedRole(uniqueRoleNodes[0]) === expectedRole &&
+        root.contains(roleElement),
+      roleNodeCount: uniqueRoleNodes.length,
+      actualRole: uniqueRoleNodes.length === 1 ? normalizedRole(uniqueRoleNodes[0]) : null,
+      messageIdAnchorFound: idAttributeMatches(root, messageId)
+    };
   }
 
   function removeVirtualizationArtifacts(root) {
@@ -843,7 +854,18 @@
         });
         continue;
       }
-      const sourceRoot = getCloneRoot(result.element);
+      const sourceRoot = getCloneRoot(result.element, messageId, item.role);
+      const rootValidation = validateMessageCloneRoot(
+        sourceRoot, result.element, messageId, item.role
+      );
+      if (!rootValidation.valid) {
+        duplicates.set(messageId, {
+          index, messageId, role: item.role,
+          error: 'clone-root-validation-failed',
+          ...rootValidation
+        });
+        continue;
+      }
       const clone = sourceRoot.cloneNode(true);
       removeVirtualizationArtifacts(clone);
       const codeDiagnostics = expandNativeCodeContainers(sourceRoot, clone);
