@@ -1335,9 +1335,9 @@ document.addEventListener('click',e=>{if(!e.target.closest('.menu-wrap'))menu.cl
   }
 
   function getConversationTitle() {
-    const rawTitle = (document.title || '').replace(/\\s*\\|\\s*ChatGPT\\s*$/i, '').trim();
+    const rawTitle = (document.title || '').replace(/\s*\|\s*ChatGPT\s*$/i, '').trim();
     const fallback = document.querySelector('main h1')?.textContent?.trim() || '未命名会话';
-    return (rawTitle || fallback).replace(/[\\\\/:*?"<>|\\u0000-\\u001F]/g, '-').replace(/\\s+/g, ' ').replace(/[. ]+$/g, '').slice(0, 120) || '未命名会话';
+    return (rawTitle || fallback).replace(/[\\/:*?"<>|\u0000-\u001F]/g, '-').replace(/\s+/g, ' ').replace(/[. ]+$/g, '').slice(0, 120) || '未命名会话';
   }
 
   function downloadHTML(html, conversationId) {
