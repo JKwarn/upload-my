@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT 会话 HTML 导出器
 // @namespace    https://github.com/JKwarn/upload-my
-// @version      2.5.5
+// @version      2.5.6
 // @description  通过会话接口校验消息，并复用 ChatGPT 原生 DOM 与 CSS 导出独立 HTML
 // @match        https://chatgpt.com/c/*
 // @run-at       document-idle
@@ -11,7 +11,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '2.5.5';
+  const VERSION = '2.5.6';
   const PREFIX = '[ChatGPT 会话 HTML 导出器]';
   const IDS = {
     button: 'chatgpt-html-exporter-button',
@@ -1099,12 +1099,12 @@
       const timestamp = Number(message?.create_time);
       const date = Number.isFinite(timestamp) && timestamp > 0 ? new Date(timestamp * 1000).toLocaleString() : '';
       const roleLabel = item.role === 'user' ? '用户' : 'ChatGPT';
-      return `<button class="nav-item" type="button" data-target="${escapeHTML(item.messageId)}" data-role="${escapeHTML(item.role)}">
+      return `<div class="nav-item" role="button" tabindex="0" data-target="${escapeHTML(item.messageId)}" data-role="${escapeHTML(item.role)}">
         <input class="nav-check" type="checkbox" aria-label="选择${roleLabel}消息">
         <span class="nav-index">${item.index + 1}</span>
         <span class="nav-content"><span class="nav-meta"><strong>${roleLabel}</strong><time>${escapeHTML(date)}</time></span>
         <span class="nav-preview">${escapeHTML(preview || '（无文本内容）')}</span></span>
-      </button>`;
+      </div>`;
     }).join('\n');
 
     const html = `<!DOCTYPE html>
@@ -1125,7 +1125,7 @@ body{margin:0;padding:0;background:var(--main-surface-primary,#fff);color:var(--
 .sidebar-list{flex:1;min-height:0;overflow:auto;padding:8px 10px;overscroll-behavior:contain}
 .nav-item{width:100%;display:flex;align-items:flex-start;gap:9px;padding:10px 8px;border:0;border-radius:9px;background:transparent;color:inherit;text-align:left;cursor:pointer;font:inherit}
 .nav-item:hover,.nav-item.active{background:var(--background-surface-secondary,#f1f1f1)}.nav-item.active{outline:1px solid var(--border-light,rgba(0,0,0,.1))}
-.nav-check,.footer-check{width:17px;height:17px;flex:0 0 17px;margin:3px 0 0;accent-color:#2563eb;cursor:pointer}
+.nav-check,.footer-check{appearance:auto!important;-webkit-appearance:checkbox!important;display:inline-block!important;visibility:visible!important;opacity:1!important;width:17px!important;height:17px!important;min-width:17px!important;min-height:17px!important;flex:0 0 17px;margin:3px 0 0;padding:0;border:1px solid #9ca3af!important;border-radius:3px!important;background:#fff!important;accent-color:#2563eb;cursor:pointer}
 .nav-index{min-width:24px;padding:2px 5px;border-radius:12px;background:var(--background-surface-secondary,#eee);color:var(--text-secondary,#666);font-size:11px;font-weight:650;text-align:center}
 .nav-content{min-width:0;flex:1}.nav-meta{display:flex;align-items:center;justify-content:space-between;gap:8px;line-height:1.5}
 .nav-meta strong{font-size:13px;font-weight:650}.nav-meta time{color:var(--text-tertiary,#999);font-size:10px;white-space:nowrap}
@@ -1170,10 +1170,11 @@ const rows=[...list.querySelectorAll('.nav-item')],checks=rows.map(row=>row.quer
 const update=()=>{const n=checks.filter(x=>x.checked).length;count.textContent=n+'/'+checks.length;selectAll.checked=checks.length>0&&n===checks.length;selectAll.indeterminate=n>0&&n<checks.length};
 const choose=fn=>{rows.forEach((row,i)=>checks[i].checked=fn(row));update()};
 checks.forEach(check=>{check.addEventListener('click',e=>e.stopPropagation());check.addEventListener('change',update)});
-rows.forEach(row=>row.addEventListener('click',e=>{if(e.target.closest('.nav-check'))return;
-const target=[...document.querySelectorAll('.export-message')].find(node=>node.dataset.messageId===row.dataset.target);if(!target)return;
+const navigate=row=>{const target=[...document.querySelectorAll('.export-message')].find(node=>node.dataset.messageId===row.dataset.target);if(!target)return;
 list.querySelectorAll('.nav-item.active').forEach(node=>node.classList.remove('active'));row.classList.add('active');
-target.scrollIntoView({behavior:'smooth',block:'start'});target.classList.add('nav-highlight');setTimeout(()=>target.classList.remove('nav-highlight'),1800)}));
+target.scrollIntoView({behavior:'smooth',block:'start'});target.classList.add('nav-highlight');setTimeout(()=>target.classList.remove('nav-highlight'),1800)};
+rows.forEach(row=>{row.addEventListener('click',e=>{if(e.target.closest('.nav-check'))return;navigate(row)});
+row.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&!e.target.closest('.nav-check')){e.preventDefault();navigate(row)}})});
 collapse.addEventListener('click',()=>{layout.classList.add('sidebar-collapsed');expand.style.display='block'});
 expand.addEventListener('click',()=>{layout.classList.remove('sidebar-collapsed');expand.style.display='none'});
 selectAll.addEventListener('change',()=>choose(()=>selectAll.checked));
