@@ -114,7 +114,7 @@
           display:flex;align-items:center;gap:8px;min-width:148px;height:42px;
           padding:0 17px;border:1px solid rgba(255,255,255,.15);
           border-radius:11px;background:#10a37f;color:#fff;
-          font:600 14px/1.2 inherit;cursor:pointer;
+          font-family:inherit;font-size:14px;font-weight:600;line-height:1.2;cursor:pointer;
           box-shadow:0 4px 14px rgba(0,0,0,.18);
         }
         #${IDS.button}:hover{background:#0d8f70}
@@ -123,7 +123,7 @@
           position:fixed;right:24px;bottom:76px;z-index:2147483647;
           max-width:min(420px,calc(100vw - 32px));padding:11px 15px;
           border-radius:9px;background:#202123;color:#fff;
-          font:13px/1.5 inherit;box-shadow:0 4px 16px rgba(0,0,0,.2);
+          font-family:inherit;font-size:13px;line-height:1.5;box-shadow:0 4px 16px rgba(0,0,0,.2);
           opacity:0;pointer-events:none;transform:translateY(8px);
           transition:opacity .18s ease,transform .18s ease
         }
@@ -534,7 +534,10 @@
     for (const node of nodes) {
       if (!node.parentNode) continue;
       const name = node.localName;
-      const attrs = Object.fromEntries([...node.attributes].map(attr => [attr.name.toLowerCase(), attr.value]));
+      const attrs = Object.fromEntries([...node.attributes].map(attr => [
+        attr.name.toLowerCase(),
+        attr.value.replace(/^\{(.*)\}$/s, '$1')
+      ]));
       const tag = name === 'divider' ? 'hr' : name === 'list' ? 'ul' : name === 'list-item' ? 'li' :
         name === 'table-section' ? 'tbody' : name === 'table-row' ? 'tr' :
         name === 'table-cell' ? (attrs.header === 'true' ? 'th' : 'td') :
@@ -614,6 +617,203 @@
     }
   }
 
+
+  function parseStaticDIL(message) {
+    const model = message?.metadata?.model_dil_v2;
+    const source = model?.code;
+    const constants = model?.constants;
+    if (typeof source !== 'string' || !constants || typeof constants !== 'object') return null;
+    const marker = 'return __dil.jsx(';
+    const markerIndex = source.indexOf(marker);
+    if (markerIndex < 0) return null;
+    let cursor = markerIndex + 'return '.length;
+
+    function skipSpace() {
+      while (/\s/.test(source[cursor] || '')) cursor++;
+    }
+
+    function parseString() {
+      const quote = source[cursor];
+      const start = cursor++;
+      while (cursor < source.length) {
+        if (source[cursor] === '\\') {
+          cursor += 2;
+          continue;
+        }
+        if (source[cursor] === quote) {
+          cursor++;
+          return JSON.parse(source.slice(start, cursor));
+        }
+        cursor++;
+      }
+      throw new Error('DIL 字符串常量未闭合。');
+    }
+
+    function parseObject() {
+      const result = {};
+      cursor++;
+      skipSpace();
+      while (cursor < source.length && source[cursor] !== '}') {
+        const key = source[cursor] === '"' || source[cursor] === "'" ? parseString() : null;
+        if (key === null) throw new Error('DIL 属性对象包含不支持的键。');
+        skipSpace();
+        if (source[cursor++] !== ':') throw new Error('DIL 属性对象缺少冒号。');
+        skipSpace();
+        result[key] = parseValue();
+        skipSpace();
+        if (source[cursor] === ',') {
+          cursor++;
+          skipSpace();
+        } else if (source[cursor] !== '}') {
+          throw new Error('DIL 属性对象格式异常。');
+        }
+      }
+      if (source[cursor++] !== '}') throw new Error('DIL 属性对象未闭合。');
+      return result;
+    }
+
+    function parseArray() {
+      const result = [];
+      cursor++;
+      skipSpace();
+      while (cursor < source.length && source[cursor] !== ']') {
+        result.push(parseValue());
+        skipSpace();
+        if (source[cursor] === ',') {
+          cursor++;
+          skipSpace();
+        } else if (source[cursor] !== ']') {
+          throw new Error('DIL 数组格式异常。');
+        }
+      }
+      if (source[cursor++] !== ']') throw new Error('DIL 数组未闭合。');
+      return result;
+    }
+
+    function skipUnknownExpression() {
+      let round = 0, square = 0, curly = 0, quote = null;
+      while (cursor < source.length) {
+        const ch = source[cursor];
+        if (quote) {
+          if (ch === '\\') cursor += 2;
+          else {
+            if (ch === quote) quote = null;
+            cursor++;
+          }
+          continue;
+        }
+        if (ch === '"' || ch === "'") {
+          quote = ch;
+          cursor++;
+          continue;
+        }
+        if (ch === '(') round++;
+        else if (ch === ')') {
+          if (round === 0 && square === 0 && curly === 0) break;
+          round--;
+        } else if (ch === '[') square++;
+        else if (ch === ']') square--;
+        else if (ch === '{') curly++;
+        else if (ch === '}') {
+          if (round === 0 && square === 0 && curly === 0) break;
+          curly--;
+        } else if (ch === ',' && round === 0 && square === 0 && curly === 0) break;
+        cursor++;
+      }
+    }
+
+    function parseValue() {
+      skipSpace();
+      if (source.startsWith('__dil.jsx(', cursor)) {
+        cursor += '__dil.jsx('.length;
+        const args = [];
+        skipSpace();
+        while (cursor < source.length && source[cursor] !== ')') {
+          args.push(parseValue());
+          skipSpace();
+          if (source[cursor] === ',') {
+            cursor++;
+            skipSpace();
+          } else if (source[cursor] !== ')') {
+            throw new Error('DIL JSX 参数格式异常。');
+          }
+        }
+        if (source[cursor++] !== ')') throw new Error('DIL JSX 调用未闭合。');
+        return {
+          type: args[0],
+          props: args[1] && typeof args[1] === 'object' && !Array.isArray(args[1]) ? args[1] : {},
+          children: args.slice(2)
+        };
+      }
+      if (source.startsWith('__dil.Fragment', cursor)) {
+        cursor += '__dil.Fragment'.length;
+        return 'Fragment';
+      }
+      if (source.startsWith('__dilConstants[', cursor)) {
+        cursor += '__dilConstants['.length;
+        skipSpace();
+        const key = parseString();
+        skipSpace();
+        if (source[cursor++] !== ']') throw new Error('DIL 常量引用格式异常。');
+        return Object.prototype.hasOwnProperty.call(constants, key) ? constants[key] : '';
+      }
+      if (source[cursor] === '"' || source[cursor] === "'") return parseString();
+      if (source[cursor] === '{') return parseObject();
+      if (source[cursor] === '[') return parseArray();
+      for (const [literal, value] of [['null', null], ['true', true], ['false', false], ['undefined', null]]) {
+        if (source.startsWith(literal, cursor)) {
+          cursor += literal.length;
+          return value;
+        }
+      }
+      const number = source.slice(cursor).match(/^-?\d+(?:\.\d+)?/);
+      if (number) {
+        cursor += number[0].length;
+        return Number(number[0]);
+      }
+      skipUnknownExpression();
+      return null;
+    }
+
+    try {
+      const tree = parseValue();
+      return tree && typeof tree === 'object' ? tree : null;
+    } catch (error) {
+      diagnostics.rendering.modelDILErrors.push(error?.message || String(error));
+      return null;
+    }
+  }
+
+  function renderStaticDILNode(node) {
+    if (node == null || typeof node === 'boolean') return document.createDocumentFragment();
+    if (typeof node === 'string' || typeof node === 'number') return document.createTextNode(String(node));
+    if (Array.isArray(node)) {
+      const fragment = document.createDocumentFragment();
+      for (const child of node) fragment.appendChild(renderStaticDILNode(child));
+      return fragment;
+    }
+    if (node.type === 'Fragment') {
+      const fragment = document.createDocumentFragment();
+      for (const child of node.children || []) fragment.appendChild(renderStaticDILNode(child));
+      return fragment;
+    }
+    const name = String(node.type || 'text');
+    const element = document.createElement(COMPONENTS.has(name) ? name : 'span');
+    for (const [rawKey, value] of Object.entries(node.props || {})) {
+      if (value == null || rawKey === 'key' || rawKey === 'ref' || /^on[A-Z]/.test(rawKey) || rawKey === 'style') continue;
+      const key = rawKey === 'className' ? 'class' : rawKey.replace(/[A-Z]/g, char => '-' + char.toLowerCase());
+      if (typeof value === 'boolean') {
+        if (['disabled', 'checked', 'strong', 'italic', 'inline', 'header'].includes(key)) {
+          element.setAttribute(key, String(value));
+        }
+      } else if (typeof value === 'string' || typeof value === 'number') {
+        element.setAttribute(key, String(value));
+      }
+    }
+    for (const child of node.children || []) element.appendChild(renderStaticDILNode(child));
+    return element;
+  }
+
   function renderMessage(item, index) {
     const markdown = getMessageMarkdown(item.message);
     const article = document.createElement('article');
@@ -632,7 +832,13 @@
 
     const content = document.createElement('div');
     content.className = 'export-message-content';
-    content.innerHTML = renderMarkdown(markdown);
+    const modelTree = parseStaticDIL(item.message);
+    if (modelTree) {
+      content.appendChild(renderStaticDILNode(modelTree));
+      diagnostics.rendering.modelDILRenderedCount++;
+    } else {
+      content.innerHTML = renderMarkdown(markdown);
+    }
     const componentCount = convertDIL(content);
     diagnostics.rendering.dilComponentCount += componentCount;
 
@@ -797,6 +1003,8 @@
     resetDiagnostics(conversationId);
     diagnostics.rendering = {
       dilComponentCount: 0,
+      modelDILRenderedCount: 0,
+      modelDILErrors: [],
       unsupportedDILExpressionCount: 0,
       mermaidBlockCount: 0,
       mermaidRenderedCount: 0,
