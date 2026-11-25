@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT 会话 HTML 导出器
 // @namespace    https://github.com/JKwarn/upload-my
-// @version      2.5.4
+// @version      2.5.5
 // @description  通过会话接口校验消息，并复用 ChatGPT 原生 DOM 与 CSS 导出独立 HTML
 // @match        https://chatgpt.com/c/*
 // @run-at       document-idle
@@ -11,7 +11,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '2.5.4';
+  const VERSION = '2.5.5';
   const PREFIX = '[ChatGPT 会话 HTML 导出器]';
   const IDS = {
     button: 'chatgpt-html-exporter-button',
@@ -1085,58 +1085,112 @@
   function buildDocument(exported, selected, conversationId) {
     const styles = collectPageStyles();
     let copiedCustomPropertyCount = 0;
-    for (const item of exported) {
-      copiedCustomPropertyCount += preserveElementVariables(item.source, item.clone.firstElementChild);
-    }
+    for (const item of exported) copiedCustomPropertyCount += preserveElementVariables(item.source, item.clone.firstElementChild);
 
     const title = escapeHTML(document.title || 'ChatGPT 会话导出');
-    const links = styles.externalLinks.map(href =>
-      `<link rel="stylesheet" href="${escapeHTML(href)}">`
-    ).join('\n');
+    const links = styles.externalLinks.map(href => `<link rel="stylesheet" href="${escapeHTML(href)}">`).join('\n');
     const rootVars = styles.rootProperties.join(';');
     const bodyVars = styles.bodyProperties.join(';');
     const messages = exported.map(item => item.clone.outerHTML).join('\n');
+    const selectedById = new Map(selected.map(item => [item.message.id, item]));
+    const navigationItems = exported.map(item => {
+      const message = selectedById.get(item.messageId)?.message;
+      const preview = (item.clone.innerText || item.clone.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 100);
+      const timestamp = Number(message?.create_time);
+      const date = Number.isFinite(timestamp) && timestamp > 0 ? new Date(timestamp * 1000).toLocaleString() : '';
+      const roleLabel = item.role === 'user' ? '用户' : 'ChatGPT';
+      return `<button class="nav-item" type="button" data-target="${escapeHTML(item.messageId)}" data-role="${escapeHTML(item.role)}">
+        <input class="nav-check" type="checkbox" aria-label="选择${roleLabel}消息">
+        <span class="nav-index">${item.index + 1}</span>
+        <span class="nav-content"><span class="nav-meta"><strong>${roleLabel}</strong><time>${escapeHTML(date)}</time></span>
+        <span class="nav-preview">${escapeHTML(preview || '（无文本内容）')}</span></span>
+      </button>`;
+    }).join('\n');
 
     const html = `<!DOCTYPE html>
 <html lang="zh-CN" class="${escapeHTML(styles.rootClass)}" data-theme="${escapeHTML(styles.rootTheme)}">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>${title}</title>
-${links}
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${title}</title>${links}
 <style>
-:root{${rootVars}}
-body{${bodyVars}}
-${styles.css}
-html{min-height:100%;background:var(--main-surface-primary,#fff)}
-body{margin:0;padding:12mm;background:var(--main-surface-primary,#fff);color:var(--text-primary,#0d0d0d)}
-.export-page{width:100%;max-width:186mm;margin:0 auto;box-sizing:border-box}
-.export-message{width:100%;min-width:0;margin:0 auto 28px;box-sizing:border-box;overflow:visible}
-.export-message>*{width:100%;min-width:0;max-width:100%}
+:root{${rootVars}}body{${bodyVars}}${styles.css}
+html{min-height:100%;background:var(--main-surface-primary,#fff);scroll-behavior:smooth}
+body{margin:0;padding:0;background:var(--main-surface-primary,#fff);color:var(--text-primary,#0d0d0d)}
+.export-layout{display:flex;min-height:100vh;width:100%;align-items:stretch}
+.export-sidebar{position:sticky;top:0;flex:0 0 340px;width:340px;height:100vh;box-sizing:border-box;display:flex;flex-direction:column;border-right:1px solid var(--border-light,rgba(0,0,0,.12));background:var(--main-surface-primary,#fff);z-index:20}
+.sidebar-header{min-height:76px;box-sizing:border-box;padding:18px 16px 12px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;border-bottom:1px solid var(--border-light,rgba(0,0,0,.1))}
+.sidebar-title{min-width:0;font-size:15px;font-weight:650;line-height:1.45;overflow-wrap:anywhere}.sidebar-subtitle{margin-top:5px;color:var(--text-secondary,#777);font-size:12px}
+.sidebar-toggle,.sidebar-menu-button{width:34px;height:34px;flex:0 0 34px;border:0;border-radius:8px;background:transparent;color:var(--text-secondary,#666);font-size:20px;cursor:pointer}
+.sidebar-toggle:hover,.sidebar-menu-button:hover{background:var(--background-surface-secondary,#f1f1f1)}
+.sidebar-list{flex:1;min-height:0;overflow:auto;padding:8px 10px;overscroll-behavior:contain}
+.nav-item{width:100%;display:flex;align-items:flex-start;gap:9px;padding:10px 8px;border:0;border-radius:9px;background:transparent;color:inherit;text-align:left;cursor:pointer;font:inherit}
+.nav-item:hover,.nav-item.active{background:var(--background-surface-secondary,#f1f1f1)}.nav-item.active{outline:1px solid var(--border-light,rgba(0,0,0,.1))}
+.nav-check,.footer-check{width:17px;height:17px;flex:0 0 17px;margin:3px 0 0;accent-color:#2563eb;cursor:pointer}
+.nav-index{min-width:24px;padding:2px 5px;border-radius:12px;background:var(--background-surface-secondary,#eee);color:var(--text-secondary,#666);font-size:11px;font-weight:650;text-align:center}
+.nav-content{min-width:0;flex:1}.nav-meta{display:flex;align-items:center;justify-content:space-between;gap:8px;line-height:1.5}
+.nav-meta strong{font-size:13px;font-weight:650}.nav-meta time{color:var(--text-tertiary,#999);font-size:10px;white-space:nowrap}
+.nav-preview{display:-webkit-box;margin-top:4px;color:var(--text-secondary,#555);font-size:12px;line-height:1.55;overflow:hidden;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow-wrap:anywhere}
+.sidebar-footer{height:56px;flex:0 0 56px;display:flex;align-items:center;gap:12px;padding:0 14px;border-top:1px solid var(--border-light,rgba(0,0,0,.12));background:var(--main-surface-primary,#fff)}
+.footer-check{margin:0}.selected-count{padding:4px 10px;border-radius:16px;background:var(--background-surface-secondary,#eee);color:var(--text-secondary,#666);font-size:12px;font-weight:650}
+.sidebar-footer-spacer{flex:1}.menu-wrap{position:relative}.sidebar-menu-button{font-size:22px;letter-spacing:1px}
+.quick-menu{position:absolute;right:0;bottom:44px;width:190px;padding:7px;border:1px solid var(--border-light,rgba(0,0,0,.16));border-radius:10px;background:var(--main-surface-primary,#fff);box-shadow:0 8px 28px rgba(0,0,0,.18);display:none;z-index:30}
+.quick-menu.open{display:block}.quick-menu button{width:100%;padding:10px 11px;border:0;border-radius:7px;background:transparent;color:inherit;text-align:left;font:inherit;font-size:13px;cursor:pointer}
+.quick-menu button:hover{background:var(--background-surface-secondary,#f1f1f1)}
+.export-main{flex:1;min-width:0;box-sizing:border-box;padding:12mm}.export-page{width:100%;max-width:186mm;margin:0 auto;box-sizing:border-box}
+.export-message{width:100%;min-width:0;margin:0 auto 28px;box-sizing:border-box;overflow:visible;scroll-margin-top:20px;border-radius:10px;transition:background-color .25s,outline-color .25s}
+.export-message>*{width:100%;min-width:0;max-width:100%}.export-message.nav-highlight{outline:2px solid #3b82f6;outline-offset:8px;background:rgba(59,130,246,.035)}
 .export-message [data-virtualized-turn]{height:auto!important;min-height:0!important;max-height:none!important;margin-top:0!important;contain:none!important;overflow:visible!important;content-visibility:visible!important}
 .export-message pre,.export-message code,.export-message table{max-width:100%}
 .export-message [data-code-block="true"],.export-message [class*="CodeSurface"],.export-message [class*="InlineCodePane"],.export-message .chatgpt-code-scrollport{height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;contain:none!important}
 .export-message [data-code-block="true"] pre,.export-message [class*="CodeSurface"] pre{height:auto!important;max-height:none!important;overflow:visible!important}
 .export-message img,.export-message video,.export-message svg{max-width:100%;height:auto}
-@media print{body{padding:0}.export-page{max-width:none}.export-message{break-inside:auto}pre,table,blockquote{break-inside:avoid}}
+.export-layout.sidebar-collapsed .export-sidebar{display:none}.export-layout.sidebar-collapsed .export-main{padding-left:12mm}
+@media(max-width:760px){.export-sidebar{flex-basis:300px;width:300px}.export-main{padding:20px 14px}.export-layout.sidebar-collapsed .export-main{padding:20px 14px}}
+@media print{.export-sidebar{display:none!important}.export-main{padding:0}.export-page{max-width:none}.export-message{break-inside:auto}pre,table,blockquote{break-inside:avoid}}
 @page{size:A4;margin:12mm}
-</style>
-</head>
+</style></head>
 <body>
-<main class="export-page" data-conversation-id="${escapeHTML(conversationId)}">
-${messages}
-</main>
-</body>
-</html>`;
+<div class="export-layout" id="export-layout">
+<aside class="export-sidebar" id="export-sidebar" aria-label="会话消息导航">
+<header class="sidebar-header"><div style="min-width:0"><div class="sidebar-title">${title}</div><div class="sidebar-subtitle">chatgpt.com · ${exported.length} 条消息</div></div>
+<button class="sidebar-toggle" id="sidebar-toggle" type="button" title="收缩左侧面板" aria-label="收缩左侧面板">◧</button></header>
+<nav class="sidebar-list" id="sidebar-list">${navigationItems}</nav>
+<footer class="sidebar-footer"><input class="footer-check" id="select-all" type="checkbox" aria-label="全选消息">
+<span class="selected-count" id="selected-count">0/${exported.length}</span><span class="sidebar-footer-spacer"></span>
+<div class="menu-wrap"><button class="sidebar-menu-button" id="quick-menu-button" type="button" aria-label="快速选择" title="快速选择">···</button>
+<div class="quick-menu" id="quick-menu"><button type="button" data-action="clear">清空</button><button type="button" data-action="questions">只选问题</button><button type="button" data-action="answers">只选回答</button></div></div></footer></aside>
+<button class="sidebar-toggle" id="sidebar-expand" type="button" title="展开左侧面板" aria-label="展开左侧面板" style="display:none;position:fixed;top:16px;left:12px;z-index:40;background:var(--main-surface-primary,#fff);border:1px solid var(--border-light,rgba(0,0,0,.16));box-shadow:0 2px 8px rgba(0,0,0,.12)">◧</button>
+<main class="export-main"><div class="export-page" data-conversation-id="${escapeHTML(conversationId)}">${messages}</div></main></div>
+<script>
+(() => {
+const layout=document.getElementById('export-layout'),collapse=document.getElementById('sidebar-toggle'),expand=document.getElementById('sidebar-expand');
+const list=document.getElementById('sidebar-list'),menuButton=document.getElementById('quick-menu-button'),menu=document.getElementById('quick-menu');
+const selectAll=document.getElementById('select-all'),count=document.getElementById('selected-count');
+const rows=[...list.querySelectorAll('.nav-item')],checks=rows.map(row=>row.querySelector('.nav-check'));
+const update=()=>{const n=checks.filter(x=>x.checked).length;count.textContent=n+'/'+checks.length;selectAll.checked=checks.length>0&&n===checks.length;selectAll.indeterminate=n>0&&n<checks.length};
+const choose=fn=>{rows.forEach((row,i)=>checks[i].checked=fn(row));update()};
+checks.forEach(check=>{check.addEventListener('click',e=>e.stopPropagation());check.addEventListener('change',update)});
+rows.forEach(row=>row.addEventListener('click',e=>{if(e.target.closest('.nav-check'))return;
+const target=[...document.querySelectorAll('.export-message')].find(node=>node.dataset.messageId===row.dataset.target);if(!target)return;
+list.querySelectorAll('.nav-item.active').forEach(node=>node.classList.remove('active'));row.classList.add('active');
+target.scrollIntoView({behavior:'smooth',block:'start'});target.classList.add('nav-highlight');setTimeout(()=>target.classList.remove('nav-highlight'),1800)}));
+collapse.addEventListener('click',()=>{layout.classList.add('sidebar-collapsed');expand.style.display='block'});
+expand.addEventListener('click',()=>{layout.classList.remove('sidebar-collapsed');expand.style.display='none'});
+selectAll.addEventListener('change',()=>choose(()=>selectAll.checked));
+menuButton.addEventListener('click',e=>{e.stopPropagation();menu.classList.toggle('open')});
+menu.addEventListener('click',e=>{const action=e.target.closest('button')?.dataset.action;if(!action)return;
+if(action==='clear')choose(()=>false);if(action==='questions')choose(row=>row.dataset.role==='user');if(action==='answers')choose(row=>row.dataset.role==='assistant');menu.classList.remove('open')});
+document.addEventListener('click',e=>{if(!e.target.closest('.menu-wrap'))menu.classList.remove('open')});update();
+})();
+</script>
+</body></html>`;
 
     diagnostics.css.copiedElementCustomPropertyCount = copiedCustomPropertyCount;
     diagnostics.dom.exportedMessageCount = exported.length;
-    diagnostics.dom.exportedTextLength = exported.reduce(
-      (total, item) => total + (item.clone.innerText || item.clone.textContent || '').length, 0
-    );
+    diagnostics.dom.exportedTextLength = exported.reduce((total, item) => total + (item.clone.innerText || item.clone.textContent || '').length, 0);
+    diagnostics.dom.navigationItemCount = navigationItems ? exported.length : 0;
     return html;
   }
-
   function validateDocument(html, expectedCount) {
     const parsed = new DOMParser().parseFromString(html, 'text/html');
     const actualCount = parsed.querySelectorAll('.export-message').length;
