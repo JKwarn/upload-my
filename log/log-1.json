@@ -1,7 +1,7 @@
-//[ChatGPT 会话 HTML 导出器] SUCCESS 
+[ChatGPT 会话 HTML 导出器] SUCCESS 
 {
-  "version": "2.5.1",
-  "timestamp": "2026-11-25T11:35:22.382Z",
+  "version": "2.5.2",
+  "timestamp": "2026-11-25T11:50:16.881Z",
   "conversationId": "6afedfeb-7034-83ec-81f2-51b83a2598b2",
   "errors": [],
   "warnings": [],
@@ -51,7 +51,7 @@
   },
   "dom": {
     "discovery": {
-      "capturedAt": "2026-11-25T11:35:24.528Z",
+      "capturedAt": "2026-11-25T11:50:19.396Z",
       "document": {
         "url": "https://chatgpt.com/c/6afedfeb-7034-83ec-81f2-51b83a2598b2",
         "title": "设计AI软件团队工作流骨架",
@@ -1687,7 +1687,7 @@
       ]
     },
     "traversal": {
-      "startedAt": "2026-11-25T11:35:24.528Z",
+      "startedAt": "2026-11-25T11:50:19.397Z",
       "strategy": "reset-to-top-then-forward-scan",
       "container": {
         "tag": "div",
@@ -1695,1931 +1695,2667 @@
         "className": "scrollContainer-fG6qEo thread-scroll-container peer/transcript overflow-x-hidden overflow-y-auto contain-pane-overscroll overscroll-y-contain browser:overscroll-y-auto [scroll-padding-bottom:var(--thread-scroll-padding-bottom,0px)] outline-none group-has-[[data-composer-expanded]]/thread-scroll-layo",
         "testId": null,
         "overflowY": "auto",
-        "scrollHeight": 74604,
+        "scrollHeight": 78514,
         "clientHeight": 748,
         "scrollTop": 0,
-        "scrollRange": 73856,
+        "scrollRange": 77766,
         "virtualizedTurnCount": 1,
         "candidateCount": 1,
         "ancestorDepth": 6
       },
       "initialScrollTop": 0,
       "finalScrollTop": 0,
-      "maxScrollTop": 73856,
+      "maxScrollTop": 77766,
       "stepSize": 508,
       "stepCount": 154,
       "mutationWaitTimeoutMs": 2500,
+      "fallbackWaitMs": 250,
       "configuredMinimumDelayMs": 200,
       "capturedPerStep": [
         {
           "step": 1,
           "requestedScrollTop": 508,
           "actualScrollTop": 508,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 464,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 2,
           "requestedScrollTop": 1016,
           "actualScrollTop": 1016,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 463,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 3,
           "requestedScrollTop": 1524,
           "actualScrollTop": 1524,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 462,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 4,
           "requestedScrollTop": 2032,
           "actualScrollTop": 2032,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 462,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 5,
           "requestedScrollTop": 2540,
           "actualScrollTop": 2540,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 462,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 6,
           "requestedScrollTop": 3048,
           "actualScrollTop": 3048,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 461,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 7,
           "requestedScrollTop": 3556,
           "actualScrollTop": 3556,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 464,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 8,
           "requestedScrollTop": 4064,
           "actualScrollTop": 4064,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 463,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 9,
           "requestedScrollTop": 4572,
           "actualScrollTop": 4572,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 463,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 10,
           "requestedScrollTop": 5080,
           "actualScrollTop": 5080,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 462,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 11,
           "requestedScrollTop": 5588,
           "actualScrollTop": 5588,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 463,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 12,
           "requestedScrollTop": 6096,
           "actualScrollTop": 6096,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 464,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 13,
           "requestedScrollTop": 6604,
           "actualScrollTop": 6604,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 463,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 14,
           "requestedScrollTop": 7112,
           "actualScrollTop": 7112,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 463,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 15,
           "requestedScrollTop": 7620,
           "actualScrollTop": 7620,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 461,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 16,
           "requestedScrollTop": 8128,
           "actualScrollTop": 8128,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 462,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 17,
           "requestedScrollTop": 8636,
           "actualScrollTop": 8636,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 462,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 18,
           "requestedScrollTop": 9144,
           "actualScrollTop": 9144,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 464,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 19,
           "requestedScrollTop": 9652,
           "actualScrollTop": 9652,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 462,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 20,
           "requestedScrollTop": 10160,
           "actualScrollTop": 10160,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 463,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 21,
           "requestedScrollTop": 10668,
           "actualScrollTop": 10668,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 461,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 22,
           "requestedScrollTop": 11176,
           "actualScrollTop": 11176,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 463,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 23,
           "requestedScrollTop": 11684,
           "actualScrollTop": 11684,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 463,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 24,
           "requestedScrollTop": 12192,
           "actualScrollTop": 12192,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 463,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 25,
           "requestedScrollTop": 12700,
           "actualScrollTop": 12700,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 463,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 26,
           "requestedScrollTop": 13208,
           "actualScrollTop": 13208,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 462,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 27,
           "requestedScrollTop": 13716,
           "actualScrollTop": 13716,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 462,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 28,
           "requestedScrollTop": 14224,
           "actualScrollTop": 14224,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 462,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 29,
           "requestedScrollTop": 14732,
           "actualScrollTop": 14732,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 463,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 30,
           "requestedScrollTop": 15240,
           "actualScrollTop": 15240,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 465,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 31,
           "requestedScrollTop": 15748,
           "actualScrollTop": 15748,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 462,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 32,
           "requestedScrollTop": 16256,
           "actualScrollTop": 16256,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 462,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 33,
           "requestedScrollTop": 16764,
           "actualScrollTop": 16764,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 464,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 34,
           "requestedScrollTop": 17272,
           "actualScrollTop": 17272,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 463,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 35,
           "requestedScrollTop": 17780,
           "actualScrollTop": 17780,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 464,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 36,
           "requestedScrollTop": 18288,
           "actualScrollTop": 18288,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 464,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 37,
           "requestedScrollTop": 18796,
           "actualScrollTop": 18796,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 463,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 38,
           "requestedScrollTop": 19304,
           "actualScrollTop": 19304,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 463,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 39,
           "requestedScrollTop": 19812,
           "actualScrollTop": 19812,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 464,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 40,
           "requestedScrollTop": 20320,
           "actualScrollTop": 20320,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 462,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 41,
           "requestedScrollTop": 20828,
           "actualScrollTop": 20828,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 463,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 42,
           "requestedScrollTop": 21336,
           "actualScrollTop": 21336,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 463,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 43,
           "requestedScrollTop": 21844,
           "actualScrollTop": 21844,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 461,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 44,
           "requestedScrollTop": 22352,
           "actualScrollTop": 22352,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 463,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 45,
           "requestedScrollTop": 22860,
           "actualScrollTop": 22860,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 463,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 46,
           "requestedScrollTop": 23368,
           "actualScrollTop": 23368,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 462,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 47,
           "requestedScrollTop": 23876,
           "actualScrollTop": 23876,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 462,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 48,
           "requestedScrollTop": 24384,
           "actualScrollTop": 24384,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 462,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 49,
           "requestedScrollTop": 24892,
           "actualScrollTop": 24892,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 463,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 50,
           "requestedScrollTop": 25400,
           "actualScrollTop": 25400,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 463,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 51,
           "requestedScrollTop": 25908,
           "actualScrollTop": 25908,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 462,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 52,
           "requestedScrollTop": 26416,
           "actualScrollTop": 26416,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 463,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 53,
           "requestedScrollTop": 26924,
           "actualScrollTop": 26924,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 463,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 54,
           "requestedScrollTop": 27432,
           "actualScrollTop": 27432,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 463,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 55,
           "requestedScrollTop": 27940,
           "actualScrollTop": 27940,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 464,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 56,
           "requestedScrollTop": 28448,
           "actualScrollTop": 28448,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 462,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 57,
           "requestedScrollTop": 28956,
           "actualScrollTop": 28956,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 462,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 58,
           "requestedScrollTop": 29464,
           "actualScrollTop": 29464,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 462,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 59,
           "requestedScrollTop": 29972,
           "actualScrollTop": 29972,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 463,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 60,
           "requestedScrollTop": 30480,
           "actualScrollTop": 30480,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 463,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 61,
           "requestedScrollTop": 30988,
           "actualScrollTop": 30988,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 461,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 62,
           "requestedScrollTop": 31496,
           "actualScrollTop": 31496,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 463,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 63,
           "requestedScrollTop": 32004,
           "actualScrollTop": 32004,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 462,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 64,
           "requestedScrollTop": 32512,
           "actualScrollTop": 32512,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 465,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 65,
           "requestedScrollTop": 33020,
           "actualScrollTop": 33020,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 462,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 66,
           "requestedScrollTop": 33528,
           "actualScrollTop": 33528,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 462,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 67,
           "requestedScrollTop": 34036,
           "actualScrollTop": 34036,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 462,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 68,
           "requestedScrollTop": 34544,
           "actualScrollTop": 34544,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 2,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 463,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 69,
           "requestedScrollTop": 35052,
           "actualScrollTop": 35052,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 2,
           "totalCapturedMessageCount": 4,
           "waitResult": {
             "changed": true,
-            "waitedAtLeastMs": 200
+            "waitedMs": 562,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": true,
+            "stableDetected": true,
+            "finishReason": "dom-stable-and-minimum-delay-met",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 70,
           "requestedScrollTop": 35560,
           "actualScrollTop": 35560,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 4,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 465,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 71,
           "requestedScrollTop": 36068,
           "actualScrollTop": 36068,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 4,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 466,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 72,
           "requestedScrollTop": 36576,
           "actualScrollTop": 36576,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 4,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 465,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 73,
           "requestedScrollTop": 37084,
           "actualScrollTop": 37084,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 4,
           "waitResult": {
             "changed": true,
-            "waitedAtLeastMs": 200
+            "waitedMs": 459,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": true,
+            "stableDetected": true,
+            "finishReason": "dom-stable-and-minimum-delay-met",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 74,
           "requestedScrollTop": 37592,
           "actualScrollTop": 37592,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 4,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 456,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 75,
           "requestedScrollTop": 38100,
           "actualScrollTop": 38100,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 4,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 457,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 76,
           "requestedScrollTop": 38608,
           "actualScrollTop": 38608,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 4,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 455,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 77,
           "requestedScrollTop": 39116,
           "actualScrollTop": 39116,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 4,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 456,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 78,
           "requestedScrollTop": 39624,
           "actualScrollTop": 39624,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 4,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 454,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 79,
           "requestedScrollTop": 40132,
           "actualScrollTop": 40132,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 4,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 456,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 80,
           "requestedScrollTop": 40640,
           "actualScrollTop": 40640,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 4,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 455,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 81,
           "requestedScrollTop": 41148,
           "actualScrollTop": 41148,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 4,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 457,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 82,
           "requestedScrollTop": 41656,
           "actualScrollTop": 41656,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 4,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 456,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 83,
           "requestedScrollTop": 42164,
           "actualScrollTop": 42164,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 4,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 456,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 84,
           "requestedScrollTop": 42672,
           "actualScrollTop": 42672,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 4,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 456,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 85,
           "requestedScrollTop": 43180,
           "actualScrollTop": 43180,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 4,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 456,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 86,
           "requestedScrollTop": 43688,
           "actualScrollTop": 43688,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 4,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 457,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 87,
           "requestedScrollTop": 44196,
           "actualScrollTop": 44196,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 4,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 455,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 88,
           "requestedScrollTop": 44704,
           "actualScrollTop": 44704,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 4,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 455,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 89,
           "requestedScrollTop": 45212,
           "actualScrollTop": 45212,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 4,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 455,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 90,
           "requestedScrollTop": 45720,
           "actualScrollTop": 45720,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 4,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 455,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 91,
           "requestedScrollTop": 46228,
           "actualScrollTop": 46228,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 2,
           "totalCapturedMessageCount": 6,
           "waitResult": {
             "changed": true,
-            "waitedAtLeastMs": 200
+            "waitedMs": 877,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": true,
+            "stableDetected": true,
+            "finishReason": "dom-stable-and-minimum-delay-met",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 92,
           "requestedScrollTop": 46736,
           "actualScrollTop": 46736,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 6,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 461,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 93,
           "requestedScrollTop": 47244,
           "actualScrollTop": 47244,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 6,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 459,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 94,
           "requestedScrollTop": 47752,
           "actualScrollTop": 47752,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 6,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 461,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 95,
           "requestedScrollTop": 48260,
           "actualScrollTop": 48260,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 6,
           "waitResult": {
             "changed": true,
-            "waitedAtLeastMs": 200
+            "waitedMs": 459,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": true,
+            "stableDetected": true,
+            "finishReason": "dom-stable-and-minimum-delay-met",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 96,
           "requestedScrollTop": 48768,
           "actualScrollTop": 48768,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 6,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 456,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 97,
           "requestedScrollTop": 49276,
           "actualScrollTop": 49276,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 6,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 457,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 98,
           "requestedScrollTop": 49784,
           "actualScrollTop": 49784,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 6,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 456,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 99,
           "requestedScrollTop": 50292,
           "actualScrollTop": 50292,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 6,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 458,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 100,
           "requestedScrollTop": 50800,
           "actualScrollTop": 50800,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 6,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 455,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 101,
           "requestedScrollTop": 51308,
           "actualScrollTop": 51308,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 6,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 459,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 102,
           "requestedScrollTop": 51816,
           "actualScrollTop": 51816,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 6,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 456,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 103,
           "requestedScrollTop": 52324,
           "actualScrollTop": 52324,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 6,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 456,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 104,
           "requestedScrollTop": 52832,
           "actualScrollTop": 52832,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 6,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 457,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 105,
           "requestedScrollTop": 53340,
           "actualScrollTop": 53340,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 6,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 457,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 106,
           "requestedScrollTop": 53848,
           "actualScrollTop": 53848,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 6,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 456,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 107,
           "requestedScrollTop": 54356,
           "actualScrollTop": 54356,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 6,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 458,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 108,
           "requestedScrollTop": 54864,
           "actualScrollTop": 54864,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 6,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 455,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 109,
           "requestedScrollTop": 55372,
           "actualScrollTop": 55372,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 6,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 457,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 110,
           "requestedScrollTop": 55880,
           "actualScrollTop": 55880,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 6,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 457,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 111,
           "requestedScrollTop": 56388,
           "actualScrollTop": 56388,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 6,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 456,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 112,
           "requestedScrollTop": 56896,
           "actualScrollTop": 56896,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 6,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 457,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 113,
           "requestedScrollTop": 57404,
           "actualScrollTop": 57404,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 6,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 456,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 114,
           "requestedScrollTop": 57912,
           "actualScrollTop": 57912,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 6,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 455,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 115,
           "requestedScrollTop": 58420,
           "actualScrollTop": 58420,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 2,
           "totalCapturedMessageCount": 8,
           "waitResult": {
             "changed": true,
-            "waitedAtLeastMs": 200
+            "waitedMs": 467,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": true,
+            "stableDetected": true,
+            "finishReason": "dom-stable-and-minimum-delay-met",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 116,
           "requestedScrollTop": 58928,
           "actualScrollTop": 58928,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 8,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 458,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 117,
           "requestedScrollTop": 59436,
           "actualScrollTop": 59436,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 8,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 458,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 118,
           "requestedScrollTop": 59944,
           "actualScrollTop": 59944,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 8,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 460,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 119,
           "requestedScrollTop": 60452,
           "actualScrollTop": 60452,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 8,
           "waitResult": {
             "changed": true,
-            "waitedAtLeastMs": 200
+            "waitedMs": 456,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": true,
+            "stableDetected": true,
+            "finishReason": "dom-stable-and-minimum-delay-met",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 120,
           "requestedScrollTop": 60960,
           "actualScrollTop": 60960,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 8,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 453,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 121,
           "requestedScrollTop": 61468,
           "actualScrollTop": 61468,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 8,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 454,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 122,
           "requestedScrollTop": 61976,
           "actualScrollTop": 61976,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 8,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 454,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 123,
           "requestedScrollTop": 62484,
           "actualScrollTop": 62484,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 2,
           "totalCapturedMessageCount": 10,
           "waitResult": {
             "changed": true,
-            "waitedAtLeastMs": 200
+            "waitedMs": 455,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": true,
+            "stableDetected": true,
+            "finishReason": "dom-stable-and-minimum-delay-met",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 124,
           "requestedScrollTop": 62992,
           "actualScrollTop": 62992,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 10,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 455,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 125,
           "requestedScrollTop": 63500,
           "actualScrollTop": 63500,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 10,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 455,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 126,
           "requestedScrollTop": 64008,
           "actualScrollTop": 64008,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 10,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 455,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 127,
           "requestedScrollTop": 64516,
           "actualScrollTop": 64516,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 10,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 455,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 128,
           "requestedScrollTop": 65024,
           "actualScrollTop": 65024,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 10,
           "waitResult": {
             "changed": true,
-            "waitedAtLeastMs": 200
+            "waitedMs": 454,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": true,
+            "stableDetected": true,
+            "finishReason": "dom-stable-and-minimum-delay-met",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 129,
           "requestedScrollTop": 65532,
           "actualScrollTop": 65532,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 2,
           "totalCapturedMessageCount": 12,
           "waitResult": {
             "changed": true,
-            "waitedAtLeastMs": 200
+            "waitedMs": 454,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": true,
+            "stableDetected": true,
+            "finishReason": "dom-stable-and-minimum-delay-met",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 130,
           "requestedScrollTop": 66040,
           "actualScrollTop": 66040,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 12,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 454,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 131,
           "requestedScrollTop": 66548,
           "actualScrollTop": 66548,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 12,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 454,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 132,
           "requestedScrollTop": 67056,
           "actualScrollTop": 67056,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 12,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 453,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 133,
           "requestedScrollTop": 67564,
           "actualScrollTop": 67564,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 12,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 454,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 134,
           "requestedScrollTop": 68072,
           "actualScrollTop": 68072,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 2,
           "totalCapturedMessageCount": 14,
           "waitResult": {
             "changed": true,
-            "waitedAtLeastMs": 200
+            "waitedMs": 454,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": true,
+            "stableDetected": true,
+            "finishReason": "dom-stable-and-minimum-delay-met",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 135,
           "requestedScrollTop": 68580,
           "actualScrollTop": 68580,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 14,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 454,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 136,
           "requestedScrollTop": 69088,
           "actualScrollTop": 69088,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 14,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 454,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 137,
           "requestedScrollTop": 69596,
           "actualScrollTop": 69596,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 14,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 454,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 138,
           "requestedScrollTop": 70104,
           "actualScrollTop": 70104,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 14,
           "waitResult": {
             "changed": true,
-            "waitedAtLeastMs": 200
+            "waitedMs": 452,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": true,
+            "stableDetected": true,
+            "finishReason": "dom-stable-and-minimum-delay-met",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 139,
           "requestedScrollTop": 70612,
           "actualScrollTop": 70612,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 2,
           "totalCapturedMessageCount": 16,
           "waitResult": {
             "changed": true,
-            "waitedAtLeastMs": 200
+            "waitedMs": 454,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": true,
+            "stableDetected": true,
+            "finishReason": "dom-stable-and-minimum-delay-met",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 140,
           "requestedScrollTop": 71120,
           "actualScrollTop": 71120,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 16,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 454,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 141,
           "requestedScrollTop": 71628,
           "actualScrollTop": 71628,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 16,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 454,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 142,
           "requestedScrollTop": 72136,
           "actualScrollTop": 72136,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 16,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 453,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 143,
           "requestedScrollTop": 72644,
           "actualScrollTop": 72644,
-          "maxScrollTop": 73856,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 16,
           "waitResult": {
             "changed": true,
-            "waitedAtLeastMs": 200
+            "waitedMs": 454,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": true,
+            "stableDetected": true,
+            "finishReason": "dom-stable-and-minimum-delay-met",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 144,
           "requestedScrollTop": 73152,
           "actualScrollTop": 73152,
-          "maxScrollTop": 76049,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 2,
           "totalCapturedMessageCount": 18,
           "waitResult": {
             "changed": true,
-            "waitedAtLeastMs": 200
+            "waitedMs": 454,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": true,
+            "stableDetected": true,
+            "finishReason": "dom-stable-and-minimum-delay-met",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 145,
           "requestedScrollTop": 73660,
           "actualScrollTop": 73660,
-          "maxScrollTop": 76049,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 18,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 453,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 146,
           "requestedScrollTop": 74168,
           "actualScrollTop": 74168,
-          "maxScrollTop": 76049,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 18,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 454,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
           "step": 147,
           "requestedScrollTop": 74676,
           "actualScrollTop": 74676,
-          "maxScrollTop": 76049,
+          "maxScrollTop": 77766,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
           "totalCapturedMessageCount": 18,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 453,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
@@ -3632,7 +4368,12 @@
           "totalCapturedMessageCount": 20,
           "waitResult": {
             "changed": true,
-            "waitedAtLeastMs": 200
+            "waitedMs": 454,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": true,
+            "stableDetected": true,
+            "finishReason": "dom-stable-and-minimum-delay-met",
+            "fallbackWaitMs": 250
           }
         },
         {
@@ -3645,7 +4386,12 @@
           "totalCapturedMessageCount": 20,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 454,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
@@ -3658,7 +4404,12 @@
           "totalCapturedMessageCount": 20,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 454,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
@@ -3671,7 +4422,12 @@
           "totalCapturedMessageCount": 20,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 452,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
@@ -3684,7 +4440,12 @@
           "totalCapturedMessageCount": 20,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 453,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
@@ -3697,7 +4458,12 @@
           "totalCapturedMessageCount": 20,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 453,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
         },
         {
@@ -3710,15 +4476,728 @@
           "totalCapturedMessageCount": 20,
           "waitResult": {
             "changed": false,
-            "waitedAtLeastMs": 200
+            "waitedMs": 452,
+            "configuredMinimumDelayMs": 200,
+            "mutationDetected": false,
+            "stableDetected": false,
+            "finishReason": "no-dom-change-fallback",
+            "fallbackWaitMs": 250
           }
+        }
+      ],
+      "initialTopWait": {
+        "changed": false,
+        "waitedMs": 465,
+        "configuredMinimumDelayMs": 200,
+        "mutationDetected": false,
+        "stableDetected": false,
+        "finishReason": "no-dom-change-fallback",
+        "fallbackWaitMs": 250,
+        "elapsedFromStartMs": 465
+      },
+      "codeBlocks": [
+        {
+          "messageIndex": 6,
+          "role": "assistant",
+          "index": 0,
+          "sourcePathDepth": 16,
+          "sourcePre": {
+            "tag": "pre",
+            "className": "m-0 flex-1 cursor-text px-4 pb-3 font-mono text-size-code text-default md:px-5 ViewerContent-Cg8AgN pt-0 min-w-max whitespace-pre",
+            "testId": null,
+            "attributes": {},
+            "height": "212px",
+            "maxHeight": "none",
+            "overflowY": "visible",
+            "overflowX": "visible",
+            "scrollHeight": 212,
+            "clientHeight": 212,
+            "scrollTop": 0
+          },
+          "clonePre": {
+            "tag": "pre",
+            "className": "m-0 flex-1 cursor-text px-4 pb-3 font-mono text-size-code text-default md:px-5 ViewerContent-Cg8AgN pt-0 min-w-max whitespace-pre",
+            "testId": null,
+            "attributes": {},
+            "height": "",
+            "maxHeight": "",
+            "overflowY": "",
+            "overflowX": "",
+            "scrollHeight": 0,
+            "clientHeight": 0,
+            "scrollTop": 0
+          },
+          "ancestors": [
+            {
+              "before": {
+                "tag": "pre",
+                "className": "m-0 flex-1 cursor-text px-4 pb-3 font-mono text-size-code text-default md:px-5 ViewerContent-Cg8AgN pt-0 min-w-max whitespace-pre",
+                "testId": null,
+                "attributes": {},
+                "height": "212px",
+                "maxHeight": "none",
+                "overflowY": "visible",
+                "overflowX": "visible",
+                "scrollHeight": 212,
+                "clientHeight": 212,
+                "scrollTop": 0
+              },
+              "overridden": false,
+              "after": null
+            },
+            {
+              "before": {
+                "tag": "div",
+                "className": "chatgpt-code-scrollport flex w-full items-stretch overscroll-x-contain Scrollport-kY3Nlm overflow-x-auto",
+                "testId": null,
+                "attributes": {},
+                "height": "212px",
+                "maxHeight": "none",
+                "overflowY": "auto",
+                "overflowX": "auto",
+                "scrollHeight": 212,
+                "clientHeight": 212,
+                "scrollTop": 0
+              },
+              "overridden": true,
+              "after": {
+                "maxHeight": "none",
+                "height": "auto",
+                "overflowY": "visible",
+                "priority": "important"
+              }
+            },
+            {
+              "before": {
+                "tag": "div",
+                "className": "relative z-0 flex max-w-full Viewer-ALA646",
+                "testId": null,
+                "attributes": {},
+                "height": "212px",
+                "maxHeight": "none",
+                "overflowY": "visible",
+                "overflowX": "visible",
+                "scrollHeight": 212,
+                "clientHeight": 212,
+                "scrollTop": 0
+              },
+              "overridden": false,
+              "after": null
+            },
+            {
+              "before": {
+                "tag": "div",
+                "className": "InlineCodePane-EYx4bd w-full overflow-x-hidden",
+                "testId": null,
+                "attributes": {},
+                "height": "212px",
+                "maxHeight": "431.1px",
+                "overflowY": "auto",
+                "overflowX": "hidden",
+                "scrollHeight": 212,
+                "clientHeight": 212,
+                "scrollTop": 0
+              },
+              "overridden": true,
+              "after": {
+                "maxHeight": "none",
+                "height": "auto",
+                "overflowY": "visible",
+                "priority": "important"
+              }
+            },
+            {
+              "before": {
+                "tag": "div",
+                "className": "relative [container-type:inline-size]",
+                "testId": null,
+                "attributes": {},
+                "height": "212px",
+                "maxHeight": "none",
+                "overflowY": "visible",
+                "overflowX": "visible",
+                "scrollHeight": 212,
+                "clientHeight": 212,
+                "scrollTop": 0
+              },
+              "overridden": false,
+              "after": null
+            },
+            {
+              "before": {
+                "tag": "div",
+                "className": "relative Root-iW7ipz w-full min-w-0 contain-inline-size overflow-clip rounded-(--radius-3xl-base) border border-subtle text-default CodeSurface-UAMd1A light @container",
+                "testId": null,
+                "attributes": {
+                  "data-code-block": "true",
+                  "data-markdown-copy": "code-block",
+                  "data-theme": "light",
+                  "data-search-result-target": ""
+                },
+                "height": "261.6px",
+                "maxHeight": "none",
+                "overflowY": "clip",
+                "overflowX": "clip",
+                "scrollHeight": 260,
+                "clientHeight": 260,
+                "scrollTop": 0
+              },
+              "overridden": false,
+              "after": null
+            },
+            {
+              "before": {
+                "tag": "div",
+                "className": "CodeBlock-zu1QM3",
+                "testId": null,
+                "attributes": {
+                  "data-chatgpt-copy-code": "document_id: ROLE-DEVELOPER\ndocument_name: Developer Role Card\n\ndocument_version: 1.2.0\nframework_version: 1.2.3\n\nstatus"
+                },
+                "height": "261.6px",
+                "maxHeight": "none",
+                "overflowY": "visible",
+                "overflowX": "visible",
+                "scrollHeight": 262,
+                "clientHeight": 262,
+                "scrollTop": 0
+              },
+              "overridden": false,
+              "after": null
+            },
+            {
+              "before": {
+                "tag": "div",
+                "className": "",
+                "testId": null,
+                "attributes": {
+                  "data-client-defined-widget": "code_block"
+                },
+                "height": "301.6px",
+                "maxHeight": "none",
+                "overflowY": "visible",
+                "overflowX": "visible",
+                "scrollHeight": 302,
+                "clientHeight": 302,
+                "scrollTop": 0
+              },
+              "overridden": false,
+              "after": null
+            },
+            {
+              "before": {
+                "tag": "div",
+                "className": "DilRenderer-temL23 DilResponseRoot-fdCmoC Reveal-eHl_0F",
+                "testId": null,
+                "attributes": {
+                  "data-dil-response": "",
+                  "data-d-direction": "col",
+                  "data-dil-message-id": "760412e6-a149-4936-a75c-ed5939707f58"
+                },
+                "height": "12225.7px",
+                "maxHeight": "none",
+                "overflowY": "visible",
+                "overflowX": "visible",
+                "scrollHeight": 12226,
+                "clientHeight": 12226,
+                "scrollTop": 0
+              },
+              "overridden": false,
+              "after": null
+            },
+            {
+              "before": {
+                "tag": "div",
+                "className": "relative PortalBoundary-TFj9W2 Renderer-ojZscX",
+                "testId": null,
+                "attributes": {
+                  "data-theme": "light"
+                },
+                "height": "12225.7px",
+                "maxHeight": "none",
+                "overflowY": "visible",
+                "overflowX": "visible",
+                "scrollHeight": 12226,
+                "clientHeight": 12226,
+                "scrollTop": 0
+              },
+              "overridden": false,
+              "after": null
+            },
+            {
+              "before": {
+                "tag": "div",
+                "className": "[--entity-prose-inset:0px]",
+                "testId": null,
+                "attributes": {},
+                "height": "12225.7px",
+                "maxHeight": "none",
+                "overflowY": "visible",
+                "overflowX": "visible",
+                "scrollHeight": 12226,
+                "clientHeight": 12226,
+                "scrollTop": 0
+              },
+              "overridden": false,
+              "after": null
+            },
+            {
+              "before": {
+                "tag": "div",
+                "className": "my-4 first:mt-0 last:mb-0 empty:hidden",
+                "testId": null,
+                "attributes": {
+                  "data-dil-source-message-id": "760412e6-a149-4936-a75c-ed5939707f58",
+                  "data-chatgpt-copy-reference": "6",
+                  "data-markdown-copy": "contents"
+                },
+                "height": "12225.7px",
+                "maxHeight": "none",
+                "overflowY": "visible",
+                "overflowX": "visible",
+                "scrollHeight": 12226,
+                "clientHeight": 12226,
+                "scrollTop": 0
+              },
+              "overridden": false,
+              "after": null
+            },
+            {
+              "before": {
+                "tag": "div",
+                "className": "MarkdownRoot-rZKhxa [&>*:first-child]:mt-0 [&>*:last-child]:mb-0 [&>*:last-child]:mb-0 [&>ol:first-child]:mt-0 [&>ul:first-child]:mt-0",
+                "testId": null,
+                "attributes": {
+                  "data-selected-text-overlay-target": "_r_119_",
+                  "data-markdown-text-style": "assistant-message"
+                },
+                "height": "12225.7px",
+                "maxHeight": "none",
+                "overflowY": "visible",
+                "overflowX": "visible",
+                "scrollHeight": 12226,
+                "clientHeight": 12226,
+                "scrollTop": 0
+              },
+              "overridden": false,
+              "after": null
+            },
+            {
+              "before": {
+                "tag": "div",
+                "className": "group flex min-w-0 flex-col",
+                "testId": null,
+                "attributes": {
+                  "data-chatgpt-selection-conversation-id": "6afedfeb-7034-83ec-81f2-51b83a2598b2",
+                  "data-chatgpt-selection-message-id": "760412e6-a149-4936-a75c-ed5939707f58"
+                },
+                "height": "12225.7px",
+                "maxHeight": "none",
+                "overflowY": "visible",
+                "overflowX": "visible",
+                "scrollHeight": 12226,
+                "clientHeight": 12226,
+                "scrollTop": 0
+              },
+              "overridden": false,
+              "after": null
+            },
+            {
+              "before": {
+                "tag": "div",
+                "className": "",
+                "testId": null,
+                "attributes": {
+                  "data-response-body": "760412e6-a149-4936-a75c-ed5939707f58"
+                },
+                "height": "12225.7px",
+                "maxHeight": "none",
+                "overflowY": "visible",
+                "overflowX": "visible",
+                "scrollHeight": 12226,
+                "clientHeight": 12226,
+                "scrollTop": 0
+              },
+              "overridden": false,
+              "after": null
+            },
+            {
+              "before": {
+                "tag": "div",
+                "className": "",
+                "testId": null,
+                "attributes": {
+                  "data-content-search-unit-key": "ea2439b2-e406-5eab-b12f-2f09421a2ebf:2:assistant",
+                  "data-chatgpt-search-unit-key": "ea2439b2-e406-5eab-b12f-2f09421a2ebf:2:assistant",
+                  "data-chatgpt-search-message-ids": "760412e6-a149-4936-a75c-ed5939707f58 760412e6-a149-4936-a75c-ed5939707f58"
+                },
+                "height": "12225.7px",
+                "maxHeight": "none",
+                "overflowY": "visible",
+                "overflowX": "visible",
+                "scrollHeight": 12226,
+                "clientHeight": 12226,
+                "scrollTop": 0
+              },
+              "overridden": false,
+              "after": null
+            }
+          ]
+        },
+        {
+          "messageIndex": 8,
+          "role": "assistant",
+          "index": 0,
+          "sourcePathDepth": 16,
+          "sourcePre": {
+            "tag": "pre",
+            "className": "m-0 flex-1 cursor-text px-4 pb-3 font-mono text-size-code text-default md:px-5 ViewerContent-Cg8AgN pt-0 min-w-max whitespace-pre",
+            "testId": null,
+            "attributes": {},
+            "height": "312px",
+            "maxHeight": "none",
+            "overflowY": "visible",
+            "overflowX": "visible",
+            "scrollHeight": 312,
+            "clientHeight": 312,
+            "scrollTop": 0
+          },
+          "clonePre": {
+            "tag": "pre",
+            "className": "m-0 flex-1 cursor-text px-4 pb-3 font-mono text-size-code text-default md:px-5 ViewerContent-Cg8AgN pt-0 min-w-max whitespace-pre",
+            "testId": null,
+            "attributes": {},
+            "height": "",
+            "maxHeight": "",
+            "overflowY": "",
+            "overflowX": "",
+            "scrollHeight": 0,
+            "clientHeight": 0,
+            "scrollTop": 0
+          },
+          "ancestors": [
+            {
+              "before": {
+                "tag": "pre",
+                "className": "m-0 flex-1 cursor-text px-4 pb-3 font-mono text-size-code text-default md:px-5 ViewerContent-Cg8AgN pt-0 min-w-max whitespace-pre",
+                "testId": null,
+                "attributes": {},
+                "height": "312px",
+                "maxHeight": "none",
+                "overflowY": "visible",
+                "overflowX": "visible",
+                "scrollHeight": 312,
+                "clientHeight": 312,
+                "scrollTop": 0
+              },
+              "overridden": false,
+              "after": null
+            },
+            {
+              "before": {
+                "tag": "div",
+                "className": "chatgpt-code-scrollport flex w-full items-stretch overscroll-x-contain Scrollport-kY3Nlm overflow-x-auto",
+                "testId": null,
+                "attributes": {},
+                "height": "312px",
+                "maxHeight": "none",
+                "overflowY": "auto",
+                "overflowX": "auto",
+                "scrollHeight": 312,
+                "clientHeight": 312,
+                "scrollTop": 0
+              },
+              "overridden": true,
+              "after": {
+                "maxHeight": "none",
+                "height": "auto",
+                "overflowY": "visible",
+                "priority": "important"
+              }
+            },
+            {
+              "before": {
+                "tag": "div",
+                "className": "relative z-0 flex max-w-full Viewer-ALA646",
+                "testId": null,
+                "attributes": {},
+                "height": "312px",
+                "maxHeight": "none",
+                "overflowY": "visible",
+                "overflowX": "visible",
+                "scrollHeight": 312,
+                "clientHeight": 312,
+                "scrollTop": 0
+              },
+              "overridden": false,
+              "after": null
+            },
+            {
+              "before": {
+                "tag": "div",
+                "className": "InlineCodePane-EYx4bd w-full overflow-x-hidden",
+                "testId": null,
+                "attributes": {},
+                "height": "312px",
+                "maxHeight": "431.1px",
+                "overflowY": "auto",
+                "overflowX": "hidden",
+                "scrollHeight": 312,
+                "clientHeight": 312,
+                "scrollTop": 0
+              },
+              "overridden": true,
+              "after": {
+                "maxHeight": "none",
+                "height": "auto",
+                "overflowY": "visible",
+                "priority": "important"
+              }
+            },
+            {
+              "before": {
+                "tag": "div",
+                "className": "relative [container-type:inline-size]",
+                "testId": null,
+                "attributes": {},
+                "height": "312px",
+                "maxHeight": "none",
+                "overflowY": "visible",
+                "overflowX": "visible",
+                "scrollHeight": 312,
+                "clientHeight": 312,
+                "scrollTop": 0
+              },
+              "overridden": false,
+              "after": null
+            },
+            {
+              "before": {
+                "tag": "div",
+                "className": "relative Root-iW7ipz w-full min-w-0 contain-inline-size overflow-clip rounded-(--radius-3xl-base) border border-subtle text-default CodeSurface-UAMd1A light @container",
+                "testId": null,
+                "attributes": {
+                  "data-code-block": "true",
+                  "data-markdown-copy": "code-block",
+                  "data-theme": "light",
+                  "data-search-result-target": ""
+                },
+                "height": "361.6px",
+                "maxHeight": "none",
+                "overflowY": "clip",
+                "overflowX": "clip",
+                "scrollHeight": 360,
+                "clientHeight": 360,
+                "scrollTop": 0
+              },
+              "overridden": false,
+              "after": null
+            },
+            {
+              "before": {
+                "tag": "div",
+                "className": "CodeBlock-zu1QM3",
+                "testId": null,
+                "attributes": {
+                  "data-chatgpt-copy-code": "framework:\n  version: 1.2.0\n\ndocuments:\n  - path: FRAMEWORK_SPECIFICATION.md\n    version: 1.2.0\n    compatible_framework"
+                },
+                "height": "361.6px",
+                "maxHeight": "none",
+                "overflowY": "visible",
+                "overflowX": "visible",
+                "scrollHeight": 362,
+                "clientHeight": 362,
+                "scrollTop": 0
+              },
+              "overridden": false,
+              "after": null
+            },
+            {
+              "before": {
+                "tag": "div",
+                "className": "",
+                "testId": null,
+                "attributes": {
+                  "data-client-defined-widget": "code_block"
+                },
+                "height": "401.6px",
+                "maxHeight": "none",
+                "overflowY": "visible",
+                "overflowX": "visible",
+                "scrollHeight": 402,
+                "clientHeight": 402,
+                "scrollTop": 0
+              },
+              "overridden": false,
+              "after": null
+            },
+            {
+              "before": {
+                "tag": "div",
+                "className": "DilRenderer-temL23 DilResponseRoot-fdCmoC Reveal-eHl_0F",
+                "testId": null,
+                "attributes": {
+                  "data-dil-response": "",
+                  "data-d-direction": "col",
+                  "data-dil-message-id": "cb5bd3f2-bb31-4dc9-98a5-d54f48068d7f"
+                },
+                "height": "4040.2px",
+                "maxHeight": "none",
+                "overflowY": "visible",
+                "overflowX": "visible",
+                "scrollHeight": 4040,
+                "clientHeight": 4040,
+                "scrollTop": 0
+              },
+              "overridden": false,
+              "after": null
+            },
+            {
+              "before": {
+                "tag": "div",
+                "className": "relative PortalBoundary-TFj9W2 Renderer-ojZscX",
+                "testId": null,
+                "attributes": {
+                  "data-theme": "light"
+                },
+                "height": "4040.2px",
+                "maxHeight": "none",
+                "overflowY": "visible",
+                "overflowX": "visible",
+                "scrollHeight": 4040,
+                "clientHeight": 4040,
+                "scrollTop": 0
+              },
+              "overridden": false,
+              "after": null
+            },
+            {
+              "before": {
+                "tag": "div",
+                "className": "[--entity-prose-inset:0px]",
+                "testId": null,
+                "attributes": {},
+                "height": "4040.2px",
+                "maxHeight": "none",
+                "overflowY": "visible",
+                "overflowX": "visible",
+                "scrollHeight": 4040,
+                "clientHeight": 4040,
+                "scrollTop": 0
+              },
+              "overridden": false,
+              "after": null
+            },
+            {
+              "before": {
+                "tag": "div",
+                "className": "my-4 first:mt-0 last:mb-0 empty:hidden",
+                "testId": null,
+                "attributes": {
+                  "data-dil-source-message-id": "cb5bd3f2-bb31-4dc9-98a5-d54f48068d7f",
+                  "data-chatgpt-copy-reference": "1",
+                  "data-markdown-copy": "contents"
+                },
+                "height": "4040.2px",
+                "maxHeight": "none",
+                "overflowY": "visible",
+                "overflowX": "visible",
+                "scrollHeight": 4040,
+                "clientHeight": 4040,
+                "scrollTop": 0
+              },
+              "overridden": false,
+              "after": null
+            },
+            {
+              "before": {
+                "tag": "div",
+                "className": "MarkdownRoot-rZKhxa [&>*:first-child]:mt-0 [&>*:last-child]:mb-0 [&>*:last-child]:mb-0 [&>ol:first-child]:mt-0 [&>ul:first-child]:mt-0",
+                "testId": null,
+                "attributes": {
+                  "data-selected-text-overlay-target": "_r_13l_",
+                  "data-markdown-text-style": "assistant-message"
+                },
+                "height": "4040.2px",
+                "maxHeight": "none",
+                "overflowY": "visible",
+                "overflowX": "visible",
+                "scrollHeight": 4040,
+                "clientHeight": 4040,
+                "scrollTop": 0
+              },
+              "overridden": false,
+              "after": null
+            },
+            {
+              "before": {
+                "tag": "div",
+                "className": "group flex min-w-0 flex-col",
+                "testId": null,
+                "attributes": {
+                  "data-chatgpt-selection-conversation-id": "6afedfeb-7034-83ec-81f2-51b83a2598b2",
+                  "data-chatgpt-selection-message-id": "cb5bd3f2-bb31-4dc9-98a5-d54f48068d7f"
+                },
+                "height": "4040.2px",
+                "maxHeight": "none",
+                "overflowY": "visible",
+                "overflowX": "visible",
+                "scrollHeight": 4040,
+                "clientHeight": 4040,
+                "scrollTop": 0
+              },
+              "overridden": false,
+              "after": null
+            },
+            {
+              "before": {
+                "tag": "div",
+                "className": "",
+                "testId": null,
+                "attributes": {
+                  "data-response-body": "cb5bd3f2-bb31-4dc9-98a5-d54f48068d7f"
+                },
+                "height": "4040.2px",
+                "maxHeight": "none",
+                "overflowY": "visible",
+                "overflowX": "visible",
+                "scrollHeight": 4040,
+                "clientHeight": 4040,
+                "scrollTop": 0
+              },
+              "overridden": false,
+              "after": null
+            },
+            {
+              "before": {
+                "tag": "div",
+                "className": "",
+                "testId": null,
+                "attributes": {
+                  "data-content-search-unit-key": "ae9c2a65-2289-59b3-9176-293beac822b1:2:assistant",
+                  "data-chatgpt-search-unit-key": "ae9c2a65-2289-59b3-9176-293beac822b1:2:assistant",
+                  "data-chatgpt-search-message-ids": "cb5bd3f2-bb31-4dc9-98a5-d54f48068d7f cb5bd3f2-bb31-4dc9-98a5-d54f48068d7f"
+                },
+                "height": "4040.2px",
+                "maxHeight": "none",
+                "overflowY": "visible",
+                "overflowX": "visible",
+                "scrollHeight": 4040,
+                "clientHeight": 4040,
+                "scrollTop": 0
+              },
+              "overridden": false,
+              "after": null
+            }
+          ]
         }
       ],
       "reachedTop": true,
       "reachedBottom": true,
       "restoredOriginalScrollTop": true,
       "failure": null,
-      "initialCaptureCount": 2
+      "initialCaptureCount": 2,
+      "codeBlockDiagnosticLimit": 20,
+      "codeBlockCountTotal": 2
     },
     "expectedMessageCount": 20,
     "matchedMessageCount": 20,
@@ -3829,7 +5308,7 @@
       }
     ],
     "exportedMessageCount": 20,
-    "exportedTextLength": 73827
+    "exportedTextLength": 73599
   },
   "css": {
     "stylesheetCount": 28,
@@ -3851,8 +5330,8 @@
       ]
     },
     "rendering": "ChatGPT 原生 DOM 克隆与原生 CSS 提取；未使用独立 Markdown、DIL 或 Mermaid 渲染器。",
-    "filename": "ChatGPT-6afedfeb-7034-83ec-81f2-51b83a2598b2-v2.5.1.html",
-    "htmlLength": 4285050,
+    "filename": "ChatGPT-6afedfeb-7034-83ec-81f2-51b83a2598b2-v2.5.2.html",
+    "htmlLength": 4460844,
     "exportedMessageCount": 20,
     "userMessageCount": 10,
     "assistantFinalCount": 10,
@@ -3860,7 +5339,7 @@
       "expectedMessageCount": 20,
       "actualMessageCount": 20,
       "uniqueMessageIdCount": 20,
-      "textLength": 73851,
+      "textLength": 73623,
       "hasDoctype": true,
       "hasOriginalMarkdownRoots": true,
       "hasCodeBlocks": true,
@@ -3868,3 +5347,4 @@
     }
   }
 }
+226913.52b9bcbf34.js:6:107089
