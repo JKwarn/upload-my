@@ -1,266 +1,205 @@
-//[ChatGPT 会话 HTML 导出器] SUCCESS ChatGPT 会话 HTML 导出器.user.js:219:17
-{
-  "version": "2.2.2",
-  "timestamp": "2026-11-25T05:59:11.757Z",
+//[ChatGPT 会话 HTML 导出器] FAILED {
+  "version": "2.4.1",
+  "timestamp": "2026-11-25T08:44:14.810Z",
   "conversationId": "6afedfeb-7034-83ec-81f2-51b83a2598b2",
-  "errors": [],
-  "warnings": [
-    "current_node 的父节点链目前无法验证完整性：父节点 6fcbb0a5-e3ee-4e4c-97ea-b35dd7888825 不在本次获取的消息集合中。这只能证明该节点不在当前两段分页数据内，不能证明真实会话中不存在该节点。当前分页标志表明仍可能存在未获取的分页数据，因此缺失节点可能位于分页边界之外。",
-    "当前没有可靠的 API 消息 ID 与 DOM 节点映射关系，DOM 节点数量不能证明 API 消息完整性。",
-    "当前 DOM 克隆节点数少于 API 中 user 与 assistant final 的候选消息总数；页面可能只保留了部分虚拟滚动节点。",
-    "本次导出不能证明会话完整性，HTML 将明确标记为部分导出。"
+  "errors": [
+    {
+      "name": "Error",
+      "message": "原生 DOM 无法完整对应接口消息：目标 20 条，匹配 4 条，缺失或歧义 16 条。未生成不完整文件。",
+      "stack": "handleExport@moz-extension://3bd90dbb-ecdd-4b22-9532-9cd19de6ad7a/%20ChatGPT%20%E4%BC%9A%E8%AF%9D%20HTML%20%E5%AF%BC%E5%87%BA%E5%99%A8.user.js#31:681:15\nasync*injectUI@moz-extension://3bd90dbb-ecdd-4b22-9532-9cd19de6ad7a/%20ChatGPT%20%E4%BC%9A%E8%AF%9D%20HTML%20%E5%AF%BC%E5%87%BA%E5%99%A8.user.js#31:115:14\ninitialize@moz-extension://3bd90dbb-ecdd-4b22-9532-9cd19de6ad7a/%20ChatGPT%20%E4%BC%9A%E8%AF%9D%20HTML%20%E5%AF%BC%E5%87%BA%E5%99%A8.user.js#31:730:5\nd$izUM7N2NoAUznkR/<@moz-extension://3bd90dbb-ecdd-4b22-9532-9cd19de6ad7a/%20ChatGPT%20%E4%BC%9A%E8%AF%9D%20HTML%20%E5%AF%BC%E5%87%BA%E5%99%A8.user.js#31:734:3\nd$izUM7N2NoAUznkR/<@moz-extension://3bd90dbb-ecdd-4b22-9532-9cd19de6ad7a/%20ChatGPT%20%E4%BC%9A%E8%AF%9D%20HTML%20%E5%AF%BC%E5%87%BA%E5%99%A8.user.js#31:735:3\nd$izUM7N2NoAUznkR@moz-extension://3bd90dbb-ecdd-4b22-9532-9cd19de6ad7a/%20ChatGPT%20%E4%BC%9A%E8%AF%9D%20HTML%20%E5%AF%BC%E5%87%BA%E5%99%A8.user.js#31:736:3\nwn@moz-extension://3bd90dbb-ecdd-4b22-9532-9cd19de6ad7a/sandbox/injected-web.js:1:16625\n@moz-extension://3bd90dbb-ecdd-4b22-9532-9cd19de6ad7a/%20ChatGPT%20%E4%BC%9A%E8%AF%9D%20HTML%20%E5%AF%BC%E5%87%BA%E5%99%A8.user.js#31:1:1\n"
+    }
   ],
+  "warnings": [],
   "authentication": {
     "success": true
   },
   "api": {
-    "metadataMessageCount": 15,
+    "newerMessageCount": 15,
     "olderMessageCount": 19,
     "mergedMessageCount": 34,
     "duplicateCount": 0,
-    "conflicts": [],
+    "missingIdCount": 0,
+    "responseOrder": [
+      "第二阶段旧消息 response",
+      "第一阶段新消息 response"
+    ],
     "pagination": {
       "newerPage": {
-        "start_cursor": "14f4aa67-4d42-4c7e-82ea-e436e649f403",
-        "end_cursor": "f21f8714-e00a-4f1f-920c-98aa2c078c5d",
-        "has_previous_page": true,
-        "has_next_page": false
+        "hasPreviousPage": true,
+        "hasNextPage": false
       },
       "olderPage": {
-        "start_cursor": "8d3e701a-398e-4556-9960-0b1d28eb6ab5",
-        "end_cursor": "654281db-b3e0-4175-8d6b-d96ae858ee5f",
-        "has_previous_page": false,
-        "has_next_page": true
-      },
-      "checks": {
-        "newerPageHasPrevious": true,
-        "newerPageHasNoNext": true,
-        "olderPageHasNoPrevious": true,
-        "olderPageHasNext": true
-      },
-      "expectedPattern": true
+        "hasPreviousPage": false,
+        "hasNextPage": true
+      }
     },
-    "currentNode": "f21f8714-e00a-4f1f-920c-98aa2c078c5d",
-    "branch": {
-      "currentNode": "f21f8714-e00a-4f1f-920c-98aa2c078c5d",
-      "currentNodeExists": true,
-      "visitedNodes": [
-        {
-          "id": "f21f8714-e00a-4f1f-920c-98aa2c078c5d",
-          "role": "assistant",
-          "messageType": "next",
-          "parentId": "f060e9c9-a448-4406-9f70-0db4ee4a984b"
-        },
-        {
-          "id": "f060e9c9-a448-4406-9f70-0db4ee4a984b",
-          "role": "assistant",
-          "messageType": "next",
-          "parentId": "6fcbb0a5-e3ee-4e4c-97ea-b35dd7888825"
-        }
-      ],
-      "reachableIds": [
-        "f21f8714-e00a-4f1f-920c-98aa2c078c5d",
-        "f060e9c9-a448-4406-9f70-0db4ee4a984b"
-      ],
-      "missingParentId": "6fcbb0a5-e3ee-4e4c-97ea-b35dd7888825",
-      "missingParentInFetchedRange": false,
-      "paginationBoundary": {
-        "newerPageHasPrevious": true,
-        "newerPageHasNext": false,
-        "olderPageHasPrevious": false,
-        "olderPageHasNext": true,
-        "missingParentCouldBeOutsideFetchedRange": true,
-        "explanation": "第二阶段响应的 has_next_page=true，表示该分页方向仍有后续页面；缺失父节点可能位于当前获取范围之外。"
-      },
-      "cycleDetected": false,
-      "cycleAt": null,
-      "reachedRoot": false,
-      "branchConclusion": "无法验证完整性",
-      "conclusionReason": "父节点 6fcbb0a5-e3ee-4e4c-97ea-b35dd7888825 不在本次获取的消息集合中。这只能证明该节点不在当前两段分页数据内，不能证明真实会话中不存在该节点。当前分页标志表明仍可能存在未获取的分页数据，因此缺失节点可能位于分页边界之外。"
-    },
+    "hasUnfetchedPages": false,
     "roleCounts": {
       "user": 10,
-      "assistant": 23,
-      "assistantFinal": 0,
-      "system": 1
+      "system": 1,
+      "assistant": 23
+    },
+    "contentTypeCounts": {
+      "text": 21,
+      "reasoning_recap": 10,
+      "thoughts": 3
+    },
+    "channelCounts": {
+      "(null)": 24,
+      "final": 10
     },
     "selectedUserCount": 10,
-    "selectedAssistantFinalCount": 0,
-    "apiCandidateMessageCount": 10
+    "selectedAssistantFinalCount": 10,
+    "ignoredReasoningRecapCount": 10,
+    "ignoredThoughtsCount": 3,
+    "ignoredOtherCount": 1
   },
-  "container": {
-    "selected": {
-      "tag": "DIV",
-      "className": "relative flex flex-1 shrink-0 flex-col transcriptContent-l_FOQD [--thread-content-max-width:var(--thread-content-responsive-max-width,inherit)] [--thread-body-max-width:calc(var(--thread-content-max-width)+var(--thread-body-inline-padding,0px)*2)] mx-auto w-full max-w-(--thread-body-max-width) px-[var(--thread-body-inline-padding,var(--padding-toolbar))] pb-8 has-[[data-compact-status-slot-clearance]]:pb-0",
-      "id": "",
-      "textLength": 2746,
-      "childElementCount": 1,
-      "markdownRootCount": 2,
-      "rect": {
-        "width": 808,
-        "height": 78215
-      },
-      "display": "flex",
-      "position": "relative",
-      "dataTheme": null
-    },
-    "candidateCount": 41,
-    "validCandidateCount": 41,
-    "otherCandidates": [
+  "dom": {
+    "expectedMessageCount": 20,
+    "matchedMessageCount": 4,
+    "missingMessageCount": 16,
+    "duplicateMessageCount": 0,
+    "missing": [
       {
-        "tag": "DIV",
-        "className": "relative flex flex-col [--app-shell-left-panel-width:var(--app-shell-animated-left-panel-width)] [--app-shell-titlebar-height:var(--height-toolbar)] max-[768px]:[--app-shell-left-panel-width:0px]",
-        "id": "",
-        "textLength": 2891,
-        "childElementCount": 3,
-        "markdownRootCount": 2,
-        "rect": {
-          "width": 1486,
-          "height": 748
-        },
-        "display": "flex",
-        "position": "relative",
-        "dataTheme": null
+        "index": 0,
+        "messageId": "8d3e701a-398e-4556-9960-0b1d28eb6ab5",
+        "role": "user",
+        "reason": "not-found",
+        "matchCount": 0
       },
       {
-        "tag": "DIV",
-        "className": "relative flex max-h-full min-h-0 w-full flex-1 isolate",
-        "id": "",
-        "textLength": 2885,
-        "childElementCount": 1,
-        "markdownRootCount": 2,
-        "rect": {
-          "width": 1486,
-          "height": 748
-        },
-        "display": "flex",
-        "position": "relative",
-        "dataTheme": null
+        "index": 1,
+        "messageId": "849db50c-088d-4e9f-87ec-c1aa728dd81a",
+        "role": "assistant",
+        "reason": "not-found",
+        "matchCount": 0
       },
       {
-        "tag": "DIV",
-        "className": "relative flex min-h-0 min-w-0 flex-1",
-        "id": "",
-        "textLength": 2885,
-        "childElementCount": 2,
-        "markdownRootCount": 2,
-        "rect": {
-          "width": 1486,
-          "height": 748
-        },
-        "display": "flex",
-        "position": "relative",
-        "dataTheme": null
+        "index": 2,
+        "messageId": "36afb55e-a4eb-446e-b41e-f60b5716c2a1",
+        "role": "user",
+        "reason": "not-found",
+        "matchCount": 0
       },
       {
-        "tag": "DIV",
-        "className": "contents",
-        "id": "",
-        "textLength": 2871,
-        "childElementCount": 1,
-        "markdownRootCount": 2,
-        "rect": {
-          "width": 0,
-          "height": 0
-        },
-        "display": "contents",
-        "position": "static",
-        "dataTheme": null
+        "index": 3,
+        "messageId": "9dd7cc6f-44c4-4ad7-865c-852c83a7e033",
+        "role": "assistant",
+        "reason": "not-found",
+        "matchCount": 0
       },
       {
-        "tag": "DIV",
-        "className": "contents [--app-shell-content-fade-height:--spacing(4)] [--app-shell-content-fade:linear-gradient(to_bottom,currentColor,transparent)]",
-        "id": "",
-        "textLength": 2871,
-        "childElementCount": 3,
-        "markdownRootCount": 2,
-        "rect": {
-          "width": 0,
-          "height": 0
-        },
-        "display": "contents",
-        "position": "static",
-        "dataTheme": null
+        "index": 4,
+        "messageId": "6a59fed2-efff-48c0-8fe7-e7a781a12e21",
+        "role": "user",
+        "reason": "not-found",
+        "matchCount": 0
+      },
+      {
+        "index": 5,
+        "messageId": "760412e6-a149-4936-a75c-ed5939707f58",
+        "role": "assistant",
+        "reason": "not-found",
+        "matchCount": 0
+      },
+      {
+        "index": 6,
+        "messageId": "f1ab3d91-ea1a-4f30-8aef-69fec6d6ad5c",
+        "role": "user",
+        "reason": "not-found",
+        "matchCount": 0
+      },
+      {
+        "index": 7,
+        "messageId": "cb5bd3f2-bb31-4dc9-98a5-d54f48068d7f",
+        "role": "assistant",
+        "reason": "not-found",
+        "matchCount": 0
+      },
+      {
+        "index": 8,
+        "messageId": "f5efb15a-a04a-46e6-9174-a1541b77ce8f",
+        "role": "user",
+        "reason": "not-found",
+        "matchCount": 0
+      },
+      {
+        "index": 9,
+        "messageId": "654281db-b3e0-4175-8d6b-d96ae858ee5f",
+        "role": "assistant",
+        "reason": "not-found",
+        "matchCount": 0
+      },
+      {
+        "index": 10,
+        "messageId": "14f4aa67-4d42-4c7e-82ea-e436e649f403",
+        "role": "user",
+        "reason": "not-found",
+        "matchCount": 0
+      },
+      {
+        "index": 11,
+        "messageId": "53869494-d5a4-4526-adb1-9951c1edf3c5",
+        "role": "assistant",
+        "reason": "not-found",
+        "matchCount": 0
+      },
+      {
+        "index": 12,
+        "messageId": "ba536087-a795-4afd-8852-43e5ea96c6cb",
+        "role": "user",
+        "reason": "not-found",
+        "matchCount": 0
+      },
+      {
+        "index": 13,
+        "messageId": "52018a29-3ae5-4082-9d81-862ddfb2f3d6",
+        "role": "assistant",
+        "reason": "not-found",
+        "matchCount": 0
+      },
+      {
+        "index": 14,
+        "messageId": "65396917-eb7a-4edc-8cb7-db5939cec5b8",
+        "role": "user",
+        "reason": "not-found",
+        "matchCount": 0
+      },
+      {
+        "index": 15,
+        "messageId": "3676c0e0-dd2d-4a01-a67a-3e5aadc9519f",
+        "role": "assistant",
+        "reason": "not-found",
+        "matchCount": 0
       }
     ],
-    "originalMarkdownRootCount": 2,
-    "clonedMarkdownRootCount": 2,
-    "originalTextLength": 2746,
-    "clonedTextLength": 2432,
-    "clonedTurnCount": 2,
-    "domTurnCount": 2,
-    "domMarkdownRootCount": 2,
-    "apiCandidateMessageCount": 10,
-    "domApiCountComparable": false
-  },
-  "messages": [
-    {
-      "index": 0,
-      "tag": "DIV",
-      "className": "",
-      "id": "",
-      "textLength": 1418,
-      "childElementCount": 1,
-      "markdownRootCount": 1,
-      "rect": {
-        "width": 768,
-        "height": 2323
+    "duplicate": [],
+    "mapping": [
+      {
+        "index": 16,
+        "messageId": "79cc8baf-796a-4a3b-950f-3750ffd2d58e",
+        "role": "user"
       },
-      "display": "block",
-      "position": "static",
-      "dataTheme": null,
-      "clonedMarkdownRootCount": 1,
-      "clonedTextLength": 1274,
-      "htmlLength": 20588,
-      "exportHtmlLength": 20653
-    },
-    {
-      "index": 1,
-      "tag": "DIV",
-      "className": "",
-      "id": "",
-      "textLength": 1326,
-      "childElementCount": 1,
-      "markdownRootCount": 1,
-      "rect": {
-        "width": 768,
-        "height": 1848
+      {
+        "index": 17,
+        "messageId": "9350f1a9-4a17-47af-8695-5e08f57c315e",
+        "role": "assistant"
       },
-      "display": "block",
-      "position": "static",
-      "dataTheme": null,
-      "clonedMarkdownRootCount": 1,
-      "clonedTextLength": 1158,
-      "htmlLength": 19922,
-      "exportHtmlLength": 19987
-    }
-  ],
-  "css": {
-    "stylesheetCount": 27,
-    "accessibleStylesheets": 27,
-    "inaccessibleStylesheets": [],
-    "cssLength": 3405895,
-    "customPropertyCount": 1713
+      {
+        "index": 18,
+        "messageId": "1fb05d3b-e994-4692-88a4-1134e87049ed",
+        "role": "user"
+      },
+      {
+        "index": 19,
+        "messageId": "f21f8714-e00a-4f1f-920c-98aa2c078c5d",
+        "role": "assistant"
+      }
+    ]
   },
+  "css": {},
   "result": {
-    "success": true,
-    "completeness": {
-      "isComplete": false,
-      "status": "partial",
-      "reason": [
-        "当前 DOM 与 API 消息尚无可靠的一一映射关系。",
-        "父节点链判断：无法验证完整性。"
-      ]
-    },
-    "filename": "ChatGPT-部分导出-2026-11-25T05-59-13-308Z.html",
-    "htmlLength": 3521559,
-    "cssLength": 3405947,
-    "sampleCount": 2,
-    "originalMarkdownRootCount": 2,
-    "clonedMarkdownRootCount": 2,
-    "parsedMarkdownRootCount": 2,
-    "originalTextLength": 2746,
-    "clonedTextLength": 2432,
-    "parsedTextLength": 2984
+    "success": false,
+    "reason": "原生 DOM 无法完整对应接口消息：目标 20 条，匹配 4 条，缺失或歧义 16 条。未生成不完整文件。"
   }
 }
