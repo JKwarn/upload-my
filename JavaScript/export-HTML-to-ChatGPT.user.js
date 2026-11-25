@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT 会话 HTML 导出器
 // @namespace    https://github.com/JKwarn/upload-my
-// @version      2.4.1
+// @version      2.4.2
 // @description  通过会话接口校验消息，并复用 ChatGPT 原生 DOM 与 CSS 导出独立 HTML
 // @match        https://chatgpt.com/c/*
 // @run-at       document-idle
@@ -11,7 +11,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '2.4.1';
+  const VERSION = '2.4.2';
   const PREFIX = '[ChatGPT 会话 HTML 导出器]';
   const IDS = {
     button: 'chatgpt-html-exporter-button',
@@ -417,7 +417,74 @@
     ).forEach(node => node.remove());
   }
 
+
+  function summarizeDomElement(element) {
+    if (!(element instanceof Element)) return null;
+    const attributes = {};
+    for (const attribute of [...element.attributes]) {
+      if (attribute.name.startsWith('data-')) attributes[attribute.name] = attribute.value.slice(0, 300);
+    }
+    const text = (element.innerText || element.textContent || '').replace(/\s+/g, ' ').trim();
+    let visibility = null;
+    try {
+      const style = getComputedStyle(element);
+      visibility = { display: style.display, visibility: style.visibility, opacity: style.opacity, contentVisibility: style.contentVisibility };
+    } catch {}
+    const rect = element.getBoundingClientRect();
+    return {
+      tag: element.tagName.toLowerCase(), id: element.id || null,
+      className: typeof element.className === 'string' ? element.className.slice(0, 500) : null,
+      testId: element.getAttribute('data-testid'), role: normalizedRole(element),
+      attributes, textLength: text.length, textPreview: text.slice(0, 240),
+      hiddenAttribute: element.hasAttribute('hidden'), ariaHidden: element.getAttribute('aria-hidden'),
+      hasClientRects: element.getClientRects().length > 0,
+      rect: { x: Math.round(rect.x), y: Math.round(rect.y), width: Math.round(rect.width), height: Math.round(rect.height) },
+      visibility
+    };
+  }
+
+  function diagnoseDom(selected) {
+    const roleSelector = ROLE_SELECTORS + ',[data-user-message-bubble="true"],[data-chatgpt-search-unit-key]';
+    const roleNodes = [...document.querySelectorAll(roleSelector)];
+    const idSelector = ID_ATTRIBUTES.map(name => `[${name}]`).join(',');
+    const idNodes = [...document.querySelectorAll(idSelector)];
+    const selectedCandidates = selected.map((item, index) => {
+      const messageId = item.message?.id || '';
+      const anchors = idNodes.filter(element => idAttributeMatches(element, messageId));
+      return {
+        index, messageId, expectedRole: item.role,
+        matchingIdAttributeElementCount: anchors.length,
+        matchingIdAttributeElements: anchors.slice(0, 12).map(summarizeDomElement),
+        matchingRoleDescendantCount: anchors.reduce((count, anchor) => count + (findRoleElement(anchor, item.role) ? 1 : 0), 0)
+      };
+    });
+    const roleNodeDetails = roleNodes.slice(0, 120).map((element, index) => {
+      const ancestors = [];
+      let current = element;
+      for (let depth = 0; current && depth < 9; depth++, current = current.parentElement) ancestors.push(summarizeDomElement(current));
+      return { index, element: summarizeDomElement(element), ancestors };
+    });
+    const idAttributeCounts = Object.fromEntries(ID_ATTRIBUTES.map(name => [name, document.querySelectorAll(`[${name}]`).length]));
+    return {
+      capturedAt: new Date().toISOString(),
+      document: {
+        url: location.href, title: document.title, readyState: document.readyState,
+        scrollY: Math.round(window.scrollY),
+        viewport: { width: window.innerWidth, height: window.innerHeight },
+        documentHeight: document.documentElement?.scrollHeight || 0
+      },
+      selectorInventory: {
+        roleSelector, roleNodeCount: roleNodes.length, idAttributeCounts,
+        idAttributeElementCount: idNodes.length,
+        roleNodeDetailsTruncated: roleNodes.length > roleNodeDetails.length,
+        roleNodeDetails
+      },
+      selectedCandidates
+    };
+  }
+
   function cloneNativeMessages(selected) {
+    const discovery = diagnoseDom(selected);
     const exported = [];
     const missing = [];
     const duplicate = [];
@@ -448,6 +515,7 @@
     }
 
     diagnostics.dom = {
+      discovery,
       expectedMessageCount: selected.length,
       matchedMessageCount: exported.length,
       missingMessageCount: missing.length,
