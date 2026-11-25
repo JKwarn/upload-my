@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT 会话 HTML 导出器
 // @namespace    https://github.com/JKwarn/upload-my
-// @version      2.4.2
+// @version      2.5.0
 // @description  通过会话接口校验消息，并复用 ChatGPT 原生 DOM 与 CSS 导出独立 HTML
 // @match        https://chatgpt.com/c/*
 // @run-at       document-idle
@@ -11,7 +11,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '2.4.2';
+  const VERSION = '2.5.0';
   const PREFIX = '[ChatGPT 会话 HTML 导出器]';
   const IDS = {
     button: 'chatgpt-html-exporter-button',
@@ -483,45 +483,193 @@
     };
   }
 
-  function cloneNativeMessages(selected) {
-    const discovery = diagnoseDom(selected);
-    const exported = [];
-    const missing = [];
-    const duplicate = [];
-    const matchedIds = new Set();
+  function findConversationScrollContainer() {
+    const turn = document.querySelector('[data-virtualized-turn]');
+    if (!turn) return { element: null, reason: 'no-virtualized-turn' };
+    const candidates = [];
+    let current = turn.parentElement;
+    let depth = 0;
+    while (current && current !== document.body && current !== document.documentElement && depth < 18) {
+      const style = getComputedStyle(current);
+      const range = current.scrollHeight - current.clientHeight;
+      const turnCount = current.querySelectorAll('[data-virtualized-turn]').length;
+      if (range > 80 && turnCount > 0 && /(auto|scroll|overlay|hidden)/.test(style.overflowY)) {
+        const rect = current.getBoundingClientRect();
+        candidates.push({ element: current, depth, overflowY: style.overflowY,
+          scrollHeight: current.scrollHeight, clientHeight: current.clientHeight,
+          scrollTop: current.scrollTop, scrollRange: range, turnCount,
+          area: Math.max(0, rect.width) * Math.max(0, rect.height) });
+      }
+      current = current.parentElement;
+      depth++;
+    }
+    candidates.sort((a, b) => b.turnCount - a.turnCount || b.scrollRange - a.scrollRange || b.area - a.area || a.depth - b.depth);
+    const chosen = candidates[0] || null;
+    return {
+      element: chosen?.element || null,
+      details: chosen ? {
+        tag: chosen.element.tagName.toLowerCase(), id: chosen.element.id || null,
+        className: typeof chosen.element.className === 'string' ? chosen.element.className.slice(0, 300) : null,
+        testId: chosen.element.getAttribute('data-testid'), overflowY: chosen.overflowY,
+        scrollHeight: chosen.scrollHeight, clientHeight: chosen.clientHeight,
+        scrollTop: chosen.scrollTop, scrollRange: chosen.scrollRange,
+        virtualizedTurnCount: chosen.turnCount, candidateCount: candidates.length,
+        ancestorDepth: chosen.depth
+      } : null,
+      reason: chosen ? null : 'no-scrollable-ancestor-containing-virtualized-turn'
+    };
+  }
 
+  function waitForVirtualizedUpdate(previousSignature, timeout = 700) {
+    return new Promise(resolve => {
+      let finished = false;
+      let timer;
+      let stableTimer;
+      const signature = () => [...document.querySelectorAll('[data-virtualized-turn]')]
+        .map(node => (node.getAttribute('data-testid') || '') + ':' + (node.innerText || '').length)
+        .join('|');
+      const observer = new MutationObserver(() => {
+        clearTimeout(stableTimer);
+        stableTimer = setTimeout(() => finish(signature() !== previousSignature), 100);
+      });
+      const finish = changed => {
+        if (finished) return;
+        finished = true;
+        observer.disconnect();
+        clearTimeout(timer);
+        clearTimeout(stableTimer);
+        resolve(changed);
+      };
+      observer.observe(document.documentElement, { childList: true, subtree: true, attributes: true });
+      timer = setTimeout(() => finish(signature() !== previousSignature), timeout);
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        if (signature() !== previousSignature) stableTimer = setTimeout(() => finish(true), 100);
+      }));
+    });
+  }
+
+  function captureVisibleMessages(selected, captured, duplicates) {
+    let newlyCaptured = 0;
     for (const [index, item] of selected.entries()) {
+      const messageId = item.message?.id;
+      if (!messageId || captured.has(messageId)) continue;
       const result = findDomMessage(item);
       if (!result?.element) {
-        const issue = { index, messageId: item.message?.id || null, role: item.role, reason: result?.error || 'not-found', matchCount: result?.matchCount || 0 };
-        if (result?.error === 'duplicate-dom-match') duplicate.push(issue);
-        else missing.push(issue);
+        if (result?.error === 'duplicate-dom-match') duplicates.set(messageId, {
+          index, messageId, role: item.role, matchCount: result.matchCount
+        });
         continue;
       }
-
       const sourceRoot = getCloneRoot(result.element);
       const clone = sourceRoot.cloneNode(true);
       removeVirtualizationArtifacts(clone);
       removeNonContentControls(clone);
-
       const wrapper = document.createElement('section');
       wrapper.className = 'export-message';
       wrapper.dataset.messageIndex = String(index + 1);
-      wrapper.dataset.messageId = item.message.id;
+      wrapper.dataset.messageId = messageId;
       wrapper.dataset.role = item.role;
       wrapper.appendChild(clone);
-      exported.push({ index, messageId: item.message.id, role: item.role, source: sourceRoot, clone: wrapper });
-      matchedIds.add(item.message.id);
+      captured.set(messageId, { index, messageId, role: item.role, source: sourceRoot, clone: wrapper });
+      newlyCaptured++;
+    }
+    return newlyCaptured;
+  }
+
+  async function cloneNativeMessages(selected) {
+    const discovery = diagnoseDom(selected);
+    const captured = new Map();
+    const duplicates = new Map();
+    const traversal = {
+      startedAt: new Date().toISOString(),
+      strategy: 'reset-to-top-then-forward-scan',
+      container: null, initialScrollTop: null, finalScrollTop: null,
+      maxScrollTop: null, stepSize: null, stepCount: 0,
+      mutationWaitTimeoutMs: 700, capturedPerStep: [],
+      reachedTop: false, reachedBottom: false,
+      restoredOriginalScrollTop: false, failure: null
+    };
+    traversal.initialCaptureCount = captureVisibleMessages(selected, captured, duplicates);
+    const found = findConversationScrollContainer();
+    const scrollElement = found.element;
+    traversal.container = found.details;
+
+    if (!scrollElement) {
+      traversal.failure = found.reason;
+      warn('未发现包含虚拟化对话轮次的可滚动容器；当前页面 DOM 可能仅包含部分消息。');
+    } else {
+      const originalScrollTop = scrollElement.scrollTop;
+      traversal.initialScrollTop = originalScrollTop;
+      traversal.maxScrollTop = Math.max(0, scrollElement.scrollHeight - scrollElement.clientHeight);
+      traversal.stepSize = Math.max(240, Math.floor(scrollElement.clientHeight * 0.68));
+      try {
+        scrollElement.scrollTop = 0;
+        await new Promise(resolve => setTimeout(resolve, 180));
+        captureVisibleMessages(selected, captured, duplicates);
+        traversal.reachedTop = scrollElement.scrollTop <= 2;
+        let previousTop = scrollElement.scrollTop;
+        const maxSteps = Math.min(600, Math.ceil(traversal.maxScrollTop / Math.max(1, traversal.stepSize)) + 8);
+        for (let step = 0; step < maxSteps; step++) {
+          const maxTop = Math.max(0, scrollElement.scrollHeight - scrollElement.clientHeight);
+          const nextTop = Math.min(maxTop, previousTop + traversal.stepSize);
+          if (nextTop <= previousTop + 1) {
+            traversal.reachedBottom = true;
+            break;
+          }
+          const beforeSignature = [...document.querySelectorAll('[data-virtualized-turn]')]
+            .map(node => (node.getAttribute('data-testid') || '') + ':' + (node.innerText || '').length)
+            .join('|');
+          scrollElement.scrollTop = nextTop;
+          await waitForVirtualizedUpdate(beforeSignature, traversal.mutationWaitTimeoutMs);
+          const capturedNow = captureVisibleMessages(selected, captured, duplicates);
+          traversal.stepCount++;
+          traversal.capturedPerStep.push({
+            step: traversal.stepCount, requestedScrollTop: nextTop,
+            actualScrollTop: scrollElement.scrollTop,
+            maxScrollTop: Math.max(0, scrollElement.scrollHeight - scrollElement.clientHeight),
+            virtualizedTurnCount: document.querySelectorAll('[data-virtualized-turn]').length,
+            newlyCapturedMessageCount: capturedNow,
+            totalCapturedMessageCount: captured.size
+          });
+          const actualTop = scrollElement.scrollTop;
+          if (actualTop <= previousTop + 1) {
+            traversal.reachedBottom = actualTop >= Math.max(0, scrollElement.scrollHeight - scrollElement.clientHeight) - 2;
+            if (!traversal.reachedBottom) {
+              traversal.failure = 'scroll-position-did-not-advance';
+              break;
+            }
+          }
+          previousTop = actualTop;
+          if (traversal.reachedBottom) break;
+        }
+        if (!traversal.reachedBottom && !traversal.failure) {
+          const currentMax = Math.max(0, scrollElement.scrollHeight - scrollElement.clientHeight);
+          traversal.reachedBottom = scrollElement.scrollTop >= currentMax - 2;
+          if (!traversal.reachedBottom) traversal.failure = 'maximum-scroll-steps-reached';
+        }
+      } catch (error) {
+        traversal.failure = error?.message || String(error);
+      } finally {
+        try {
+          scrollElement.scrollTop = originalScrollTop;
+          await new Promise(resolve => setTimeout(resolve, 120));
+          traversal.restoredOriginalScrollTop = Math.abs(scrollElement.scrollTop - originalScrollTop) <= 2;
+          traversal.finalScrollTop = scrollElement.scrollTop;
+        } catch (error) {
+          traversal.restoreError = error?.message || String(error);
+        }
+      }
     }
 
+    const exported = selected.map(item => captured.get(item.message.id)).filter(Boolean);
+    const missing = selected.map((item, index) => ({
+      index, messageId: item.message?.id || null, role: item.role
+    })).filter(item => item.messageId && !captured.has(item.messageId));
     diagnostics.dom = {
-      discovery,
-      expectedMessageCount: selected.length,
-      matchedMessageCount: exported.length,
-      missingMessageCount: missing.length,
-      duplicateMessageCount: duplicate.length,
-      missing,
-      duplicate,
+      discovery, traversal, expectedMessageCount: selected.length,
+      matchedMessageCount: exported.length, missingMessageCount: missing.length,
+      duplicateMessageCount: duplicates.size, missing,
+      duplicate: [...duplicates.values()],
       mapping: exported.map(({ index, messageId, role }) => ({ index, messageId, role }))
     };
     return exported;
@@ -742,11 +890,11 @@ ${messages}
         throw new Error('部分目标消息缺少 ID，无法与原生 DOM 精确对应。');
       }
 
-      setStatus(`接口已筛选 ${selected.length} 条消息，正在与原生页面逐条对应…`);
-      const exported = cloneNativeMessages(selected);
+      setStatus(`接口已筛选 ${selected.length} 条消息，正在遍历虚拟滚动页面…`);
+      const exported = await cloneNativeMessages(selected);
       if (exported.length !== selected.length) {
         const missingCount = diagnostics.dom.missingMessageCount + diagnostics.dom.duplicateMessageCount;
-        throw new Error(`原生 DOM 无法完整对应接口消息：目标 ${selected.length} 条，匹配 ${exported.length} 条，缺失或歧义 ${missingCount} 条。未生成不完整文件。`);
+        throw new Error(`虚拟滚动遍历后仍无法完整对应接口消息：目标 ${selected.length} 条，匹配 ${exported.length} 条，缺失或歧义 ${missingCount} 条。未生成不完整文件。`);
       }
 
       setStatus('正在提取 ChatGPT 原生样式并生成 HTML…');
