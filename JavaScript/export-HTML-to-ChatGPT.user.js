@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT 会话 HTML 导出器
 // @namespace    https://github.com/JKwarn/upload-my
-// @version      2.5.6
+// @version      2.5.7
 // @description  通过会话接口校验消息，并复用 ChatGPT 原生 DOM 与 CSS 导出独立 HTML
 // @match        https://chatgpt.com/c/*
 // @run-at       document-idle
@@ -11,7 +11,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '2.5.6';
+  const VERSION = '2.5.7';
   const PREFIX = '[ChatGPT 会话 HTML 导出器]';
   const IDS = {
     button: 'chatgpt-html-exporter-button',
@@ -1099,8 +1099,9 @@
       const timestamp = Number(message?.create_time);
       const date = Number.isFinite(timestamp) && timestamp > 0 ? new Date(timestamp * 1000).toLocaleString() : '';
       const roleLabel = item.role === 'user' ? '用户' : 'ChatGPT';
-      return `<div class="nav-item" role="button" tabindex="0" data-target="${escapeHTML(item.messageId)}" data-role="${escapeHTML(item.role)}">
-        <input class="nav-check" type="checkbox" aria-label="选择${roleLabel}消息">
+      const messageDomId = String(item.messageId).replace(/[^a-zA-Z0-9_-]/g, '-');
+      return `<div class="nav-item" id="nav-message-${messageDomId}" role="button" tabindex="0" data-target="${escapeHTML(item.messageId)}" data-role="${escapeHTML(item.role)}">
+        <input class="nav-check" id="nav-checkbox-${messageDomId}" type="checkbox" aria-label="选择${roleLabel}消息">
         <span class="nav-index">${item.index + 1}</span>
         <span class="nav-content"><span class="nav-meta"><strong>${roleLabel}</strong><time>${escapeHTML(date)}</time></span>
         <span class="nav-preview">${escapeHTML(preview || '（无文本内容）')}</span></span>
@@ -1151,28 +1152,28 @@ body{margin:0;padding:0;background:var(--main-surface-primary,#fff);color:var(--
 </style></head>
 <body>
 <div class="export-layout" id="export-layout">
-<aside class="export-sidebar" id="export-sidebar" aria-label="会话消息导航">
-<header class="sidebar-header"><div style="min-width:0"><div class="sidebar-title">${title}</div><div class="sidebar-subtitle">chatgpt.com · ${exported.length} 条消息</div></div>
-<button class="sidebar-toggle" id="sidebar-toggle" type="button" title="收缩左侧面板" aria-label="收缩左侧面板">◧</button></header>
-<nav class="sidebar-list" id="sidebar-list">${navigationItems}</nav>
-<footer class="sidebar-footer"><input class="footer-check" id="select-all" type="checkbox" aria-label="全选消息">
-<span class="selected-count" id="selected-count">0/${exported.length}</span><span class="sidebar-footer-spacer"></span>
-<div class="menu-wrap"><button class="sidebar-menu-button" id="quick-menu-button" type="button" aria-label="快速选择" title="快速选择">···</button>
-<div class="quick-menu" id="quick-menu"><button type="button" data-action="clear">清空</button><button type="button" data-action="questions">只选问题</button><button type="button" data-action="answers">只选回答</button></div></div></footer></aside>
-<button class="sidebar-toggle" id="sidebar-expand" type="button" title="展开左侧面板" aria-label="展开左侧面板" style="display:none;position:fixed;top:16px;left:12px;z-index:40;background:var(--main-surface-primary,#fff);border:1px solid var(--border-light,rgba(0,0,0,.16));box-shadow:0 2px 8px rgba(0,0,0,.12)">◧</button>
+<aside class="export-sidebar" id="conversation-navigation-panel" aria-label="会话消息导航">
+<header class="sidebar-header"><div style="min-width:0"><div class="sidebar-title" id="conversation-navigation-title">${title}</div><div class="sidebar-subtitle" id="conversation-navigation-summary">chatgpt.com · ${exported.length} 条消息</div></div>
+<button class="sidebar-toggle" id="collapse-navigation-panel" type="button" title="收缩左侧面板" aria-label="收缩左侧面板">◧</button></header>
+<nav class="sidebar-list" id="conversation-message-list">${navigationItems}</nav>
+<footer class="sidebar-footer"><input class="footer-check" id="select-all-messages" type="checkbox" aria-label="全选消息">
+<span class="selected-count" id="selected-message-count">0/${exported.length}</span><span class="sidebar-footer-spacer"></span>
+<div class="menu-wrap"><button class="sidebar-menu-button" id="message-selection-menu-button" type="button" aria-label="快速选择" title="快速选择">···</button>
+<div class="quick-menu" id="message-selection-menu"><button id="clear-message-selection" type="button" data-action="clear">清空</button><button id="select-user-questions" type="button" data-action="questions">只选问题</button><button id="select-assistant-answers" type="button" data-action="answers">只选回答</button></div></div></footer></aside>
+<button class="sidebar-toggle" id="expand-navigation-panel" type="button" title="展开左侧面板" aria-label="展开左侧面板" style="display:none;position:fixed;top:16px;left:12px;z-index:40;background:var(--main-surface-primary,#fff);border:1px solid var(--border-light,rgba(0,0,0,.16));box-shadow:0 2px 8px rgba(0,0,0,.12)">◧</button>
 <main class="export-main"><div class="export-page" data-conversation-id="${escapeHTML(conversationId)}">${messages}</div></main></div>
 <script>
 (() => {
-const layout=document.getElementById('export-layout'),collapse=document.getElementById('sidebar-toggle'),expand=document.getElementById('sidebar-expand');
-const list=document.getElementById('sidebar-list'),menuButton=document.getElementById('quick-menu-button'),menu=document.getElementById('quick-menu');
-const selectAll=document.getElementById('select-all'),count=document.getElementById('selected-count');
+const layout=document.getElementById('export-layout'),collapse=document.getElementById('collapse-navigation-panel'),expand=document.getElementById('expand-navigation-panel');
+const list=document.getElementById('conversation-message-list'),menuButton=document.getElementById('message-selection-menu-button'),menu=document.getElementById('message-selection-menu');
+const selectAll=document.getElementById('select-all-messages'),count=document.getElementById('selected-message-count');
 const rows=[...list.querySelectorAll('.nav-item')],checks=rows.map(row=>row.querySelector('.nav-check'));
 const update=()=>{const n=checks.filter(x=>x.checked).length;count.textContent=n+'/'+checks.length;selectAll.checked=checks.length>0&&n===checks.length;selectAll.indeterminate=n>0&&n<checks.length};
 const choose=fn=>{rows.forEach((row,i)=>checks[i].checked=fn(row));update()};
+const clearCurrentHighlight=()=>{document.querySelectorAll('.export-message.nav-highlight').forEach(node=>node.classList.remove('nav-highlight'));rows.forEach(row=>row.classList.remove('active'))};
 checks.forEach(check=>{check.addEventListener('click',e=>e.stopPropagation());check.addEventListener('change',update)});
 const navigate=row=>{const target=[...document.querySelectorAll('.export-message')].find(node=>node.dataset.messageId===row.dataset.target);if(!target)return;
-list.querySelectorAll('.nav-item.active').forEach(node=>node.classList.remove('active'));row.classList.add('active');
-target.scrollIntoView({behavior:'smooth',block:'start'});target.classList.add('nav-highlight');setTimeout(()=>target.classList.remove('nav-highlight'),1800)};
+clearCurrentHighlight();row.classList.add('active');target.scrollIntoView({behavior:'smooth',block:'start'});target.classList.add('nav-highlight')};
 rows.forEach(row=>{row.addEventListener('click',e=>{if(e.target.closest('.nav-check'))return;navigate(row)});
 row.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&!e.target.closest('.nav-check')){e.preventDefault();navigate(row)}})});
 collapse.addEventListener('click',()=>{layout.classList.add('sidebar-collapsed');expand.style.display='block'});
@@ -1180,7 +1181,10 @@ expand.addEventListener('click',()=>{layout.classList.remove('sidebar-collapsed'
 selectAll.addEventListener('change',()=>choose(()=>selectAll.checked));
 menuButton.addEventListener('click',e=>{e.stopPropagation();menu.classList.toggle('open')});
 menu.addEventListener('click',e=>{const action=e.target.closest('button')?.dataset.action;if(!action)return;
-if(action==='clear')choose(()=>false);if(action==='questions')choose(row=>row.dataset.role==='user');if(action==='answers')choose(row=>row.dataset.role==='assistant');menu.classList.remove('open')});
+if(action==='clear'){choose(()=>false);clearCurrentHighlight()}
+if(action==='questions')choose(row=>row.dataset.role==='user');
+if(action==='answers')choose(row=>row.dataset.role==='assistant');
+menu.classList.remove('open')});
 document.addEventListener('click',e=>{if(!e.target.closest('.menu-wrap'))menu.classList.remove('open')});update();
 })();
 </script>
