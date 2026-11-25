@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT 会话 HTML 导出器
 // @namespace    https://github.com/JKwarn/upload-my
-// @version      2.6.2
+// @version      2.6.3
 // @description  通过会话接口校验消息，并复用 ChatGPT 原生 DOM 与 CSS 导出独立 HTML
 // @match        https://chatgpt.com/c/*
 // @run-at       document-idle
@@ -11,7 +11,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '2.6.2';
+  const VERSION = '2.6.3';
   const PREFIX = '[ChatGPT 会话 HTML 导出器]';
   const IDS = {
     button: 'chatgpt-html-exporter-button',
@@ -675,6 +675,9 @@
     });
     root.querySelectorAll('[data-testid*="copy-button"]').forEach(node => {
       if (!node.closest('pre,code,[data-testid*="code"],[class*="code-block"]')) node.remove();
+    });
+    root.querySelectorAll('div.flex.flex-row-reverse.items-center.gap-1').forEach(node => {
+      node.remove();
     });
   }
 
