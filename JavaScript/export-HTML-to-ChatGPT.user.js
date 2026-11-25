@@ -627,6 +627,9 @@
     const marker = 'return __dil.jsx(';
     const markerIndex = source.indexOf(marker);
     if (markerIndex < 0) return null;
+    if (/DIL\\.use(?:State|Effect|Callback|Ref|Memo)|on(?:Click|Change|Submit)/.test(source)) {
+      diagnostics.rendering.unsupportedDILExpressionCount++;
+    }
     let cursor = markerIndex + 'return '.length;
 
     function skipSpace() {
@@ -1053,11 +1056,11 @@
       diagnostics.result = {
         success: true,
         completeness: {
-          isComplete: !hasUnfetchedPages,
-          status: hasUnfetchedPages ? 'partial' : 'two-stage-response',
+          isComplete: hasUnfetchedPages ? false : null,
+          status: hasUnfetchedPages ? 'partial' : 'unverified',
           reason: hasUnfetchedPages
             ? ['接口分页标志表明可能仍有未获取的数据；未执行第三阶段请求。']
-            : ['仅能确认两阶段接口响应已完整合并，不能据此证明会话所有分支均已导出。']
+            : ['两阶段响应已按接口顺序合并，且未发现明确的剩余分页标志；这不能证明会话的所有分支均已导出。']
         },
         filename,
         htmlLength: finalHTML.length,
