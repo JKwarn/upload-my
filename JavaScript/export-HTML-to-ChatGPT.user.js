@@ -46,7 +46,7 @@
   const COMPONENTS = new Set([
     'box', 'col', 'row', 'grid', 'grid-item', 'flow', 'flow-item',
     'card', 'title', 'text', 'caption', 'badge', 'icon', 'divider',
-    'list', 'list-item', 'table-section', 'table-row', 'table-cell',
+    'list', 'list-item', 'table', 'table-section', 'table-row', 'table-cell',
     'radio', 'radio-group', 'checkbox', 'button', 'segmented-control',
     'select', 'input', 'textarea', 'math', 'popover', 'popover-trigger',
     'popover-content', 'pressable', 'spacer', 'underline', 'bold',
@@ -538,7 +538,7 @@
         attr.name.toLowerCase(),
         attr.value.replace(/^\{(.*)\}$/s, '$1')
       ]));
-      const tag = name === 'divider' ? 'hr' : name === 'list' ? 'ul' : name === 'list-item' ? 'li' :
+      const tag = name === 'divider' ? 'hr' : name === 'list' ? (attrs.marker === 'number' ? 'ol' : 'ul') : name === 'list-item' ? 'li' : name === 'table' ? 'table' :
         name === 'table-section' ? 'tbody' : name === 'table-row' ? 'tr' :
         name === 'table-cell' ? (attrs.header === 'true' ? 'th' : 'td') :
         name === 'bold' ? 'strong' : name === 'italic' ? 'em' :
@@ -553,6 +553,7 @@
         replacement.dataset[key.replace(/-([a-z])/g, (_, c) => c.toUpperCase())] = value;
       }
       while (node.firstChild) replacement.appendChild(node.firstChild);
+      if (name === 'math' && attrs.value) replacement.textContent = attrs.value;
       if (name === 'icon') {
         replacement.textContent = iconGlyph(attrValue(node, 'name'));
         replacement.setAttribute('aria-hidden', 'true');
