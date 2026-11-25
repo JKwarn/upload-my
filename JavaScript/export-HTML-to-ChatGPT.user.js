@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT 会话 HTML 导出器
 // @namespace    https://github.com/JKwarn/upload-my
-// @version      2.3.1
+// @version      2.3.2
 // @description  通过两阶段会话接口导出消息，保留 Markdown、静态 DIL 布局和 Mermaid 图表
 // @match        https://chatgpt.com/c/*
 // @run-at       document-idle
@@ -14,7 +14,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '2.3.1';
+  const VERSION = '2.3.2';
   const PREFIX = '[ChatGPT 会话 HTML 导出器]';
   const IDS = {
     button: 'chatgpt-html-exporter-button',
@@ -1037,6 +1037,7 @@
       const originalPage = parsedOriginal.querySelector('.export-page');
       if (originalPage) {
         const footer = originalPage.querySelector('.export-footer');
+        originalPage.querySelectorAll('.export-message').forEach(message => message.remove());
         for (const message of finalMessages) originalPage.insertBefore(message, footer || null);
       }
       const finalHTML = originalPage
