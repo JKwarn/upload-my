@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT 会话 HTML 导出器
 // @namespace    https://github.com/JKwarn/upload-my
-// @version      2.6.0
+// @version      2.6.1
 // @description  通过会话接口校验消息，并复用 ChatGPT 原生 DOM 与 CSS 导出独立 HTML
 // @match        https://chatgpt.com/c/*
 // @run-at       document-idle
@@ -11,7 +11,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '2.6.0';
+  const VERSION = '2.6.1';
   const PREFIX = '[ChatGPT 会话 HTML 导出器]';
   const IDS = {
     button: 'chatgpt-html-exporter-button',
@@ -280,19 +280,35 @@
       if(id&&seenIds.has(id)){duplicateCount++;continue;} if(id)seenIds.add(id);else missingIdCount++; merged.push(message);
     }
     const newestInfo=newer.page_info||{}; const oldestInfo=olderPages.length?olderPages[olderPages.length-1].page_info||{}:{};
+    const terminalPage=olderPages.length?olderPages[olderPages.length-1]:null;
+    let boundarySource=boundaryMessageId?'response.boundary_message_id':null;
+    if(!boundaryMessageId&&terminalPage?.page_info?.has_previous_page===false){
+      const start=terminalPage.page_info?.start_cursor;
+      const end=terminalPage.page_info?.end_cursor;
+      if(typeof start==='string'&&start&&start===end){
+        boundaryMessageId=start;
+        boundarySource='terminal-page.start_cursor=end_cursor';
+      }
+    }
+    const boundaryMessagePresent=Boolean(boundaryMessageId&&merged.some(message=>message.id===boundaryMessageId));
+    const filteredMessages=boundaryMessageId
+      ? merged.filter(message=>message.id!==boundaryMessageId)
+      : merged;
     const hasUnfetchedPages=['max-pagination-pages-reached','missing-start-cursor','repeated-start-cursor'].includes(stopReason)||
       (!boundaryReached&&oldestInfo.has_previous_page===true);
     diagnostics.api={newerMessageCount:newer.messages.length,olderMessageCount:olderPages.reduce((n,p)=>n+p.messages.length,0),
       requestPageCount:requests.length,requests,pages:{newer:summarizePage(newer),older:olderPages.map(summarizePage)},
-      mergedMessageCount:merged.length,duplicateCount,missingIdCount,responseOrder:['最旧历史页到较新历史页','第一阶段新消息 response'],
-      boundary:{boundaryMessageId,reached:boundaryReached,stopReason},
+      mergedMessageCount:merged.length,exportableMessageCount:filteredMessages.length,
+      duplicateCount,missingIdCount,responseOrder:['最旧历史页到较新历史页','第一阶段新消息 response'],
+      boundary:{boundaryMessageId,boundarySource,reached:boundaryReached,stopReason,
+        boundaryMessagePresent,excludedBoundaryMessageCount:merged.length-filteredMessages.length},
       pagination:{newerPage:{hasPreviousPage:newestInfo.has_previous_page??null,hasNextPage:newestInfo.has_next_page??null},
       oldestFetchedPage:{hasPreviousPage:oldestInfo.has_previous_page??null,hasNextPage:oldestInfo.has_next_page??null},fetchedOlderPageCount:olderPages.length},
       hasUnfetchedPages};
     if(missingIdCount)warn(`${missingIdCount} 条消息缺少 ID，无法精确匹配 DOM。`);
-    if(!boundaryMessageId)warn('响应未提供 boundary_message_id；使用 has_previous_page=false 作为分页终止条件。');
-    else if(!boundaryReached&&!hasUnfetchedPages)warn('分页已停止，但尚未观察到 boundary_message_id。');
-    return merged;
+    if(!boundaryMessageId)warn('响应未提供 boundary_message_id，且无法从终止页游标推导边界 ID。');
+    else if(boundarySource!=='response.boundary_message_id')warn('未提供 boundary_message_id；已根据 has_previous_page=false 且 start_cursor=end_cursor 推导边界消息，并从导出候选中排除该边界消息。');
+    return filteredMessages;
   }
 
   function roleOf(message) {
