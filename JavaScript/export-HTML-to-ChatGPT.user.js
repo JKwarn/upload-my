@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT 会话 HTML 导出器
 // @namespace    https://github.com/JKwarn/upload-my
-// @version      2.6.6
+// @version      2.6.7
 // @description  通过会话接口校验消息，并复用 ChatGPT 原生 DOM 与 CSS 导出独立 HTML
 // @match        https://chatgpt.com/c/*
 // @run-at       document-idle
@@ -11,7 +11,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '2.6.5';
+  const VERSION = '2.6.7';
   const PREFIX = '[ChatGPT 会话 HTML 导出器]';
   const IDS = {
     button: 'chatgpt-html-exporter-button',
@@ -1217,7 +1217,59 @@
     };
   }
 
-  function buildDocument(exported, selected, conversationId) {
+  async function inlineExternalSvgSprites(exported) {
+    const references = [];
+    const spriteUrls = new Set();
+    for (const item of exported) {
+      for (const use of item.clone.querySelectorAll('svg use')) {
+        const reference = use.getAttribute('href') ||
+          use.getAttributeNS('http://www.w3.org/1999/xlink', 'href') ||
+          use.getAttribute('xlink:href');
+        if (!reference) continue;
+        let url;
+        try { url = new URL(reference, location.href); } catch { continue; }
+        if (!url.hash) continue;
+        const spriteUrl = new URL(url.href);
+        spriteUrl.hash = '';
+        const key = spriteUrl.href;
+        spriteUrls.add(key);
+        references.push({ use, key, id: decodeURIComponent(url.hash.slice(1)) });
+      }
+    }
+    if (!references.length) return '';
+    const spriteDocuments = new Map();
+    for (const url of spriteUrls) {
+      const response = await fetch(url, {
+        method: 'GET',
+        credentials: new URL(url).origin === location.origin ? 'same-origin' : 'include',
+        cache: 'force-cache'
+      });
+      if (!response.ok) throw new Error('下载 SVG 图标资源失败：HTTP ' + response.status + '，' + url);
+      const parsed = new DOMParser().parseFromString(await response.text(), 'image/svg+xml');
+      const root = parsed.documentElement;
+      if (!root || root.localName !== 'svg' || parsed.querySelector('parsererror')) {
+        throw new Error('SVG 图标资源格式无效：' + url);
+      }
+      spriteDocuments.set(url, root);
+    }
+    for (const reference of references) {
+      const sprite = spriteDocuments.get(reference.key);
+      if (!sprite || !sprite.querySelector('#' + CSS.escape(reference.id))) {
+        throw new Error('SVG 雪碧图中缺少图标定义：' + reference.id);
+      }
+      reference.use.setAttribute('href', '#' + reference.id);
+      reference.use.removeAttribute('xlink:href');
+    }
+    const embedded = [...spriteDocuments.values()].map(root =>
+      '<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" ' +
+      'style="position:absolute;width:0;height:0;overflow:hidden;pointer-events:none">' +
+      root.innerHTML + '</svg>'
+    ).join('\n');
+    diagnostics.dom.inlinedSvgReferenceCount = references.length;
+    diagnostics.dom.inlinedSvgSpriteCount = spriteDocuments.size;
+    return embedded;
+  }
+  function buildDocument(exported, selected, conversationId, svgSpriteMarkup = '') {
     const styles = collectPageStyles();
     let copiedCustomPropertyCount = 0;
     for (const item of exported) copiedCustomPropertyCount += preserveElementVariables(item.source, item.clone.firstElementChild);
@@ -1286,6 +1338,7 @@ body{margin:0;padding:0;background:var(--main-surface-primary,#fff);color:var(--
 @page{size:A4;margin:12mm}
 </style></head>
 <body>
+${svgSpriteMarkup}
 <div class="export-layout" id="export-layout">
 <aside class="export-sidebar" id="conversation-navigation-panel" aria-label="会话消息导航">
 <header class="sidebar-header"><div style="min-width:0"><div class="sidebar-title" id="conversation-navigation-title">${title}</div><div class="sidebar-subtitle" id="conversation-navigation-summary">chatgpt.com · ${exported.length} 条消息</div></div>
@@ -1416,8 +1469,11 @@ document.addEventListener('click',e=>{if(!e.target.closest('.menu-wrap'))menu.cl
         throw new Error(`虚拟滚动遍历后仍无法完整对应接口消息：目标 ${selected.length} 条，匹配 ${exported.length} 条，缺失或歧义 ${missingCount} 条。未生成不完整文件。`);
       }
 
+      setStatus('正在内嵌 SVG 图标资源…');
+      const svgSpriteMarkup = await inlineExternalSvgSprites(exported);
+
       setStatus('正在提取 ChatGPT 原生样式并生成 HTML…');
-      const html = buildDocument(exported, selected, conversationId);
+      const html = buildDocument(exported, selected, conversationId, svgSpriteMarkup);
       const validation = validateDocument(html, selected.length);
       const filename = downloadHTML(html, conversationId);
 
