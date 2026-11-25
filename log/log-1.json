@@ -1,9 +1,15 @@
-[ChatGPT 会话 HTML 导出器] SUCCESS 
+[ChatGPT 会话 HTML 导出器] FAILED 
 {
-  "version": "2.5.7",
-  "timestamp": "2026-11-25T15:29:54.404Z",
+  "version": "2.5.8",
+  "timestamp": "2026-11-25T15:44:18.255Z",
   "conversationId": "6b006027-ed74-83ee-89f6-d179c49e7292",
-  "errors": [],
+  "errors": [
+    {
+      "name": "Error",
+      "message": "虚拟滚动遍历后仍无法完整对应接口消息：目标 20 条，匹配 0 条，缺失或歧义 40 条。未生成不完整文件。",
+      "stack": "handleExport@moz-extension://3bd90dbb-ecdd-4b22-9532-9cd19de6ad7a/%20ChatGPT%20%E4%BC%9A%E8%AF%9D%20HTML%20%E5%AF%BC%E5%87%BA%E5%99%A8.user.js#31:1295:15\nasync*injectUI@moz-extension://3bd90dbb-ecdd-4b22-9532-9cd19de6ad7a/%20ChatGPT%20%E4%BC%9A%E8%AF%9D%20HTML%20%E5%AF%BC%E5%87%BA%E5%99%A8.user.js#31:166:14\ninitialize@moz-extension://3bd90dbb-ecdd-4b22-9532-9cd19de6ad7a/%20ChatGPT%20%E4%BC%9A%E8%AF%9D%20HTML%20%E5%AF%BC%E5%87%BA%E5%99%A8.user.js#31:1346:5\nd_0Pu63Dqmtvl_4eo/<@moz-extension://3bd90dbb-ecdd-4b22-9532-9cd19de6ad7a/%20ChatGPT%20%E4%BC%9A%E8%AF%9D%20HTML%20%E5%AF%BC%E5%87%BA%E5%99%A8.user.js#31:1350:3\nd_0Pu63Dqmtvl_4eo/<@moz-extension://3bd90dbb-ecdd-4b22-9532-9cd19de6ad7a/%20ChatGPT%20%E4%BC%9A%E8%AF%9D%20HTML%20%E5%AF%BC%E5%87%BA%E5%99%A8.user.js#31:1351:3\nd_0Pu63Dqmtvl_4eo@moz-extension://3bd90dbb-ecdd-4b22-9532-9cd19de6ad7a/%20ChatGPT%20%E4%BC%9A%E8%AF%9D%20HTML%20%E5%AF%BC%E5%87%BA%E5%99%A8.user.js#31:1352:3\nwn@moz-extension://3bd90dbb-ecdd-4b22-9532-9cd19de6ad7a/sandbox/injected-web.js:1:16625\n@moz-extension://3bd90dbb-ecdd-4b22-9532-9cd19de6ad7a/%20ChatGPT%20%E4%BC%9A%E8%AF%9D%20HTML%20%E5%AF%BC%E5%87%BA%E5%99%A8.user.js#31:1:1\n"
+    }
+  ],
   "warnings": [
     "接口分页标志仍提示可能存在其他分页；本诊断版本不据此单独判定当前会话不完整，将结合原生 DOM 消息 ID 对照分析。",
     "分页标志存在未解决状态；继续进行 DOM 对照诊断。该状态本身不作为失败依据。"
@@ -348,7 +354,7 @@
   },
   "dom": {
     "discovery": {
-      "capturedAt": "2026-11-25T15:29:56.275Z",
+      "capturedAt": "2026-11-25T15:44:19.749Z",
       "document": {
         "url": "https://chatgpt.com/c/6b006027-ed74-83ee-89f6-d179c49e7292",
         "title": "设计AI软件团队工作流骨架 (2)",
@@ -3255,7 +3261,7 @@
       ]
     },
     "traversal": {
-      "startedAt": "2026-11-25T15:29:56.275Z",
+      "startedAt": "2026-11-25T15:44:19.750Z",
       "strategy": "reset-to-top-then-forward-scan",
       "container": {
         "tag": "div",
@@ -3290,7 +3296,7 @@
           "totalCapturedMessageCount": 0,
           "waitResult": {
             "changed": false,
-            "waitedMs": 455,
+            "waitedMs": 453,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": false,
             "stableDetected": false,
@@ -3308,7 +3314,7 @@
           "totalCapturedMessageCount": 0,
           "waitResult": {
             "changed": false,
-            "waitedMs": 455,
+            "waitedMs": 454,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": false,
             "stableDetected": false,
@@ -3344,7 +3350,7 @@
           "totalCapturedMessageCount": 0,
           "waitResult": {
             "changed": false,
-            "waitedMs": 454,
+            "waitedMs": 453,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": false,
             "stableDetected": false,
@@ -3380,7 +3386,7 @@
           "totalCapturedMessageCount": 0,
           "waitResult": {
             "changed": false,
-            "waitedMs": 452,
+            "waitedMs": 455,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": false,
             "stableDetected": false,
@@ -3434,7 +3440,7 @@
           "totalCapturedMessageCount": 0,
           "waitResult": {
             "changed": true,
-            "waitedMs": 454,
+            "waitedMs": 455,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": true,
             "stableDetected": true,
@@ -3452,7 +3458,7 @@
           "totalCapturedMessageCount": 0,
           "waitResult": {
             "changed": true,
-            "waitedMs": 454,
+            "waitedMs": 453,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": true,
             "stableDetected": true,
@@ -3470,7 +3476,7 @@
           "totalCapturedMessageCount": 0,
           "waitResult": {
             "changed": true,
-            "waitedMs": 452,
+            "waitedMs": 455,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": true,
             "stableDetected": true,
@@ -3488,7 +3494,7 @@
           "totalCapturedMessageCount": 0,
           "waitResult": {
             "changed": true,
-            "waitedMs": 455,
+            "waitedMs": 452,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": true,
             "stableDetected": true,
@@ -3506,7 +3512,7 @@
           "totalCapturedMessageCount": 0,
           "waitResult": {
             "changed": true,
-            "waitedMs": 454,
+            "waitedMs": 453,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": true,
             "stableDetected": true,
@@ -3560,7 +3566,7 @@
           "totalCapturedMessageCount": 0,
           "waitResult": {
             "changed": false,
-            "waitedMs": 454,
+            "waitedMs": 453,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": false,
             "stableDetected": false,
@@ -3578,7 +3584,7 @@
           "totalCapturedMessageCount": 0,
           "waitResult": {
             "changed": true,
-            "waitedMs": 452,
+            "waitedMs": 454,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": true,
             "stableDetected": true,
@@ -3614,7 +3620,7 @@
           "totalCapturedMessageCount": 0,
           "waitResult": {
             "changed": false,
-            "waitedMs": 453,
+            "waitedMs": 452,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": false,
             "stableDetected": false,
@@ -3632,7 +3638,7 @@
           "totalCapturedMessageCount": 0,
           "waitResult": {
             "changed": true,
-            "waitedMs": 453,
+            "waitedMs": 455,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": true,
             "stableDetected": true,
@@ -3650,7 +3656,7 @@
           "totalCapturedMessageCount": 0,
           "waitResult": {
             "changed": true,
-            "waitedMs": 453,
+            "waitedMs": 452,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": true,
             "stableDetected": true,
@@ -3668,7 +3674,7 @@
           "totalCapturedMessageCount": 0,
           "waitResult": {
             "changed": true,
-            "waitedMs": 452,
+            "waitedMs": 455,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": true,
             "stableDetected": true,
@@ -3686,7 +3692,7 @@
           "totalCapturedMessageCount": 0,
           "waitResult": {
             "changed": true,
-            "waitedMs": 454,
+            "waitedMs": 455,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": true,
             "stableDetected": true,
@@ -3704,7 +3710,7 @@
           "totalCapturedMessageCount": 0,
           "waitResult": {
             "changed": true,
-            "waitedMs": 452,
+            "waitedMs": 453,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": true,
             "stableDetected": true,
@@ -3722,7 +3728,7 @@
           "totalCapturedMessageCount": 0,
           "waitResult": {
             "changed": true,
-            "waitedMs": 455,
+            "waitedMs": 456,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": true,
             "stableDetected": true,
@@ -3740,7 +3746,7 @@
           "totalCapturedMessageCount": 0,
           "waitResult": {
             "changed": true,
-            "waitedMs": 453,
+            "waitedMs": 454,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": true,
             "stableDetected": true,
@@ -3758,7 +3764,7 @@
           "totalCapturedMessageCount": 0,
           "waitResult": {
             "changed": false,
-            "waitedMs": 453,
+            "waitedMs": 455,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": false,
             "stableDetected": false,
@@ -3790,11 +3796,11 @@
           "actualScrollTop": 14732,
           "maxScrollTop": 32089,
           "virtualizedTurnCount": 3,
-          "newlyCapturedMessageCount": 2,
-          "totalCapturedMessageCount": 2,
+          "newlyCapturedMessageCount": 0,
+          "totalCapturedMessageCount": 0,
           "waitResult": {
             "changed": true,
-            "waitedMs": 453,
+            "waitedMs": 455,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": true,
             "stableDetected": true,
@@ -3809,7 +3815,7 @@
           "maxScrollTop": 32089,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 2,
+          "totalCapturedMessageCount": 0,
           "waitResult": {
             "changed": true,
             "waitedMs": 455,
@@ -3826,8 +3832,8 @@
           "actualScrollTop": 15748,
           "maxScrollTop": 32089,
           "virtualizedTurnCount": 3,
-          "newlyCapturedMessageCount": 2,
-          "totalCapturedMessageCount": 4,
+          "newlyCapturedMessageCount": 0,
+          "totalCapturedMessageCount": 0,
           "waitResult": {
             "changed": true,
             "waitedMs": 454,
@@ -3845,10 +3851,10 @@
           "maxScrollTop": 32089,
           "virtualizedTurnCount": 3,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 4,
+          "totalCapturedMessageCount": 0,
           "waitResult": {
             "changed": false,
-            "waitedMs": 454,
+            "waitedMs": 453,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": false,
             "stableDetected": false,
@@ -3862,11 +3868,11 @@
           "actualScrollTop": 16764,
           "maxScrollTop": 32089,
           "virtualizedTurnCount": 3,
-          "newlyCapturedMessageCount": 2,
-          "totalCapturedMessageCount": 6,
+          "newlyCapturedMessageCount": 0,
+          "totalCapturedMessageCount": 0,
           "waitResult": {
             "changed": true,
-            "waitedMs": 453,
+            "waitedMs": 455,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": true,
             "stableDetected": true,
@@ -3881,10 +3887,10 @@
           "maxScrollTop": 32089,
           "virtualizedTurnCount": 3,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 6,
+          "totalCapturedMessageCount": 0,
           "waitResult": {
             "changed": false,
-            "waitedMs": 452,
+            "waitedMs": 453,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": false,
             "stableDetected": false,
@@ -3899,10 +3905,10 @@
           "maxScrollTop": 32089,
           "virtualizedTurnCount": 3,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 6,
+          "totalCapturedMessageCount": 0,
           "waitResult": {
             "changed": false,
-            "waitedMs": 453,
+            "waitedMs": 455,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": false,
             "stableDetected": false,
@@ -3917,7 +3923,7 @@
           "maxScrollTop": 32089,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 6,
+          "totalCapturedMessageCount": 0,
           "waitResult": {
             "changed": true,
             "waitedMs": 454,
@@ -3934,11 +3940,11 @@
           "actualScrollTop": 18796,
           "maxScrollTop": 32089,
           "virtualizedTurnCount": 2,
-          "newlyCapturedMessageCount": 2,
-          "totalCapturedMessageCount": 8,
+          "newlyCapturedMessageCount": 0,
+          "totalCapturedMessageCount": 0,
           "waitResult": {
             "changed": true,
-            "waitedMs": 453,
+            "waitedMs": 455,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": true,
             "stableDetected": true,
@@ -3953,10 +3959,10 @@
           "maxScrollTop": 32089,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 8,
+          "totalCapturedMessageCount": 0,
           "waitResult": {
             "changed": false,
-            "waitedMs": 454,
+            "waitedMs": 453,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": false,
             "stableDetected": false,
@@ -3971,10 +3977,10 @@
           "maxScrollTop": 32089,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 8,
+          "totalCapturedMessageCount": 0,
           "waitResult": {
             "changed": false,
-            "waitedMs": 454,
+            "waitedMs": 455,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": false,
             "stableDetected": false,
@@ -3988,11 +3994,11 @@
           "actualScrollTop": 20320,
           "maxScrollTop": 32089,
           "virtualizedTurnCount": 3,
-          "newlyCapturedMessageCount": 2,
-          "totalCapturedMessageCount": 10,
+          "newlyCapturedMessageCount": 0,
+          "totalCapturedMessageCount": 0,
           "waitResult": {
             "changed": true,
-            "waitedMs": 453,
+            "waitedMs": 454,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": true,
             "stableDetected": true,
@@ -4007,10 +4013,10 @@
           "maxScrollTop": 32089,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 10,
+          "totalCapturedMessageCount": 0,
           "waitResult": {
             "changed": true,
-            "waitedMs": 454,
+            "waitedMs": 453,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": true,
             "stableDetected": true,
@@ -4025,10 +4031,10 @@
           "maxScrollTop": 32089,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 10,
+          "totalCapturedMessageCount": 0,
           "waitResult": {
             "changed": false,
-            "waitedMs": 454,
+            "waitedMs": 452,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": false,
             "stableDetected": false,
@@ -4043,10 +4049,10 @@
           "maxScrollTop": 32089,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 10,
+          "totalCapturedMessageCount": 0,
           "waitResult": {
             "changed": false,
-            "waitedMs": 454,
+            "waitedMs": 452,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": false,
             "stableDetected": false,
@@ -4060,8 +4066,8 @@
           "actualScrollTop": 22352,
           "maxScrollTop": 32089,
           "virtualizedTurnCount": 3,
-          "newlyCapturedMessageCount": 2,
-          "totalCapturedMessageCount": 12,
+          "newlyCapturedMessageCount": 0,
+          "totalCapturedMessageCount": 0,
           "waitResult": {
             "changed": true,
             "waitedMs": 454,
@@ -4079,7 +4085,7 @@
           "maxScrollTop": 32089,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 12,
+          "totalCapturedMessageCount": 0,
           "waitResult": {
             "changed": true,
             "waitedMs": 453,
@@ -4096,11 +4102,11 @@
           "actualScrollTop": 23368,
           "maxScrollTop": 32089,
           "virtualizedTurnCount": 3,
-          "newlyCapturedMessageCount": 2,
-          "totalCapturedMessageCount": 14,
+          "newlyCapturedMessageCount": 0,
+          "totalCapturedMessageCount": 0,
           "waitResult": {
             "changed": true,
-            "waitedMs": 454,
+            "waitedMs": 455,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": true,
             "stableDetected": true,
@@ -4115,10 +4121,10 @@
           "maxScrollTop": 32089,
           "virtualizedTurnCount": 3,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 14,
+          "totalCapturedMessageCount": 0,
           "waitResult": {
             "changed": false,
-            "waitedMs": 455,
+            "waitedMs": 453,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": false,
             "stableDetected": false,
@@ -4133,7 +4139,7 @@
           "maxScrollTop": 32089,
           "virtualizedTurnCount": 3,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 14,
+          "totalCapturedMessageCount": 0,
           "waitResult": {
             "changed": false,
             "waitedMs": 453,
@@ -4150,8 +4156,8 @@
           "actualScrollTop": 24892,
           "maxScrollTop": 32089,
           "virtualizedTurnCount": 3,
-          "newlyCapturedMessageCount": 2,
-          "totalCapturedMessageCount": 16,
+          "newlyCapturedMessageCount": 0,
+          "totalCapturedMessageCount": 0,
           "waitResult": {
             "changed": true,
             "waitedMs": 455,
@@ -4169,7 +4175,7 @@
           "maxScrollTop": 32089,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 16,
+          "totalCapturedMessageCount": 0,
           "waitResult": {
             "changed": true,
             "waitedMs": 453,
@@ -4187,10 +4193,10 @@
           "maxScrollTop": 32089,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 16,
+          "totalCapturedMessageCount": 0,
           "waitResult": {
             "changed": false,
-            "waitedMs": 454,
+            "waitedMs": 452,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": false,
             "stableDetected": false,
@@ -4205,10 +4211,10 @@
           "maxScrollTop": 32089,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 16,
+          "totalCapturedMessageCount": 0,
           "waitResult": {
             "changed": false,
-            "waitedMs": 453,
+            "waitedMs": 454,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": false,
             "stableDetected": false,
@@ -4222,11 +4228,11 @@
           "actualScrollTop": 26924,
           "maxScrollTop": 32089,
           "virtualizedTurnCount": 2,
-          "newlyCapturedMessageCount": 2,
-          "totalCapturedMessageCount": 18,
+          "newlyCapturedMessageCount": 0,
+          "totalCapturedMessageCount": 0,
           "waitResult": {
             "changed": true,
-            "waitedMs": 651,
+            "waitedMs": 710,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": true,
             "stableDetected": true,
@@ -4241,7 +4247,7 @@
           "maxScrollTop": 32089,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 18,
+          "totalCapturedMessageCount": 0,
           "waitResult": {
             "changed": false,
             "waitedMs": 455,
@@ -4259,7 +4265,7 @@
           "maxScrollTop": 32089,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 18,
+          "totalCapturedMessageCount": 0,
           "waitResult": {
             "changed": false,
             "waitedMs": 455,
@@ -4277,10 +4283,10 @@
           "maxScrollTop": 32089,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 18,
+          "totalCapturedMessageCount": 0,
           "waitResult": {
             "changed": false,
-            "waitedMs": 453,
+            "waitedMs": 454,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": false,
             "stableDetected": false,
@@ -4295,10 +4301,10 @@
           "maxScrollTop": 32089,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 18,
+          "totalCapturedMessageCount": 0,
           "waitResult": {
             "changed": true,
-            "waitedMs": 454,
+            "waitedMs": 455,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": true,
             "stableDetected": true,
@@ -4313,7 +4319,7 @@
           "maxScrollTop": 32089,
           "virtualizedTurnCount": 1,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 18,
+          "totalCapturedMessageCount": 0,
           "waitResult": {
             "changed": false,
             "waitedMs": 454,
@@ -4330,8 +4336,8 @@
           "actualScrollTop": 29972,
           "maxScrollTop": 32089,
           "virtualizedTurnCount": 2,
-          "newlyCapturedMessageCount": 2,
-          "totalCapturedMessageCount": 20,
+          "newlyCapturedMessageCount": 0,
+          "totalCapturedMessageCount": 0,
           "waitResult": {
             "changed": true,
             "waitedMs": 454,
@@ -4349,7 +4355,7 @@
           "maxScrollTop": 32089,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 20,
+          "totalCapturedMessageCount": 0,
           "waitResult": {
             "changed": false,
             "waitedMs": 453,
@@ -4367,7 +4373,7 @@
           "maxScrollTop": 32089,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 20,
+          "totalCapturedMessageCount": 0,
           "waitResult": {
             "changed": false,
             "waitedMs": 454,
@@ -4385,10 +4391,10 @@
           "maxScrollTop": 32089,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 20,
+          "totalCapturedMessageCount": 0,
           "waitResult": {
             "changed": false,
-            "waitedMs": 454,
+            "waitedMs": 453,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": false,
             "stableDetected": false,
@@ -4403,10 +4409,10 @@
           "maxScrollTop": 32089,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 20,
+          "totalCapturedMessageCount": 0,
           "waitResult": {
             "changed": false,
-            "waitedMs": 454,
+            "waitedMs": 453,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": false,
             "stableDetected": false,
@@ -4421,10 +4427,10 @@
           "maxScrollTop": 32089,
           "virtualizedTurnCount": 2,
           "newlyCapturedMessageCount": 0,
-          "totalCapturedMessageCount": 20,
+          "totalCapturedMessageCount": 0,
           "waitResult": {
             "changed": false,
-            "waitedMs": 453,
+            "waitedMs": 454,
             "configuredMinimumDelayMs": 200,
             "mutationDetected": false,
             "stableDetected": false,
@@ -4435,13 +4441,13 @@
       ],
       "initialTopWait": {
         "changed": false,
-        "waitedMs": 454,
+        "waitedMs": 452,
         "configuredMinimumDelayMs": 200,
         "mutationDetected": false,
         "stableDetected": false,
         "finishReason": "no-dom-change-fallback",
         "fallbackWaitMs": 250,
-        "elapsedFromStartMs": 455
+        "elapsedFromStartMs": 452
       },
       "codeBlocks": [],
       "reachedTop": true,
@@ -4453,11 +4459,313 @@
       "codeBlockCountTotal": 0
     },
     "expectedMessageCount": 20,
-    "matchedMessageCount": 20,
-    "missingMessageCount": 0,
-    "duplicateMessageCount": 0,
-    "missing": [],
-    "duplicate": [],
+    "matchedMessageCount": 0,
+    "missingMessageCount": 20,
+    "duplicateMessageCount": 20,
+    "missing": [
+      {
+        "index": 0,
+        "messageId": "ebdbf9c0-69c6-41a6-a896-117f3ae05131",
+        "role": "user"
+      },
+      {
+        "index": 1,
+        "messageId": "1b29a8b8-ad1e-4b8e-8976-338b120a9ee6",
+        "role": "assistant"
+      },
+      {
+        "index": 2,
+        "messageId": "13071b7e-6807-4361-91d6-cfc2eb909f57",
+        "role": "user"
+      },
+      {
+        "index": 3,
+        "messageId": "deef0946-78f1-4a11-b2dd-6bc0c0a058dd",
+        "role": "assistant"
+      },
+      {
+        "index": 4,
+        "messageId": "49412971-5532-4077-9c43-9d79015269a4",
+        "role": "user"
+      },
+      {
+        "index": 5,
+        "messageId": "7bca35bc-b611-4f7c-a5ad-b9d0a4f69a2f",
+        "role": "assistant"
+      },
+      {
+        "index": 6,
+        "messageId": "7104dcb0-b873-40bf-9e53-447e35b969f2",
+        "role": "user"
+      },
+      {
+        "index": 7,
+        "messageId": "1816055b-e525-4b4e-a519-e823e485d7ae",
+        "role": "assistant"
+      },
+      {
+        "index": 8,
+        "messageId": "537cd660-f468-4f1c-8c75-6d9843ba574b",
+        "role": "user"
+      },
+      {
+        "index": 9,
+        "messageId": "4c46738c-8617-48fc-ac16-539ec4b01fbc",
+        "role": "assistant"
+      },
+      {
+        "index": 10,
+        "messageId": "ccdb5937-5174-4307-aa4c-56c1403f9295",
+        "role": "user"
+      },
+      {
+        "index": 11,
+        "messageId": "7f04b08f-e052-4577-909e-c9e442cb2a5b",
+        "role": "assistant"
+      },
+      {
+        "index": 12,
+        "messageId": "831f3aad-c4ba-46d4-ae50-ee2d7b499eee",
+        "role": "user"
+      },
+      {
+        "index": 13,
+        "messageId": "7175934e-4e55-467c-9171-3ecf3f36533a",
+        "role": "assistant"
+      },
+      {
+        "index": 14,
+        "messageId": "277509c7-8896-436f-a5f0-e2cffe38f8b9",
+        "role": "user"
+      },
+      {
+        "index": 15,
+        "messageId": "7f606909-b2af-4468-871d-6b165a77ac12",
+        "role": "assistant"
+      },
+      {
+        "index": 16,
+        "messageId": "5f256901-80a7-4b74-8479-9396f74822e0",
+        "role": "user"
+      },
+      {
+        "index": 17,
+        "messageId": "c6a98726-365e-4a50-8c85-8f3694ce1194",
+        "role": "assistant"
+      },
+      {
+        "index": 18,
+        "messageId": "50989465-0690-44e3-81b2-051b6f18334f",
+        "role": "user"
+      },
+      {
+        "index": 19,
+        "messageId": "c67eb43e-f8db-4a7d-84a8-5730fd213852",
+        "role": "assistant"
+      }
+    ],
+    "duplicate": [
+      {
+        "index": 0,
+        "messageId": "ebdbf9c0-69c6-41a6-a896-117f3ae05131",
+        "role": "user",
+        "error": "clone-root-validation-failed",
+        "valid": false,
+        "roleNodeCount": 2,
+        "actualRole": null,
+        "messageIdAnchorFound": true
+      },
+      {
+        "index": 1,
+        "messageId": "1b29a8b8-ad1e-4b8e-8976-338b120a9ee6",
+        "role": "assistant",
+        "error": "clone-root-validation-failed",
+        "valid": false,
+        "roleNodeCount": 2,
+        "actualRole": null,
+        "messageIdAnchorFound": true
+      },
+      {
+        "index": 2,
+        "messageId": "13071b7e-6807-4361-91d6-cfc2eb909f57",
+        "role": "user",
+        "error": "clone-root-validation-failed",
+        "valid": false,
+        "roleNodeCount": 2,
+        "actualRole": null,
+        "messageIdAnchorFound": true
+      },
+      {
+        "index": 3,
+        "messageId": "deef0946-78f1-4a11-b2dd-6bc0c0a058dd",
+        "role": "assistant",
+        "error": "clone-root-validation-failed",
+        "valid": false,
+        "roleNodeCount": 2,
+        "actualRole": null,
+        "messageIdAnchorFound": true
+      },
+      {
+        "index": 4,
+        "messageId": "49412971-5532-4077-9c43-9d79015269a4",
+        "role": "user",
+        "error": "clone-root-validation-failed",
+        "valid": false,
+        "roleNodeCount": 2,
+        "actualRole": null,
+        "messageIdAnchorFound": true
+      },
+      {
+        "index": 5,
+        "messageId": "7bca35bc-b611-4f7c-a5ad-b9d0a4f69a2f",
+        "role": "assistant",
+        "error": "clone-root-validation-failed",
+        "valid": false,
+        "roleNodeCount": 2,
+        "actualRole": null,
+        "messageIdAnchorFound": true
+      },
+      {
+        "index": 6,
+        "messageId": "7104dcb0-b873-40bf-9e53-447e35b969f2",
+        "role": "user",
+        "error": "clone-root-validation-failed",
+        "valid": false,
+        "roleNodeCount": 2,
+        "actualRole": null,
+        "messageIdAnchorFound": true
+      },
+      {
+        "index": 7,
+        "messageId": "1816055b-e525-4b4e-a519-e823e485d7ae",
+        "role": "assistant",
+        "error": "clone-root-validation-failed",
+        "valid": false,
+        "roleNodeCount": 2,
+        "actualRole": null,
+        "messageIdAnchorFound": true
+      },
+      {
+        "index": 8,
+        "messageId": "537cd660-f468-4f1c-8c75-6d9843ba574b",
+        "role": "user",
+        "error": "clone-root-validation-failed",
+        "valid": false,
+        "roleNodeCount": 2,
+        "actualRole": null,
+        "messageIdAnchorFound": true
+      },
+      {
+        "index": 9,
+        "messageId": "4c46738c-8617-48fc-ac16-539ec4b01fbc",
+        "role": "assistant",
+        "error": "clone-root-validation-failed",
+        "valid": false,
+        "roleNodeCount": 2,
+        "actualRole": null,
+        "messageIdAnchorFound": true
+      },
+      {
+        "index": 10,
+        "messageId": "ccdb5937-5174-4307-aa4c-56c1403f9295",
+        "role": "user",
+        "error": "clone-root-validation-failed",
+        "valid": false,
+        "roleNodeCount": 2,
+        "actualRole": null,
+        "messageIdAnchorFound": true
+      },
+      {
+        "index": 11,
+        "messageId": "7f04b08f-e052-4577-909e-c9e442cb2a5b",
+        "role": "assistant",
+        "error": "clone-root-validation-failed",
+        "valid": false,
+        "roleNodeCount": 2,
+        "actualRole": null,
+        "messageIdAnchorFound": true
+      },
+      {
+        "index": 12,
+        "messageId": "831f3aad-c4ba-46d4-ae50-ee2d7b499eee",
+        "role": "user",
+        "error": "clone-root-validation-failed",
+        "valid": false,
+        "roleNodeCount": 2,
+        "actualRole": null,
+        "messageIdAnchorFound": true
+      },
+      {
+        "index": 13,
+        "messageId": "7175934e-4e55-467c-9171-3ecf3f36533a",
+        "role": "assistant",
+        "error": "clone-root-validation-failed",
+        "valid": false,
+        "roleNodeCount": 2,
+        "actualRole": null,
+        "messageIdAnchorFound": true
+      },
+      {
+        "index": 14,
+        "messageId": "277509c7-8896-436f-a5f0-e2cffe38f8b9",
+        "role": "user",
+        "error": "clone-root-validation-failed",
+        "valid": false,
+        "roleNodeCount": 2,
+        "actualRole": null,
+        "messageIdAnchorFound": true
+      },
+      {
+        "index": 15,
+        "messageId": "7f606909-b2af-4468-871d-6b165a77ac12",
+        "role": "assistant",
+        "error": "clone-root-validation-failed",
+        "valid": false,
+        "roleNodeCount": 2,
+        "actualRole": null,
+        "messageIdAnchorFound": true
+      },
+      {
+        "index": 16,
+        "messageId": "5f256901-80a7-4b74-8479-9396f74822e0",
+        "role": "user",
+        "error": "clone-root-validation-failed",
+        "valid": false,
+        "roleNodeCount": 2,
+        "actualRole": null,
+        "messageIdAnchorFound": true
+      },
+      {
+        "index": 17,
+        "messageId": "c6a98726-365e-4a50-8c85-8f3694ce1194",
+        "role": "assistant",
+        "error": "clone-root-validation-failed",
+        "valid": false,
+        "roleNodeCount": 2,
+        "actualRole": null,
+        "messageIdAnchorFound": true
+      },
+      {
+        "index": 18,
+        "messageId": "50989465-0690-44e3-81b2-051b6f18334f",
+        "role": "user",
+        "error": "clone-root-validation-failed",
+        "valid": false,
+        "roleNodeCount": 2,
+        "actualRole": null,
+        "messageIdAnchorFound": true
+      },
+      {
+        "index": 19,
+        "messageId": "c67eb43e-f8db-4a7d-84a8-5730fd213852",
+        "role": "assistant",
+        "error": "clone-root-validation-failed",
+        "valid": false,
+        "roleNodeCount": 2,
+        "actualRole": null,
+        "messageIdAnchorFound": true
+      }
+    ],
     "observedDomMessageCount": 50,
     "observedDomMessages": [
       {
@@ -4955,147 +5263,12 @@
         "attribute": "data-chatgpt-search-message-ids"
       }
     ],
-    "mapping": [
-      {
-        "index": 0,
-        "messageId": "ebdbf9c0-69c6-41a6-a896-117f3ae05131",
-        "role": "user"
-      },
-      {
-        "index": 1,
-        "messageId": "1b29a8b8-ad1e-4b8e-8976-338b120a9ee6",
-        "role": "assistant"
-      },
-      {
-        "index": 2,
-        "messageId": "13071b7e-6807-4361-91d6-cfc2eb909f57",
-        "role": "user"
-      },
-      {
-        "index": 3,
-        "messageId": "deef0946-78f1-4a11-b2dd-6bc0c0a058dd",
-        "role": "assistant"
-      },
-      {
-        "index": 4,
-        "messageId": "49412971-5532-4077-9c43-9d79015269a4",
-        "role": "user"
-      },
-      {
-        "index": 5,
-        "messageId": "7bca35bc-b611-4f7c-a5ad-b9d0a4f69a2f",
-        "role": "assistant"
-      },
-      {
-        "index": 6,
-        "messageId": "7104dcb0-b873-40bf-9e53-447e35b969f2",
-        "role": "user"
-      },
-      {
-        "index": 7,
-        "messageId": "1816055b-e525-4b4e-a519-e823e485d7ae",
-        "role": "assistant"
-      },
-      {
-        "index": 8,
-        "messageId": "537cd660-f468-4f1c-8c75-6d9843ba574b",
-        "role": "user"
-      },
-      {
-        "index": 9,
-        "messageId": "4c46738c-8617-48fc-ac16-539ec4b01fbc",
-        "role": "assistant"
-      },
-      {
-        "index": 10,
-        "messageId": "ccdb5937-5174-4307-aa4c-56c1403f9295",
-        "role": "user"
-      },
-      {
-        "index": 11,
-        "messageId": "7f04b08f-e052-4577-909e-c9e442cb2a5b",
-        "role": "assistant"
-      },
-      {
-        "index": 12,
-        "messageId": "831f3aad-c4ba-46d4-ae50-ee2d7b499eee",
-        "role": "user"
-      },
-      {
-        "index": 13,
-        "messageId": "7175934e-4e55-467c-9171-3ecf3f36533a",
-        "role": "assistant"
-      },
-      {
-        "index": 14,
-        "messageId": "277509c7-8896-436f-a5f0-e2cffe38f8b9",
-        "role": "user"
-      },
-      {
-        "index": 15,
-        "messageId": "7f606909-b2af-4468-871d-6b165a77ac12",
-        "role": "assistant"
-      },
-      {
-        "index": 16,
-        "messageId": "5f256901-80a7-4b74-8479-9396f74822e0",
-        "role": "user"
-      },
-      {
-        "index": 17,
-        "messageId": "c6a98726-365e-4a50-8c85-8f3694ce1194",
-        "role": "assistant"
-      },
-      {
-        "index": 18,
-        "messageId": "50989465-0690-44e3-81b2-051b6f18334f",
-        "role": "user"
-      },
-      {
-        "index": 19,
-        "messageId": "c67eb43e-f8db-4a7d-84a8-5730fd213852",
-        "role": "assistant"
-      }
-    ],
-    "exportedMessageCount": 20,
-    "exportedTextLength": 18860,
-    "navigationItemCount": 20
+    "mapping": []
   },
-  "css": {
-    "stylesheetCount": 27,
-    "accessibleStylesheetCount": 27,
-    "inaccessibleStylesheets": [],
-    "externalStylesheetFallbackCount": 0,
-    "cssLength": 3380276,
-    "rootCustomPropertyCount": 1713,
-    "bodyCustomPropertyCount": 1724,
-    "copiedElementCustomPropertyCount": 0
-  },
+  "css": {},
   "result": {
-    "success": true,
-    "completeness": {
-      "isComplete": null,
-      "status": "unverified",
-      "reason": [
-        "两阶段 API 消息与原生 DOM 已按消息 ID 一一对应；未证明会话所有分支均已包含。"
-      ]
-    },
-    "rendering": "ChatGPT 原生 DOM 克隆与原生 CSS 提取；未使用独立 Markdown、DIL 或 Mermaid 渲染器。",
-    "filename": "ChatGPT-6b006027-ed74-83ee-89f6-d179c49e7292-v2.5.7.html",
-    "htmlLength": 3837732,
-    "exportedMessageCount": 20,
-    "userMessageCount": 10,
-    "assistantFinalCount": 10,
-    "validation": {
-      "expectedMessageCount": 20,
-      "actualMessageCount": 20,
-      "uniqueMessageIdCount": 20,
-      "textLength": 24376,
-      "hasDoctype": true,
-      "hasOriginalMarkdownRoots": true,
-      "hasCodeBlocks": true,
-      "hasSvg": true
-    }
+    "success": false,
+    "reason": "虚拟滚动遍历后仍无法完整对应接口消息：目标 20 条，匹配 0 条，缺失或歧义 40 条。未生成不完整文件。"
   }
 }
 226913.52b9bcbf34.js:6:107089
