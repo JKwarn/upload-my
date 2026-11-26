@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT 会话 HTML 导出器
 // @namespace    https://github.com/JKwarn/upload-my
-// @version      2.7.0
+// @version      2.7.1
 // @description  通过会话接口校验消息，并复用 ChatGPT 原生 DOM 与 CSS 导出独立 HTML
 // @match        https://chatgpt.com/c/*
 // @run-at       document-idle
@@ -11,7 +11,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '2.7.0';
+  const VERSION = '2.7.1';
   const PREFIX = '[ChatGPT 会话 HTML 导出器]';
   const IDS = {
     button: 'chatgpt-html-exporter-button',
@@ -732,6 +732,19 @@
     };
   }
   function removeNonContentControls(root) {
+    // Remove only the Writing Block header's right-side action toolbar.
+    // Preserve the header, its title, the surrounding surface, and the block content.
+    root.querySelectorAll('[data-oai-writing-block-surface] header > div').forEach(node => {
+      const classes = node.classList;
+      if (
+        classes.contains('flex') &&
+        classes.contains('flex-[0_0_auto]') &&
+        classes.contains('items-center') &&
+        classes.contains('gap-[var(--oai-wb-spacing)]')
+      ) {
+        node.remove();
+      }
+    });
     root.querySelectorAll('[data-chatgpt-mermaid-preview] [data-block-actions="true"]').forEach(node => {
       node.remove();
     });
