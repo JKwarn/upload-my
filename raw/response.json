@@ -1,0 +1,3973 @@
+{
+    "title": "设计AI软件团队工作流骨架 (4)", 
+    "create_time": 1795265637.119124, 
+    "update_time": 1795336457.166493, 
+    "moderation_results": [ ], 
+    "plugin_ids": null, 
+    "conversation_id": "6b019464-080c-83ee-8701-a2dd3d29ebbc", 
+    "conversation_template_id": null, 
+    "gizmo_id": null, 
+    "gizmo_type": null, 
+    "is_archived": false, 
+    "is_starred": null, 
+    "safe_urls": [ ], 
+    "blocked_urls": [ ], 
+    "default_model_slug": "auto", 
+    "atlas_mode_enabled": null, 
+    "conversation_origin": null, 
+    "is_read_only": null, 
+    "voice": null, 
+    "async_status": null, 
+    "disabled_tool_ids": [ ], 
+    "is_temporary_chat": false, 
+    "is_do_not_remember": false, 
+    "memory_scope": "global_enabled", 
+    "context_scopes": [ ], 
+    "sugar_item_id": null, 
+    "sugar_item_visible": false, 
+    "pinned_time": null, 
+    "is_study_mode": false, 
+    "owner": null, 
+    "sectioned_conversation": null, 
+    "messages": [
+        {
+            "id": "574bd13c-f1e3-4670-adc5-032d2040169a", 
+            "author": {
+                "role": "user", 
+                "name": null, 
+                "metadata": { }
+            }, 
+            "create_time": 1795335724.959, 
+            "update_time": 1795335762.660207, 
+            "content": {
+                "content_type": "text", 
+                "parts": [
+                    "继续推进"
+                ]
+            }, 
+            "status": "finished_successfully", 
+            "end_turn": null, 
+            "weight": 1, 
+            "metadata": {
+                "turn_id": "bb733448-2e12-528e-b237-a415ea841380", 
+                "request_id": "6b4ccf89-84e7-47e2-b797-4a95cfb6359d", 
+                "message_source": null, 
+                "turn_exchange_id": "4b9ac02c-3df4-4c2e-a1b8-c57c82675fcc", 
+                "working_turn_id": "4b9ac02c-3df4-4c2e-a1b8-c57c82675fcc", 
+                "can_save": false
+            }, 
+            "recipient": "all", 
+            "channel": null
+        }, 
+        {
+            "id": "219f693d-7037-433e-a14d-15711bccac70", 
+            "author": {
+                "role": "assistant", 
+                "name": null, 
+                "metadata": { }
+            }, 
+            "create_time": 1795335755.058833, 
+            "update_time": 1795335755.058833, 
+            "content": {
+                "content_type": "reasoning_recap", 
+                "content": "思考了 7s"
+            }, 
+            "status": "finished_successfully", 
+            "end_turn": false, 
+            "weight": 1, 
+            "metadata": {
+                "reasoning_status": "reasoning_ended", 
+                "finished_duration_sec": 7, 
+                "reasoning_start_time": 1795335747.9636695, 
+                "reasoning_end_time": 1795335754.9822083, 
+                "reasoning_recap_type": "hide_all", 
+                "cot_version": "v5", 
+                "conversation_followup_suggestions_eligible": false, 
+                "request_id": "6b4ccf89-84e7-47e2-b797-4a95cfb6359d", 
+                "message_type": "next", 
+                "turn_exchange_id": "4b9ac02c-3df4-4c2e-a1b8-c57c82675fcc", 
+                "working_turn_id": "4b9ac02c-3df4-4c2e-a1b8-c57c82675fcc", 
+                "resolved_model_slug": "gpt-6", 
+                "model_slug": "gpt-6", 
+                "default_model_slug": "auto", 
+                "can_save": false, 
+                "parent_id": "84438c5c-6218-468f-acdd-8c75fa242243", 
+                "turn_id": "b384e137-794b-461d-8a1b-15f1e35f2efe", 
+                "hide_inline_actions": true, 
+                "disable_turn_actions": true, 
+                "model_switcher_deny": [ ]
+            }, 
+            "recipient": "all", 
+            "channel": null
+        }, 
+        {
+            "id": "ff339d61-b38e-4c2f-bc21-7449fa6459ca", 
+            "author": {
+                "role": "assistant", 
+                "name": null, 
+                "metadata": { }
+            }, 
+            "create_time": 1795335755.088997, 
+            "update_time": 1795335761.547353, 
+            "content": {
+                "content_type": "text", 
+                "parts": [
+                    "继续推进 Handoff Protocol。
+
+目前已经确定：Handoff 文档创建后进入 `PREPARED`，新 Agent 阅读并完成必要核对、明确接受后进入 `ACCEPTED`。
+
+接下来需要明确一个关键问题：**新 Agent 必须完成哪些工作，才有资格将 Handoff 标记为 `ACCEPTED`？**
+
+## H09：Handoff 接收条件
+
+我建议将接收确认分为以下几个必要条件：
+
+1. **文档理解**：已阅读 Handoff Document，并理解当前 Task 的目标和未完成工作。
+2. **工作现场核对**：已检查项目实际状态，确认代码、文件及其他工作成果与交接记录的关系。
+3. **修改状态确认**：已了解与未完成工作有关的已有修改，尤其是尚未完成或意图不明确的修改。
+4. **验证状态确认**：已了解当前构建、测试及其他验证结果。
+5. **问题确认**：已了解尚未解决的问题、阻塞和风险。
+
+这里有一个重要区别：
+
+`ACCEPTED` 表示新 Agent 已经理解并接受接手这项工作，**不代表它已经确认原 Agent 的所有实现都正确，也不代表 Task 已经完成。**
+
+如果核对过程中发现重大差异或无法确认的修改，仍然按照已经接受的 H02，向 Owner 报告。
+
+**是否接受 H09 这套 Handoff 接收条件？**
+
+接受 / 拒绝 / 修改后接受。"
+                ]
+            }, 
+            "status": "finished_successfully", 
+            "end_turn": true, 
+            "weight": 1, 
+            "metadata": {
+                "finish_details": {
+                    "type": "stop", 
+                    "stop_tokens": [
+                        200002
+                    ]
+                }, 
+                "is_complete": true, 
+                "citations": [ ], 
+                "content_references": [ ], 
+                "model_dil_v2": {
+                    "code": "DIL.render(__dil.jsx(()=>{const __dilConstants=DIL.useConstants();const __dilModelDataBindings=DIL.useAppData((appData)=>appData.opGenui?.modelDataBindings??{});return __dil.jsx(__dil.Fragment,null,__dil.jsx(\"text\",null,__dilConstants[\"0\"]),__dil.jsx(\"text\",null,__dilConstants[\"1\"],__dil.jsx(\"code\",null,__dilConstants[\"2\"]),__dilConstants[\"3\"],__dil.jsx(\"code\",null,__dilConstants[\"4\"]),__dilConstants[\"5\"]),__dil.jsx(\"text\",null,__dilConstants[\"6\"],__dil.jsx(\"bold\",null,__dilConstants[\"7\"],__dil.jsx(\"code\",null,__dilConstants[\"8\"]),__dilConstants[\"9\"])),__dil.jsx(\"title\",{\"size\":\"lg\"},__dilConstants[\"10\"]),__dil.jsx(\"text\",null,__dilConstants[\"11\"]),__dil.jsx(\"list\",{\"marker\":\"number\"},__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dil.jsx(\"bold\",null,__dilConstants[\"12\"]),__dilConstants[\"13\"])),__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dil.jsx(\"bold\",null,__dilConstants[\"14\"]),__dilConstants[\"15\"])),__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dil.jsx(\"bold\",null,__dilConstants[\"16\"]),__dilConstants[\"17\"])),__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dil.jsx(\"bold\",null,__dilConstants[\"18\"]),__dilConstants[\"19\"])),__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dil.jsx(\"bold\",null,__dilConstants[\"20\"]),__dilConstants[\"21\"]))),__dil.jsx(\"text\",null,__dilConstants[\"22\"]),__dil.jsx(\"text\",null,__dil.jsx(\"code\",null,__dilConstants[\"23\"]),__dilConstants[\"24\"],__dil.jsx(\"bold\",null,__dilConstants[\"25\"])),__dil.jsx(\"text\",null,__dilConstants[\"26\"]),__dil.jsx(\"text\",null,__dil.jsx(\"bold\",null,__dilConstants[\"27\"])),__dil.jsx(\"text\",null,__dilConstants[\"28\"]));},{\"key\":\"body:0\"}));", 
+                    "constants": {
+                        "0": "继续推进 Handoff Protocol。", 
+                        "1": "目前已经确定：Handoff 文档创建后进入 ", 
+                        "2": "PREPARED", 
+                        "3": "，新 Agent 阅读并完成必要核对、明确接受后进入 ", 
+                        "4": "ACCEPTED", 
+                        "5": "。", 
+                        "6": "接下来需要明确一个关键问题：", 
+                        "7": "新 Agent 必须完成哪些工作，才有资格将 Handoff 标记为 ", 
+                        "8": "ACCEPTED", 
+                        "9": "？", 
+                        "10": "H09：Handoff 接收条件", 
+                        "11": "我建议将接收确认分为以下几个必要条件：", 
+                        "12": "文档理解", 
+                        "13": "：已阅读 Handoff Document，并理解当前 Task 的目标和未完成工作。", 
+                        "14": "工作现场核对", 
+                        "15": "：已检查项目实际状态，确认代码、文件及其他工作成果与交接记录的关系。", 
+                        "16": "修改状态确认", 
+                        "17": "：已了解与未完成工作有关的已有修改，尤其是尚未完成或意图不明确的修改。", 
+                        "18": "验证状态确认", 
+                        "19": "：已了解当前构建、测试及其他验证结果。", 
+                        "20": "问题确认", 
+                        "21": "：已了解尚未解决的问题、阻塞和风险。", 
+                        "22": "这里有一个重要区别：", 
+                        "23": "ACCEPTED", 
+                        "24": " 表示新 Agent 已经理解并接受接手这项工作，", 
+                        "25": "不代表它已经确认原 Agent 的所有实现都正确，也不代表 Task 已经完成。", 
+                        "26": "如果核对过程中发现重大差异或无法确认的修改，仍然按照已经接受的 H02，向 Owner 报告。", 
+                        "27": "是否接受 H09 这套 Handoff 接收条件？", 
+                        "28": "接受 / 拒绝 / 修改后接受。"
+                    }, 
+                    "fallbackMarkdown": "继续推进 Handoff Protocol。
+
+目前已经确定：Handoff 文档创建后进入 `PREPARED`，新 Agent 阅读并完成必要核对、明确接受后进入 `ACCEPTED`。
+
+接下来需要明确一个关键问题：**新 Agent 必须完成哪些工作，才有资格将 Handoff 标记为 `ACCEPTED`？**
+
+## H09：Handoff 接收条件
+
+我建议将接收确认分为以下几个必要条件：
+
+1. **文档理解**：已阅读 Handoff Document，并理解当前 Task 的目标和未完成工作。
+2. **工作现场核对**：已检查项目实际状态，确认代码、文件及其他工作成果与交接记录的关系。
+3. **修改状态确认**：已了解与未完成工作有关的已有修改，尤其是尚未完成或意图不明确的修改。
+4. **验证状态确认**：已了解当前构建、测试及其他验证结果。
+5. **问题确认**：已了解尚未解决的问题、阻塞和风险。
+
+这里有一个重要区别：
+
+`ACCEPTED` 表示新 Agent 已经理解并接受接手这项工作，**不代表它已经确认原 Agent 的所有实现都正确，也不代表 Task 已经完成。**
+
+如果核对过程中发现重大差异或无法确认的修改，仍然按照已经接受的 H02，向 Owner 报告。
+
+**是否接受 H09 这套 Handoff 接收条件？**
+
+接受 / 拒绝 / 修改后接受。", 
+                    "fallbackMarkdownVersion": 1, 
+                    "appData": {
+                        "opGenui": {
+                            "componentResults": { }, 
+                            "interactionSurface": "mainline", 
+                            "modelDataBindings": { }
+                        }
+                    }
+                }, 
+                "view_state": { }, 
+                "resolved_model_slug": "gpt-6", 
+                "search_result_groups": [ ], 
+                "cot_version": "v5", 
+                "conversation_followup_suggestions_eligible": true, 
+                "request_id": "6b4ccf89-84e7-47e2-b797-4a95cfb6359d", 
+                "message_type": "next", 
+                "turn_exchange_id": "4b9ac02c-3df4-4c2e-a1b8-c57c82675fcc", 
+                "working_turn_id": "4b9ac02c-3df4-4c2e-a1b8-c57c82675fcc", 
+                "model_slug": "gpt-6", 
+                "default_model_slug": "auto", 
+                "can_save": true, 
+                "parent_id": "219f693d-7037-433e-a14d-15711bccac70", 
+                "turn_id": "b384e137-794b-461d-8a1b-15f1e35f2efe", 
+                "model_switcher_deny": [ ]
+            }, 
+            "recipient": "all", 
+            "channel": "final"
+        }, 
+        {
+            "id": "a0174bf6-f3f8-4f0f-b4e4-f416aeafd3e7", 
+            "author": {
+                "role": "user", 
+                "name": null, 
+                "metadata": { }
+            }, 
+            "create_time": 1795335983.303, 
+            "update_time": 1795335993.933081, 
+            "content": {
+                "content_type": "text", 
+                "parts": [
+                    "接受"
+                ]
+            }, 
+            "status": "finished_successfully", 
+            "end_turn": null, 
+            "weight": 1, 
+            "metadata": {
+                "turn_id": "d29d6271-a76b-54a2-8488-4e49fd5f80a8", 
+                "request_id": "592f8ea0-70f1-48a4-bf08-d0cc177004b9", 
+                "message_source": null, 
+                "turn_exchange_id": "dd81a3aa-489f-41f6-a2ec-b7c216acb009", 
+                "working_turn_id": "dd81a3aa-489f-41f6-a2ec-b7c216acb009", 
+                "can_save": false
+            }, 
+            "recipient": "all", 
+            "channel": null
+        }, 
+        {
+            "id": "aa1a702e-d940-4fad-b726-c256a9212ce4", 
+            "author": {
+                "role": "assistant", 
+                "name": null, 
+                "metadata": { }
+            }, 
+            "create_time": 1795335988.070964, 
+            "update_time": 1795335992.520532, 
+            "content": {
+                "content_type": "text", 
+                "parts": [
+                    "H09 已接受，记录为设计结论。
+
+新 Agent 将 Handoff 标记为 `ACCEPTED` 前，必须完成：
+
+1. 阅读并理解 Handoff Document。
+2. 核对项目实际工作现场。
+3. 确认已有修改及其完成状态。
+4. 了解构建、测试及其他验证结果。
+5. 了解尚未解决的问题、阻塞和风险。
+
+特别明确：
+
+`ACCEPTED` 仅表示新 Agent 已理解并接受接手工作，不代表原有实现已经通过验证，也不代表 Task 已完成。
+
+## 下一步：确定 Handoff 的结束条件
+
+目前 Handoff 有两个状态：
+
+```text
+PREPARED
+    |
+    v
+ACCEPTED
+```
+
+这里需要进一步明确：当新 Agent 已经接受交接后，这份 Handoff 记录是否还需要其他生命周期状态？
+
+**提议 H10：采用两状态生命周期，不再增加其他状态。**
+
+- `PREPARED`：交接文档已创建，等待接收。
+- `ACCEPTED`：新 Agent 已完成接收确认。
+- `ACCEPTED` 是该次 Handoff 的终态。
+- 后续工作进度由 Task Card 和 Work Step 记录，不继续修改该 Handoff 的状态。
+- 如果未来再次发生 Agent 更换，则创建新的 Handoff Document，而不是重新打开旧记录。
+
+这样每次交接都有独立、完整的历史记录。
+
+是否接受 H10？接受 / 拒绝 / 修改后接受。"
+                ]
+            }, 
+            "status": "finished_successfully", 
+            "end_turn": true, 
+            "weight": 1, 
+            "metadata": {
+                "finish_details": {
+                    "type": "stop", 
+                    "stop_tokens": [
+                        200002
+                    ]
+                }, 
+                "is_complete": true, 
+                "citations": [ ], 
+                "content_references": [
+                    {
+                        "type": "client_defined_widget", 
+                        "category": "code_block", 
+                        "data": {
+                            "content": "PREPARED
+    |
+    v
+ACCEPTED", 
+                            "language": "text", 
+                            "widget_type": "code_block"
+                        }, 
+                        "matched_text": "```text
+PREPARED
+    |
+    v
+ACCEPTED
+```", 
+                        "start_idx": 273, 
+                        "end_idx": 314, 
+                        "safe_urls": [ ], 
+                        "refs": [ ], 
+                        "alt": null, 
+                        "prompt_text": null
+                    }
+                ], 
+                "model_dil_v2": {
+                    "code": "DIL.render(__dil.jsx(()=>{const __dilConstants=DIL.useConstants();const __dilModelDataBindings=DIL.useAppData((appData)=>appData.opGenui?.modelDataBindings??{});return __dil.jsx(__dil.Fragment,null,__dil.jsx(\"text\",null,__dilConstants[\"0\"]),__dil.jsx(\"text\",null,__dilConstants[\"1\"],__dil.jsx(\"code\",null,__dilConstants[\"2\"]),__dilConstants[\"3\"]),__dil.jsx(\"list\",{\"marker\":\"number\"},__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dilConstants[\"4\"])),__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dilConstants[\"5\"])),__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dilConstants[\"6\"])),__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dilConstants[\"7\"])),__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dilConstants[\"8\"]))),__dil.jsx(\"text\",null,__dilConstants[\"9\"]),__dil.jsx(\"text\",null,__dil.jsx(\"code\",null,__dilConstants[\"10\"]),__dilConstants[\"11\"]),__dil.jsx(\"title\",{\"size\":\"lg\"},__dilConstants[\"12\"]),__dil.jsx(\"text\",null,__dilConstants[\"13\"]),(__dilConstants[\"15\"]==null?__dil.jsx(\"__chatgptClientDefinedWidget\",{\"key\":\"cdw:0\",\"invocationId\":__dilConstants[\"14\"]}):__dilConstants[\"15\"].type===\"math\"?__dil.jsx(\"math\",{\"key\":\"cdw:0\",\"value\":__dilConstants[\"15\"].value}):__dilConstants[\"15\"].type===\"text\"?__dil.jsx(\"text\",{\"key\":\"cdw:0\"},__dilConstants[\"15\"].value):null),__dil.jsx(\"text\",null,__dilConstants[\"16\"]),__dil.jsx(\"text\",null,__dil.jsx(\"bold\",null,__dilConstants[\"17\"])),__dil.jsx(\"list\",{\"marker\":\"bullet\"},__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dil.jsx(\"code\",null,__dilConstants[\"18\"]),__dilConstants[\"19\"])),__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dil.jsx(\"code\",null,__dilConstants[\"20\"]),__dilConstants[\"21\"])),__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dil.jsx(\"code\",null,__dilConstants[\"22\"]),__dilConstants[\"23\"])),__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dilConstants[\"24\"])),__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dilConstants[\"25\"]))),__dil.jsx(\"text\",null,__dilConstants[\"26\"]),__dil.jsx(\"text\",null,__dilConstants[\"27\"]));},{\"key\":\"body:0\"}));", 
+                    "constants": {
+                        "0": "H09 已接受，记录为设计结论。", 
+                        "1": "新 Agent 将 Handoff 标记为 ", 
+                        "2": "ACCEPTED", 
+                        "3": " 前，必须完成：", 
+                        "4": "阅读并理解 Handoff Document。", 
+                        "5": "核对项目实际工作现场。", 
+                        "6": "确认已有修改及其完成状态。", 
+                        "7": "了解构建、测试及其他验证结果。", 
+                        "8": "了解尚未解决的问题、阻塞和风险。", 
+                        "9": "特别明确：", 
+                        "10": "ACCEPTED", 
+                        "11": " 仅表示新 Agent 已理解并接受接手工作，不代表原有实现已经通过验证，也不代表 Task 已完成。", 
+                        "12": "下一步：确定 Handoff 的结束条件", 
+                        "13": "目前 Handoff 有两个状态：", 
+                        "14": "fc1d67a6-6804-5d95-97a4-0edbd576e713", 
+                        "15": null, 
+                        "16": "这里需要进一步明确：当新 Agent 已经接受交接后，这份 Handoff 记录是否还需要其他生命周期状态？", 
+                        "17": "提议 H10：采用两状态生命周期，不再增加其他状态。", 
+                        "18": "PREPARED", 
+                        "19": "：交接文档已创建，等待接收。", 
+                        "20": "ACCEPTED", 
+                        "21": "：新 Agent 已完成接收确认。", 
+                        "22": "ACCEPTED", 
+                        "23": " 是该次 Handoff 的终态。", 
+                        "24": "后续工作进度由 Task Card 和 Work Step 记录，不继续修改该 Handoff 的状态。", 
+                        "25": "如果未来再次发生 Agent 更换，则创建新的 Handoff Document，而不是重新打开旧记录。", 
+                        "26": "这样每次交接都有独立、完整的历史记录。", 
+                        "27": "是否接受 H10？接受 / 拒绝 / 修改后接受。"
+                    }, 
+                    "fallbackMarkdown": "H09 已接受，记录为设计结论。
+
+新 Agent 将 Handoff 标记为 `ACCEPTED` 前，必须完成：
+
+1. 阅读并理解 Handoff Document。
+2. 核对项目实际工作现场。
+3. 确认已有修改及其完成状态。
+4. 了解构建、测试及其他验证结果。
+5. 了解尚未解决的问题、阻塞和风险。
+
+特别明确：
+
+`ACCEPTED` 仅表示新 Agent 已理解并接受接手工作，不代表原有实现已经通过验证，也不代表 Task 已完成。
+
+## 下一步：确定 Handoff 的结束条件
+
+目前 Handoff 有两个状态：
+
+```text
+PREPARED
+    |
+    v
+ACCEPTED
+```
+
+这里需要进一步明确：当新 Agent 已经接受交接后，这份 Handoff 记录是否还需要其他生命周期状态？
+
+**提议 H10：采用两状态生命周期，不再增加其他状态。**
+
+- `PREPARED`：交接文档已创建，等待接收。
+- `ACCEPTED`：新 Agent 已完成接收确认。
+- `ACCEPTED` 是该次 Handoff 的终态。
+- 后续工作进度由 Task Card 和 Work Step 记录，不继续修改该 Handoff 的状态。
+- 如果未来再次发生 Agent 更换，则创建新的 Handoff Document，而不是重新打开旧记录。
+
+这样每次交接都有独立、完整的历史记录。
+
+是否接受 H10？接受 / 拒绝 / 修改后接受。", 
+                    "fallbackMarkdownVersion": 1, 
+                    "clientDefinedWidgets": {
+                        "fc1d67a6-6804-5d95-97a4-0edbd576e713": {
+                            "status": "resolved", 
+                            "refIndex": 0, 
+                            "isStreaming": false
+                        }
+                    }, 
+                    "appData": {
+                        "opGenui": {
+                            "componentResults": { }, 
+                            "interactionSurface": "mainline", 
+                            "modelDataBindings": { }
+                        }
+                    }
+                }, 
+                "view_state": { }, 
+                "resolved_model_slug": "gpt-6", 
+                "search_result_groups": [ ], 
+                "code_blocks": {
+                    "0": {
+                        "id": "lhcc9i", 
+                        "edited": false, 
+                        "previewable": false, 
+                        "preview_language": null
+                    }
+                }, 
+                "cot_version": "v5", 
+                "conversation_followup_suggestions_eligible": true, 
+                "request_id": "592f8ea0-70f1-48a4-bf08-d0cc177004b9", 
+                "message_type": "next", 
+                "turn_exchange_id": "dd81a3aa-489f-41f6-a2ec-b7c216acb009", 
+                "working_turn_id": "dd81a3aa-489f-41f6-a2ec-b7c216acb009", 
+                "model_slug": "gpt-6", 
+                "default_model_slug": "auto", 
+                "can_save": true, 
+                "parent_id": "6bc30eb3-9d34-4122-947f-d64900309149", 
+                "turn_id": "e57ba387-55b4-4e11-a331-a0f203ec311a", 
+                "model_switcher_deny": [ ]
+            }, 
+            "recipient": "all", 
+            "channel": "final"
+        }, 
+        {
+            "id": "c4138513-b7d0-42be-baec-bfbcb137f6cf", 
+            "author": {
+                "role": "user", 
+                "name": null, 
+                "metadata": { }
+            }, 
+            "create_time": 1795336113.422, 
+            "update_time": 1795336124.667238, 
+            "content": {
+                "content_type": "text", 
+                "parts": [
+                    "接受。但是以后都不要问这些多余的问题。"
+                ]
+            }, 
+            "status": "finished_successfully", 
+            "end_turn": null, 
+            "weight": 1, 
+            "metadata": {
+                "turn_id": "54abec06-fc41-5bfc-8bfe-7b61054ddb5c", 
+                "request_id": "e3d0349f-c926-4e23-bf2a-c66846a3f3c8", 
+                "message_source": null, 
+                "turn_exchange_id": "88084b47-c878-4aee-b841-108e04e0fc11", 
+                "working_turn_id": "88084b47-c878-4aee-b841-108e04e0fc11", 
+                "can_save": false
+            }, 
+            "recipient": "all", 
+            "channel": null
+        }, 
+        {
+            "id": "c702dd38-18b7-487e-a2cf-0e8d1fe35812", 
+            "author": {
+                "role": "assistant", 
+                "name": null, 
+                "metadata": { }
+            }, 
+            "create_time": 1795336116.807902, 
+            "update_time": 1795336116.807902, 
+            "content": {
+                "content_type": "reasoning_recap", 
+                "content": "思考了两秒"
+            }, 
+            "status": "finished_successfully", 
+            "end_turn": false, 
+            "weight": 1, 
+            "metadata": {
+                "reasoning_status": "reasoning_ended", 
+                "finished_duration_sec": 1, 
+                "reasoning_start_time": 1795336115.6945672, 
+                "reasoning_end_time": 1795336116.7891219, 
+                "reasoning_recap_type": "hide_all", 
+                "cot_version": "v5", 
+                "conversation_followup_suggestions_eligible": false, 
+                "request_id": "e3d0349f-c926-4e23-bf2a-c66846a3f3c8", 
+                "message_type": "next", 
+                "turn_exchange_id": "88084b47-c878-4aee-b841-108e04e0fc11", 
+                "working_turn_id": "88084b47-c878-4aee-b841-108e04e0fc11", 
+                "resolved_model_slug": "gpt-6", 
+                "model_slug": "gpt-6", 
+                "default_model_slug": "auto", 
+                "can_save": false, 
+                "parent_id": "60762b3c-a171-4605-88c0-8de2b6bbfc6d", 
+                "turn_id": "95b6dbaa-6a53-4d19-831c-9adc57ed3127", 
+                "hide_inline_actions": true, 
+                "disable_turn_actions": true, 
+                "model_switcher_deny": [ ]
+            }, 
+            "recipient": "all", 
+            "channel": null
+        }, 
+        {
+            "id": "6af4640d-6933-42ed-8620-a646dafa9989", 
+            "author": {
+                "role": "assistant", 
+                "name": null, 
+                "metadata": { }
+            }, 
+            "create_time": 1795336116.814626, 
+            "update_time": 1795336118.554461, 
+            "content": {
+                "content_type": "code", 
+                "language": "unknown", 
+                "response_format_name": null, 
+                "text": "用户要求：以后推进 AI 软件团队工作流设计时，不要提出多余、低价值或仅为形式完整而产生的问题；只有存在真实且会影响设计正确性、边界或用户决策的未确定事项时，才提出必要问题。不得为了逐项凑齐流程而反复询问显而易见的细节。此偏好适用于后续设计讨论。 
+"
+            }, 
+            "status": "finished_successfully", 
+            "end_turn": false, 
+            "weight": 1, 
+            "metadata": {
+                "citations": [ ], 
+                "content_references": [ ], 
+                "resolved_model_slug": "gpt-6", 
+                "cot_version": "v5", 
+                "request_id": "e3d0349f-c926-4e23-bf2a-c66846a3f3c8", 
+                "message_type": "next", 
+                "turn_exchange_id": "88084b47-c878-4aee-b841-108e04e0fc11", 
+                "working_turn_id": "88084b47-c878-4aee-b841-108e04e0fc11", 
+                "model_slug": "gpt-6", 
+                "default_model_slug": "auto", 
+                "parent_id": "c702dd38-18b7-487e-a2cf-0e8d1fe35812", 
+                "turn_id": "95b6dbaa-6a53-4d19-831c-9adc57ed3127", 
+                "model_switcher_deny": [ ], 
+                "can_save": false
+            }, 
+            "recipient": "bio", 
+            "channel": "commentary"
+        }, 
+        {
+            "id": "6f87c049-683c-4d44-a430-8d1718db6da7", 
+            "author": {
+                "role": "tool", 
+                "name": "bio", 
+                "metadata": { }
+            }, 
+            "create_time": 1795336119.89094, 
+            "update_time": 1795336119.89094, 
+            "content": {
+                "content_type": "text", 
+                "parts": [
+                    "Model set context updated."
+                ]
+            }, 
+            "status": "finished_successfully", 
+            "end_turn": null, 
+            "weight": 1, 
+            "metadata": {
+                "memory_percentage_used": 0.7575, 
+                "resolved_model_slug": "gpt-6", 
+                "cot_version": "v5", 
+                "request_id": "e3d0349f-c926-4e23-bf2a-c66846a3f3c8", 
+                "message_type": "next", 
+                "turn_exchange_id": "88084b47-c878-4aee-b841-108e04e0fc11", 
+                "working_turn_id": "88084b47-c878-4aee-b841-108e04e0fc11", 
+                "model_slug": "gpt-6", 
+                "default_model_slug": "auto", 
+                "parent_id": "6af4640d-6933-42ed-8620-a646dafa9989", 
+                "turn_id": "95b6dbaa-6a53-4d19-831c-9adc57ed3127", 
+                "can_save": false
+            }, 
+            "recipient": "assistant", 
+            "channel": "commentary"
+        }, 
+        {
+            "id": "d45a83a6-7aa2-495f-a896-14a9be267c17", 
+            "author": {
+                "role": "assistant", 
+                "name": null, 
+                "metadata": { }
+            }, 
+            "create_time": 1795336120.361857, 
+            "update_time": 1795336183.561124, 
+            "content": {
+                "content_type": "text", 
+                "parts": [
+                    "H10 已接受，记录为设计结论。
+
+Handoff 采用两状态生命周期：
+
+- `PREPARED`：交接文档已创建，等待接收。
+- `ACCEPTED`：新 Agent 已完成接收确认。
+- `ACCEPTED` 是该次 Handoff 的终态。
+- 后续工作进度由 Task Card 和 Work Step 记录。
+- 再次发生交接时，创建新的 Handoff Document，不重新打开旧记录。
+
+另外，明确你的新要求：**今后不再为了形式完整而提出多余问题。** 只有遇到真正影响设计正确性或需要你作出决策的事项，才向你提问。
+
+## Handoff Protocol 当前设计成果
+
+目前已确认 H01—H07、H09、H10；H08 已明确拒绝。
+
+下一步我会基于这些结论整合 Handoff Protocol，检查与现有 Task、Work Step、Memory 和 Approval 机制的一致性，避免重复设计。"
+                ]
+            }, 
+            "status": "finished_successfully", 
+            "end_turn": true, 
+            "weight": 1, 
+            "metadata": {
+                "finish_details": {
+                    "type": "stop", 
+                    "stop_tokens": [
+                        200002
+                    ]
+                }, 
+                "is_complete": true, 
+                "citations": [ ], 
+                "content_references": [ ], 
+                "model_dil_v2": {
+                    "code": "DIL.render(__dil.jsx(()=>{const __dilConstants=DIL.useConstants();const __dilModelDataBindings=DIL.useAppData((appData)=>appData.opGenui?.modelDataBindings??{});return __dil.jsx(__dil.Fragment,null,__dil.jsx(\"text\",null,__dilConstants[\"0\"]),__dil.jsx(\"text\",null,__dilConstants[\"1\"]),__dil.jsx(\"list\",{\"marker\":\"bullet\"},__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dil.jsx(\"code\",null,__dilConstants[\"2\"]),__dilConstants[\"3\"])),__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dil.jsx(\"code\",null,__dilConstants[\"4\"]),__dilConstants[\"5\"])),__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dil.jsx(\"code\",null,__dilConstants[\"6\"]),__dilConstants[\"7\"])),__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dilConstants[\"8\"])),__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dilConstants[\"9\"]))),__dil.jsx(\"text\",null,__dilConstants[\"10\"],__dil.jsx(\"bold\",null,__dilConstants[\"11\"]),__dilConstants[\"12\"]),__dil.jsx(\"title\",{\"size\":\"lg\"},__dilConstants[\"13\"]),__dil.jsx(\"text\",null,__dilConstants[\"14\"]),__dil.jsx(\"text\",null,__dilConstants[\"15\"]));},{\"key\":\"body:0\"}));", 
+                    "constants": {
+                        "0": "H10 已接受，记录为设计结论。", 
+                        "1": "Handoff 采用两状态生命周期：", 
+                        "2": "PREPARED", 
+                        "3": "：交接文档已创建，等待接收。", 
+                        "4": "ACCEPTED", 
+                        "5": "：新 Agent 已完成接收确认。", 
+                        "6": "ACCEPTED", 
+                        "7": " 是该次 Handoff 的终态。", 
+                        "8": "后续工作进度由 Task Card 和 Work Step 记录。", 
+                        "9": "再次发生交接时，创建新的 Handoff Document，不重新打开旧记录。", 
+                        "10": "另外，明确你的新要求：", 
+                        "11": "今后不再为了形式完整而提出多余问题。", 
+                        "12": " 只有遇到真正影响设计正确性或需要你作出决策的事项，才向你提问。", 
+                        "13": "Handoff Protocol 当前设计成果", 
+                        "14": "目前已确认 H01—H07、H09、H10；H08 已明确拒绝。", 
+                        "15": "下一步我会基于这些结论整合 Handoff Protocol，检查与现有 Task、Work Step、Memory 和 Approval 机制的一致性，避免重复设计。"
+                    }, 
+                    "fallbackMarkdown": "H10 已接受，记录为设计结论。
+
+Handoff 采用两状态生命周期：
+
+- `PREPARED`：交接文档已创建，等待接收。
+- `ACCEPTED`：新 Agent 已完成接收确认。
+- `ACCEPTED` 是该次 Handoff 的终态。
+- 后续工作进度由 Task Card 和 Work Step 记录。
+- 再次发生交接时，创建新的 Handoff Document，不重新打开旧记录。
+
+另外，明确你的新要求：**今后不再为了形式完整而提出多余问题。** 只有遇到真正影响设计正确性或需要你作出决策的事项，才向你提问。
+
+## Handoff Protocol 当前设计成果
+
+目前已确认 H01—H07、H09、H10；H08 已明确拒绝。
+
+下一步我会基于这些结论整合 Handoff Protocol，检查与现有 Task、Work Step、Memory 和 Approval 机制的一致性，避免重复设计。", 
+                    "fallbackMarkdownVersion": 1, 
+                    "appData": {
+                        "opGenui": {
+                            "componentResults": { }, 
+                            "interactionSurface": "mainline", 
+                            "modelDataBindings": { }
+                        }
+                    }
+                }, 
+                "view_state": { }, 
+                "resolved_model_slug": "gpt-6", 
+                "search_result_groups": [ ], 
+                "cot_version": "v5", 
+                "conversation_followup_suggestions_eligible": true, 
+                "request_id": "e3d0349f-c926-4e23-bf2a-c66846a3f3c8", 
+                "message_type": "next", 
+                "turn_exchange_id": "88084b47-c878-4aee-b841-108e04e0fc11", 
+                "working_turn_id": "88084b47-c878-4aee-b841-108e04e0fc11", 
+                "model_slug": "gpt-6", 
+                "default_model_slug": "auto", 
+                "can_save": true, 
+                "parent_id": "6f87c049-683c-4d44-a430-8d1718db6da7", 
+                "turn_id": "95b6dbaa-6a53-4d19-831c-9adc57ed3127", 
+                "model_switcher_deny": [ ]
+            }, 
+            "recipient": "all", 
+            "channel": "final"
+        }, 
+        {
+            "id": "20c3c068-e416-4403-8424-c8798119b7cd", 
+            "author": {
+                "role": "user", 
+                "name": null, 
+                "metadata": { }
+            }, 
+            "create_time": 1795336140.839, 
+            "update_time": 1795336178.683641, 
+            "content": {
+                "content_type": "text", 
+                "parts": [
+                    "继续推进"
+                ]
+            }, 
+            "status": "finished_successfully", 
+            "end_turn": null, 
+            "weight": 1, 
+            "metadata": {
+                "turn_id": "4c5cabee-fc34-5227-9db2-3124bef62fb0", 
+                "request_id": "99419638-f85d-441a-8d1a-233ad258fed4", 
+                "message_source": null, 
+                "turn_exchange_id": "9460dc88-23c3-46a9-89f6-d39612363d1b", 
+                "working_turn_id": "9460dc88-23c3-46a9-89f6-d39612363d1b", 
+                "can_save": false
+            }, 
+            "recipient": "all", 
+            "channel": null
+        }, 
+        {
+            "id": "77247319-8608-4ddc-9923-758738e62ca7", 
+            "author": {
+                "role": "assistant", 
+                "name": null, 
+                "metadata": { }
+            }, 
+            "create_time": 1795336148.421008, 
+            "update_time": 1795336148.421008, 
+            "content": {
+                "content_type": "thoughts", 
+                "thoughts": [
+                    {
+                        "summary": "整合协议设计", 
+                        "content": "我正在统一交接、恢复、记录与文档引用规则：H01仅覆盖主动更换Agent或未完成工作移交；H05明确Task Reference为交接时状态快照；未完成范围严格限制在Work Progress和Modified Artifacts。", 
+                        "chunks": [ ], 
+                        "finished": true
+                    }
+                ], 
+                "source_analysis_msg_id": "d8610f52-16ac-4a20-b845-5659ef0f7973"
+            }, 
+            "status": "finished_successfully", 
+            "end_turn": false, 
+            "weight": 1, 
+            "metadata": {
+                "reasoning_status": "is_reasoning", 
+                "tool_icons": [ ], 
+                "citations": [ ], 
+                "content_references": [ ], 
+                "resolved_model_slug": "gpt-6", 
+                "hide_inline_actions": true, 
+                "disable_turn_actions": true, 
+                "cot_version": "v5", 
+                "request_id": "99419638-f85d-441a-8d1a-233ad258fed4", 
+                "message_type": "next", 
+                "turn_exchange_id": "9460dc88-23c3-46a9-89f6-d39612363d1b", 
+                "working_turn_id": "9460dc88-23c3-46a9-89f6-d39612363d1b", 
+                "model_slug": "gpt-6", 
+                "default_model_slug": "auto", 
+                "parent_id": "d8610f52-16ac-4a20-b845-5659ef0f7973", 
+                "turn_id": "fc844ebc-6b1e-4ed0-9fb2-1df070ace425", 
+                "summary_type": "raw_cot", 
+                "reasoning_start_time": 1795336143.8120072, 
+                "conversation_followup_suggestions_eligible": false, 
+                "can_save": false, 
+                "model_switcher_deny": [ ]
+            }, 
+            "recipient": "all", 
+            "channel": null
+        }, 
+        {
+            "id": "611eabcb-3b58-40d9-8941-1f300b489486", 
+            "author": {
+                "role": "assistant", 
+                "name": null, 
+                "metadata": { }
+            }, 
+            "create_time": 1795336152.693476, 
+            "update_time": 1795336152.693476, 
+            "content": {
+                "content_type": "thoughts", 
+                "thoughts": [
+                    {
+                        "summary": "", 
+                        "content": "", 
+                        "chunks": [ ], 
+                        "finished": true
+                    }
+                ], 
+                "source_analysis_msg_id": "fed5dbfa-5251-4bab-a6da-22fa1ebd34f7"
+            }, 
+            "status": "in_progress", 
+            "end_turn": false, 
+            "weight": 1, 
+            "metadata": {
+                "reasoning_status": "is_reasoning", 
+                "reasoning_start_time": 1795336143.8120072, 
+                "cot_version": "v5", 
+                "conversation_followup_suggestions_eligible": false, 
+                "request_id": "99419638-f85d-441a-8d1a-233ad258fed4", 
+                "message_type": "next", 
+                "turn_exchange_id": "9460dc88-23c3-46a9-89f6-d39612363d1b", 
+                "working_turn_id": "9460dc88-23c3-46a9-89f6-d39612363d1b", 
+                "resolved_model_slug": "gpt-6", 
+                "model_slug": "gpt-6", 
+                "default_model_slug": "auto", 
+                "parent_id": "77247319-8608-4ddc-9923-758738e62ca7", 
+                "turn_id": "fc844ebc-6b1e-4ed0-9fb2-1df070ace425", 
+                "model_switcher_deny": [ ], 
+                "can_save": false
+            }, 
+            "recipient": "all", 
+            "channel": null
+        }, 
+        {
+            "id": "edad9d6b-1ed1-423b-9d0f-877b3334788e", 
+            "author": {
+                "role": "assistant", 
+                "name": null, 
+                "metadata": { }
+            }, 
+            "create_time": 1795336152.69877, 
+            "update_time": 1795336152.69877, 
+            "content": {
+                "content_type": "reasoning_recap", 
+                "content": "思考了 8s"
+            }, 
+            "status": "finished_successfully", 
+            "end_turn": false, 
+            "weight": 1, 
+            "metadata": {
+                "reasoning_status": "reasoning_ended", 
+                "finished_duration_sec": 8, 
+                "reasoning_start_time": 1795336143.8120072, 
+                "reasoning_end_time": 1795336152.687758, 
+                "reasoning_recap_type": "collapse", 
+                "cot_version": "v5", 
+                "conversation_followup_suggestions_eligible": false, 
+                "request_id": "99419638-f85d-441a-8d1a-233ad258fed4", 
+                "message_type": "next", 
+                "turn_exchange_id": "9460dc88-23c3-46a9-89f6-d39612363d1b", 
+                "working_turn_id": "9460dc88-23c3-46a9-89f6-d39612363d1b", 
+                "resolved_model_slug": "gpt-6", 
+                "model_slug": "gpt-6", 
+                "default_model_slug": "auto", 
+                "can_save": false, 
+                "parent_id": "611eabcb-3b58-40d9-8941-1f300b489486", 
+                "turn_id": "fc844ebc-6b1e-4ed0-9fb2-1df070ace425", 
+                "hide_inline_actions": true, 
+                "disable_turn_actions": true, 
+                "model_switcher_deny": [ ]
+            }, 
+            "recipient": "all", 
+            "channel": null
+        }, 
+        {
+            "id": "460230aa-a4e4-4137-a260-6413a4157d71", 
+            "author": {
+                "role": "assistant", 
+                "name": null, 
+                "metadata": { }
+            }, 
+            "create_time": 1795336152.705018, 
+            "update_time": 1795336177.903355, 
+            "content": {
+                "content_type": "text", 
+                "parts": [
+                    "目前 Handoff Protocol 的核心设计已经基本确定。接下来不再增加形式性的状态或字段，而是将已确认的规则整合成一套可以实际执行的协议，并检查异常交接场景是否能够闭环。
+
+# Handoff Protocol — V1 设计整合
+
+## 1. 设计目标
+
+Handoff Protocol 负责规范同一个 Role 的执行主体发生更换时，如何移交工作现场，使新的 Agent 能够准确恢复上下文并继续完成剩余工作。
+
+核心原则：
+
+1. Handoff 由 Owner 主导。
+2. Handoff 以独立文档作为交接载体。
+3. Task 和 Work Step 是工作进度的事实来源。
+4. 项目实际状态是工作现场的事实来源。
+5. 交接必须区分原有记录与接替 Agent 恢复后补充的信息。
+6. Handoff 不代替 Task Protocol、Memory 或正式项目文档。
+
+## 2. Handoff 触发范围
+
+<badge color=\"success\">已确认</badge>
+
+只包含两种情况：
+
+| 类型 | 说明 |
+|---|---|
+| 主动更换 Agent | Owner 主动决定更换当前 Role 的执行 Agent |
+| 未完成工作移交 | 当前工作尚未完成，需要另一个 Agent 接手 |
+
+原 Agent 异常中断属于第二种情况的特殊场景，不单独增加第三种类型。
+
+## 3. Handoff 文档管理
+
+<badge color=\"success\">已确认</badge>
+
+每次发生 Handoff，创建一份独立文档。
+
+目录结构：
+
+```text
+TASKS/
+└── TASK-001/
+    ├── TASK_CARD.md
+    └── HANDOFFS/
+        ├── HANDOFF-001.md
+        ├── HANDOFF-002.md
+        └── HANDOFF-003.md
+```
+
+管理规则：
+
+- 文件名中的编号就是 Handoff 的唯一标识。
+- 不在正文中重复记录 Handoff ID。
+- 每次 Handoff 保留独立历史记录。
+- Task Card 负责关联 Handoff 文档。
+- 已完成的 Handoff 不重新打开；再次交接时创建新文档。
+
+## 4. Handoff Document 正式结构
+
+<badge color=\"success\">H05 已确认</badge>
+
+当前确定的结构如下：
+
+| 章节 | 内容与约束 |
+|---|---|
+| Handoff Metadata | 交接时间、交接原因 |
+| Task Reference | 交接发生时 Task 的状态快照 |
+| Work Progress | 仅记录未完成的 Work Step、当前进度及后续待执行事项 |
+| Modified Artifacts | 仅记录与未完成工作有关的已修改文件、模块、函数及修改状态 |
+| Technical Findings | 执行期间发现的重要技术事实和结论 |
+| Validation Status | 构建、测试及其他验证结果 |
+| Outstanding Issues | 尚未解决的问题、阻塞和风险 |
+| References | 需要阅读的其他正式文档、决策和记录 |
+
+### 4.1 Handoff Metadata
+
+包含：
+
+- 交接时间。
+- 交接原因。
+
+异常交接必须在交接原因中明确说明异常情况。
+
+不再重复记录 Handoff ID，因为文件名已经提供唯一标识。
+
+### 4.2 Task Reference
+
+明确记录交接发生时 Task 的状态快照，而不是简单提供一个 Task Card 文件路径。
+
+它描述的是交接时间点的 Task 状态，不会随着后续 Task 状态变化而改变。
+
+### 4.3 Work Progress
+
+只记录尚未完成的工作：
+
+- 尚未完成的 Work Step。
+- 当前执行进度。
+- 已经完成到什么程度。
+- 尚待执行的具体事项。
+
+不重复记录已经完成的 Work Step。
+
+### 4.4 Modified Artifacts
+
+只记录与未完成工作有关的修改：
+
+- 文件。
+- 模块。
+- 函数。
+- 修改内容。
+- 当前修改状态。
+
+特别需要记录已经修改、但尚未完成或尚未确认的内容。
+
+### 4.5 其他章节
+
+`Technical Findings`、`Validation Status`、`Outstanding Issues` 和 `References` 分别承担技术发现、验证结果、未解决问题和相关资料索引的职责。
+
+不再单独设置 `Next Actions`，后续行动直接纳入 `Work Progress`。
+
+## 5. Handoff 创建责任
+
+<badge color=\"success\">H06 已确认</badge>
+
+| 场景 | 创建者 | 处理方式 |
+|---|---|---|
+| 正常交接 | 原 Agent | 整理当前工作状态并创建 Handoff Document |
+| 异常交接 | 接替 Agent | 先执行 Working State Recovery，再创建 Handoff Document |
+
+异常交接时，必须明确区分：
+
+- 原 Agent 已经留下的记录。
+- 接替 Agent 通过工作现场检查恢复的信息。
+- 仍然无法确认的信息。
+
+不得将接替 Agent 自己恢复的信息伪装成原 Agent 的交接说明。
+
+## 6. Working State Recovery
+
+<badge color=\"success\">H02 已确认</badge>
+
+这是异常交接的关键机制。
+
+当原 Agent 异常中断，未能完整记录已经发生的修改时，接替 Agent 必须恢复实际工作现场。
+
+恢复过程：
+
+<box border radius=\"lg\" padding={3} gap={2}>
+  <list connector=\"solid\" marker=\"number\" gap={2}>
+    <list-item>
+      **读取已有记录**
+
+      阅读现存 Task Card、Memory、项目文档及已有 Handoff 记录。
+    </list-item>
+    <list-item>
+      **检查项目实际状态**
+
+      检查 Git 工作区、已暂存文件、未跟踪文件及实际文件差异。
+    </list-item>
+    <list-item>
+      **识别未记录修改**
+
+      找出原 Agent 已经修改，但尚未记录在文档中的代码、模块和文件。
+    </list-item>
+    <list-item>
+      **判断修改状态**
+
+      区分已完成、未完成、意图不明确的修改。
+    </list-item>
+    <list-item>
+      **检查验证情况**
+
+      检查构建、测试及其他验证结果。
+    </list-item>
+    <list-item>
+      **形成恢复记录**
+
+      整理发现的差异，明确哪些信息已确认，哪些仍然无法确认。
+    </list-item>
+    <list-item>
+      **报告不确定事项**
+
+      无法判断的修改及重要差异必须报告 Owner，不得自行猜测。
+    </list-item>
+    <list-item>
+      **创建 Handoff Document**
+
+      将恢复结果与原有记录区分，形成正式交接文档。
+    </list-item>
+  </list>
+</box>
+
+特别强调：
+
+- 已经修改的代码不能因为没有记录就被忽略。
+- 已经存在的修改不能因为看起来合理就被认定为正确。
+- 不能擅自回滚无法确认意图的修改。
+- 项目实际状态与已有文档不一致时，必须报告差异。
+
+## 7. Handoff 生命周期
+
+<badge color=\"success\">H07、H10 已确认</badge>
+
+采用两个状态：
+
+<box border radius=\"lg\" padding={3} gap={3}>
+  <box background=\"rgba(59,130,246,0.08)\" radius=\"md\" padding={3} align=\"center\">
+    <title size=\"lg\" color=\"#3B82F6\">PREPARED</title>
+    **交接文档已创建**
+
+    等待新 Agent 接收
+  </box>
+  <box align=\"center\" gap={1}>
+    <icon name=\"arrow-down\" color=\"secondary\" size=\"xl\"/>
+    <text color=\"secondary\" size=\"xs\">新 Agent 完成阅读、核对并明确接受</text>
+  </box>
+  <box background=\"rgba(16,185,129,0.08)\" radius=\"md\" padding={3} align=\"center\">
+    <title size=\"lg\" color=\"#16A34A\">ACCEPTED</title>
+    **交接已接受**
+
+    <badge color=\"success\">终态</badge>
+  </box>
+</box>
+
+`ACCEPTED` 是单次 Handoff 的终态。
+
+后续工作进度由 Task Card 和 Work Step 记录，不继续修改已经完成的 Handoff 状态。
+
+## 8. Handoff 接收条件
+
+<badge color=\"success\">H09 已确认</badge>
+
+新 Agent 将 Handoff 标记为 `ACCEPTED` 前，必须完成：
+
+| 检查项 | 接收要求 |
+|---|---|
+| 文档理解 | 已阅读 Handoff Document |
+| 工作现场 | 已核对项目实际状态 |
+| 修改状态 | 已了解已有修改及其完成情况 |
+| 验证状态 | 已了解构建、测试及其他验证结果 |
+| 未解决事项 | 已了解问题、阻塞和风险 |
+
+`ACCEPTED` 的含义是：
+
+**新 Agent 已经理解并接受接手工作。**
+
+它不代表：
+
+- 原 Agent 的所有实现都正确。
+- 所有代码都已经通过验证。
+- Task 已经完成。
+- 所有遗留问题都已经解决。
+
+如果发现重大差异或无法确认的修改，按照 H02 向 Owner 报告。
+
+## 9. 实际使用流程
+
+结合你通常使用的指令：
+
+> 现在你是 XXXX（Role 中的一种），阅读 xxxx（交接文档的文件名），继续完成剩余的工作。
+
+整个工作过程可以表示为：
+
+```mermaid
+flowchart TD
+    A[\"Owner 决定更换 Agent\"] --> B{\"原 Agent 能否正常交接？\"}
+    B -->|可以| C[\"原 Agent 创建 Handoff Document\"]
+    B -->|不可以| D[\"新 Agent 执行 Working State Recovery\"]
+    D --> E[\"新 Agent 创建 Handoff Document\"]
+    C --> F[\"Handoff: PREPARED\"]
+    E --> F
+    F --> G[\"Owner 指定新 Agent 担任原 Role\"]
+    G --> H[\"新 Agent 阅读交接文档\"]
+    H --> I[\"核对项目实际状态\"]
+    I --> J{\"是否满足接收条件？\"}
+    J -->|是| K[\"Handoff: ACCEPTED\"]
+    J -->|发现重大差异| L[\"报告 Owner\"]
+    L --> M[\"根据 Owner 决定处理\"]
+    M --> H
+    K --> N[\"继续执行剩余工作\"]
+```
+
+---
+
+# 10. 与现有机制的一致性检查
+
+目前 Handoff 与其他 Framework 机制的边界如下：
+
+| 机制 | 职责 | Handoff 的关系 |
+|---|---|---|
+| Task Protocol | 定义工作目标、范围、交付和验收 | Handoff 移交 Task 的未完成工作 |
+| Work Step | 记录 Task 内部执行进度 | Handoff 引用未完成步骤 |
+| Task Card | 记录 Task 正式状态 | Handoff 保存交接时的状态快照 |
+| Memory | 保存可复用知识 | Handoff 不能替代 Memory |
+| Project Baseline | 保存正式需求、架构和决策 | Handoff 引用相关正式依据 |
+| Approval Protocol | 管理 Owner 批准事项 | Handoff 不产生新的批准权限 |
+
+这里有一个重要的设计边界：
+
+**Handoff 是工作状态和执行上下文的移交机制，不是项目需求、架构或技术决策的变更机制。**
+
+---
+
+# 11. 下一步工作
+
+Handoff Protocol 的核心规则已经具备完整的执行路径，异常中断场景也已经纳入。
+
+接下来应当将其整理成正式规范文档，而不是继续增加低价值的字段和状态。
+
+建议文档归属如下：
+
+```text
+03-workflow/
+└── HANDOFF_PROTOCOL.md
+
+04-templates/
+└── HANDOFF_RECORD.md
+```
+
+其中：
+
+- `HANDOFF_PROTOCOL.md`：定义触发条件、创建责任、工作现场恢复、接收条件及生命周期。
+- `HANDOFF_RECORD.md`：提供实际交接文档模板。
+
+这两个文档的内容应严格遵循本次已经确认的设计结论。
+
+**当前结论：Handoff Protocol 的核心设计已完成，可以进入正式规范文档编写阶段。**"
+                ]
+            }, 
+            "status": "finished_successfully", 
+            "end_turn": true, 
+            "weight": 1, 
+            "metadata": {
+                "finish_details": {
+                    "type": "stop", 
+                    "stop_tokens": [
+                        200002
+                    ]
+                }, 
+                "is_complete": true, 
+                "citations": [ ], 
+                "content_references": [
+                    {
+                        "type": "client_defined_widget", 
+                        "category": "code_block", 
+                        "data": {
+                            "content": "TASKS/
+└── TASK-001/
+    ├── TASK_CARD.md
+    └── HANDOFFS/
+        ├── HANDOFF-001.md
+        ├── HANDOFF-002.md
+        └── HANDOFF-003.md", 
+                            "language": "text", 
+                            "widget_type": "code_block"
+                        }, 
+                        "matched_text": "```text
+TASKS/
+└── TASK-001/
+    ├── TASK_CARD.md
+    └── HANDOFFS/
+        ├── HANDOFF-001.md
+        ├── HANDOFF-002.md
+        └── HANDOFF-003.md
+```", 
+                        "start_idx": 654, 
+                        "end_idx": 806, 
+                        "safe_urls": [ ], 
+                        "refs": [ ], 
+                        "alt": null, 
+                        "prompt_text": null
+                    }, 
+                    {
+                        "type": "client_defined_widget", 
+                        "category": "code_block", 
+                        "data": {
+                            "content": "flowchart TD
+    A[\"Owner 决定更换 Agent\"] --> B{\"原 Agent 能否正常交接？\"}
+    B -->|可以| C[\"原 Agent 创建 Handoff Document\"]
+    B -->|不可以| D[\"新 Agent 执行 Working State Recovery\"]
+    D --> E[\"新 Agent 创建 Handoff Document\"]
+    C --> F[\"Handoff: PREPARED\"]
+    E --> F
+    F --> G[\"Owner 指定新 Agent 担任原 Role\"]
+    G --> H[\"新 Agent 阅读交接文档\"]
+    H --> I[\"核对项目实际状态\"]
+    I --> J{\"是否满足接收条件？\"}
+    J -->|是| K[\"Handoff: ACCEPTED\"]
+    J -->|发现重大差异| L[\"报告 Owner\"]
+    L --> M[\"根据 Owner 决定处理\"]
+    M --> H
+    K --> N[\"继续执行剩余工作\"]", 
+                            "language": "mermaid", 
+                            "widget_type": "code_block"
+                        }, 
+                        "matched_text": "```mermaid
+flowchart TD
+    A[\"Owner 决定更换 Agent\"] --> B{\"原 Agent 能否正常交接？\"}
+    B -->|可以| C[\"原 Agent 创建 Handoff Document\"]
+    B -->|不可以| D[\"新 Agent 执行 Working State Recovery\"]
+    D --> E[\"新 Agent 创建 Handoff Document\"]
+    C --> F[\"Handoff: PREPARED\"]
+    E --> F
+    F --> G[\"Owner 指定新 Agent 担任原 Role\"]
+    G --> H[\"新 Agent 阅读交接文档\"]
+    H --> I[\"核对项目实际状态\"]
+    I --> J{\"是否满足接收条件？\"}
+    J -->|是| K[\"Handoff: ACCEPTED\"]
+    J -->|发现重大差异| L[\"报告 Owner\"]
+    L --> M[\"根据 Owner 决定处理\"]
+    M --> H
+    K --> N[\"继续执行剩余工作\"]
+```", 
+                        "start_idx": 3637, 
+                        "end_idx": 4156, 
+                        "safe_urls": [ ], 
+                        "refs": [ ], 
+                        "alt": null, 
+                        "prompt_text": null
+                    }, 
+                    {
+                        "type": "client_defined_widget", 
+                        "category": "code_block", 
+                        "data": {
+                            "content": "03-workflow/
+└── HANDOFF_PROTOCOL.md
+
+04-templates/
+└── HANDOFF_RECORD.md", 
+                            "language": "text", 
+                            "widget_type": "code_block"
+                        }, 
+                        "matched_text": "```text
+03-workflow/
+└── HANDOFF_PROTOCOL.md
+
+04-templates/
+└── HANDOFF_RECORD.md
+```", 
+                        "start_idx": 4770, 
+                        "end_idx": 4855, 
+                        "safe_urls": [ ], 
+                        "refs": [ ], 
+                        "alt": null, 
+                        "prompt_text": null
+                    }
+                ], 
+                "model_dil_v2": {
+                    "code": "DIL.render(__dil.jsx(()=>{const __dilConstants=DIL.useConstants();const __dilModelDataBindings=DIL.useAppData((appData)=>appData.opGenui?.modelDataBindings??{});return __dil.jsx(__dil.Fragment,null,__dil.jsx(\"text\",null,__dilConstants[\"0\"]),__dil.jsx(\"title\",{\"size\":\"xl\"},__dilConstants[\"1\"]),__dil.jsx(\"title\",{\"size\":\"lg\"},__dilConstants[\"2\"]),__dil.jsx(\"text\",null,__dilConstants[\"3\"]),__dil.jsx(\"text\",null,__dilConstants[\"4\"]),__dil.jsx(\"list\",{\"marker\":\"number\"},__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dilConstants[\"5\"])),__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dilConstants[\"6\"])),__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dilConstants[\"7\"])),__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dilConstants[\"8\"])),__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dilConstants[\"9\"])),__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dilConstants[\"10\"]))),__dil.jsx(\"title\",{\"size\":\"lg\"},__dilConstants[\"11\"]),__dil.jsx(\"badge\",{\"color\":\"success\"},__dilConstants[\"12\"]),__dil.jsx(\"text\",null,__dilConstants[\"13\"]),__dil.jsx(\"table\",null,__dil.jsx(\"table-row\",null,__dil.jsx(\"table-cell\",{\"header\":true},__dil.jsx(\"text\",null,__dilConstants[\"14\"])),__dil.jsx(\"table-cell\",{\"header\":true},__dil.jsx(\"text\",null,__dilConstants[\"15\"]))),__dil.jsx(\"table-row\",null,__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dilConstants[\"16\"])),__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dilConstants[\"17\"]))),__dil.jsx(\"table-row\",null,__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dilConstants[\"18\"])),__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dilConstants[\"19\"])))),__dil.jsx(\"text\",null,__dilConstants[\"20\"]),__dil.jsx(\"title\",{\"size\":\"lg\"},__dilConstants[\"21\"]),__dil.jsx(\"badge\",{\"color\":\"success\"},__dilConstants[\"22\"]),__dil.jsx(\"text\",null,__dilConstants[\"23\"]),__dil.jsx(\"text\",null,__dilConstants[\"24\"]),(__dilConstants[\"26\"]==null?__dil.jsx(\"__chatgptClientDefinedWidget\",{\"key\":\"cdw:0\",\"invocationId\":__dilConstants[\"25\"]}):__dilConstants[\"26\"].type===\"math\"?__dil.jsx(\"math\",{\"key\":\"cdw:0\",\"value\":__dilConstants[\"26\"].value}):__dilConstants[\"26\"].type===\"text\"?__dil.jsx(\"text\",{\"key\":\"cdw:0\"},__dilConstants[\"26\"].value):null),__dil.jsx(\"text\",null,__dilConstants[\"27\"]),__dil.jsx(\"list\",{\"marker\":\"bullet\"},__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dilConstants[\"28\"])),__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dilConstants[\"29\"])),__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dilConstants[\"30\"])),__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dilConstants[\"31\"])),__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dilConstants[\"32\"]))),__dil.jsx(\"title\",{\"size\":\"lg\"},__dilConstants[\"33\"]),__dil.jsx(\"badge\",{\"color\":\"success\"},__dilConstants[\"34\"]),__dil.jsx(\"text\",null,__dilConstants[\"35\"]),__dil.jsx(\"table\",null,__dil.jsx(\"table-row\",null,__dil.jsx(\"table-cell\",{\"header\":true},__dil.jsx(\"text\",null,__dilConstants[\"36\"])),__dil.jsx(\"table-cell\",{\"header\":true},__dil.jsx(\"text\",null,__dilConstants[\"37\"]))),__dil.jsx(\"table-row\",null,__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dilConstants[\"38\"])),__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dilConstants[\"39\"]))),__dil.jsx(\"table-row\",null,__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dilConstants[\"40\"])),__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dilConstants[\"41\"]))),__dil.jsx(\"table-row\",null,__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dilConstants[\"42\"])),__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dilConstants[\"43\"]))),__dil.jsx(\"table-row\",null,__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dilConstants[\"44\"])),__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dilConstants[\"45\"]))),__dil.jsx(\"table-row\",null,__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dilConstants[\"46\"])),__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dilConstants[\"47\"]))),__dil.jsx(\"table-row\",null,__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dilConstants[\"48\"])),__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dilConstants[\"49\"]))),__dil.jsx(\"table-row\",null,__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dilConstants[\"50\"])),__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dilConstants[\"51\"]))),__dil.jsx(\"table-row\",null,__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dilConstants[\"52\"])),__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dilConstants[\"53\"])))),__dil.jsx(\"title\",{\"size\":\"md\"},__dilConstants[\"54\"]),__dil.jsx(\"text\",null,__dilConstants[\"55\"]),__dil.jsx(\"list\",{\"marker\":\"bullet\"},__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dilConstants[\"56\"])),__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dilConstants[\"57\"]))),__dil.jsx(\"text\",null,__dilConstants[\"58\"]),__dil.jsx(\"text\",null,__dilConstants[\"59\"]),__dil.jsx(\"title\",{\"size\":\"md\"},__dilConstants[\"60\"]),__dil.jsx(\"text\",null,__dilConstants[\"61\"]),__dil.jsx(\"text\",null,__dilConstants[\"62\"]),__dil.jsx(\"title\",{\"size\":\"md\"},__dilConstants[\"63\"]),__dil.jsx(\"text\",null,__dilConstants[\"64\"]),__dil.jsx(\"list\",{\"marker\":\"bullet\"},__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dilConstants[\"65\"])),__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dilConstants[\"66\"])),__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dilConstants[\"67\"])),__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dilConstants[\"68\"]))),__dil.jsx(\"text\",null,__dilConstants[\"69\"]),__dil.jsx(\"title\",{\"size\":\"md\"},__dilConstants[\"70\"]),__dil.jsx(\"text\",null,__dilConstants[\"71\"]),__dil.jsx(\"list\",{\"marker\":\"bullet\"},__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dilConstants[\"72\"])),__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dilConstants[\"73\"])),__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dilConstants[\"74\"])),__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dilConstants[\"75\"])),__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dilConstants[\"76\"]))),__dil.jsx(\"text\",null,__dilConstants[\"77\"]),__dil.jsx(\"title\",{\"size\":\"md\"},__dilConstants[\"78\"]),__dil.jsx(\"text\",null,__dil.jsx(\"code\",null,__dilConstants[\"79\"]),__dilConstants[\"80\"],__dil.jsx(\"code\",null,__dilConstants[\"81\"]),__dilConstants[\"82\"],__dil.jsx(\"code\",null,__dilConstants[\"83\"]),__dilConstants[\"84\"],__dil.jsx(\"code\",null,__dilConstants[\"85\"]),__dilConstants[\"86\"]),__dil.jsx(\"text\",null,__dilConstants[\"87\"],__dil.jsx(\"code\",null,__dilConstants[\"88\"]),__dilConstants[\"89\"],__dil.jsx(\"code\",null,__dilConstants[\"90\"]),__dilConstants[\"91\"]),__dil.jsx(\"title\",{\"size\":\"lg\"},__dilConstants[\"92\"]),__dil.jsx(\"badge\",{\"color\":\"success\"},__dilConstants[\"93\"]),__dil.jsx(\"table\",null,__dil.jsx(\"table-row\",null,__dil.jsx(\"table-cell\",{\"header\":true},__dil.jsx(\"text\",null,__dilConstants[\"94\"])),__dil.jsx(\"table-cell\",{\"header\":true},__dil.jsx(\"text\",null,__dilConstants[\"95\"])),__dil.jsx(\"table-cell\",{\"header\":true},__dil.jsx(\"text\",null,__dilConstants[\"96\"]))),__dil.jsx(\"table-row\",null,__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dilConstants[\"97\"])),__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dilConstants[\"98\"])),__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dilConstants[\"99\"]))),__dil.jsx(\"table-row\",null,__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dilConstants[\"100\"])),__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dilConstants[\"101\"])),__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dilConstants[\"102\"])))),__dil.jsx(\"text\",null,__dilConstants[\"103\"]),__dil.jsx(\"list\",{\"marker\":\"bullet\"},__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dilConstants[\"104\"])),__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dilConstants[\"105\"])),__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dilConstants[\"106\"]))),__dil.jsx(\"text\",null,__dilConstants[\"107\"]),__dil.jsx(\"title\",{\"size\":\"lg\"},__dilConstants[\"108\"]),__dil.jsx(\"badge\",{\"color\":\"success\"},__dilConstants[\"109\"]),__dil.jsx(\"text\",null,__dilConstants[\"110\"]),__dil.jsx(\"text\",null,__dilConstants[\"111\"]),__dil.jsx(\"text\",null,__dilConstants[\"112\"]),__dil.jsx(\"box\",{\"border\":true,\"radius\":\"lg\",\"padding\":3,\"gap\":2},__dil.jsx(\"list\",{\"connector\":\"solid\",\"marker\":\"number\",\"gap\":2},__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dil.jsx(\"bold\",null,__dilConstants[\"113\"])),__dil.jsx(\"text\",null,__dilConstants[\"114\"])),__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dil.jsx(\"bold\",null,__dilConstants[\"115\"])),__dil.jsx(\"text\",null,__dilConstants[\"116\"])),__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dil.jsx(\"bold\",null,__dilConstants[\"117\"])),__dil.jsx(\"text\",null,__dilConstants[\"118\"])),__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dil.jsx(\"bold\",null,__dilConstants[\"119\"])),__dil.jsx(\"text\",null,__dilConstants[\"120\"])),__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dil.jsx(\"bold\",null,__dilConstants[\"121\"])),__dil.jsx(\"text\",null,__dilConstants[\"122\"])),__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dil.jsx(\"bold\",null,__dilConstants[\"123\"])),__dil.jsx(\"text\",null,__dilConstants[\"124\"])),__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dil.jsx(\"bold\",null,__dilConstants[\"125\"])),__dil.jsx(\"text\",null,__dilConstants[\"126\"])),__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dil.jsx(\"bold\",null,__dilConstants[\"127\"])),__dil.jsx(\"text\",null,__dilConstants[\"128\"])))),__dil.jsx(\"text\",null,__dilConstants[\"129\"]),__dil.jsx(\"list\",{\"marker\":\"bullet\"},__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dilConstants[\"130\"])),__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dilConstants[\"131\"])),__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dilConstants[\"132\"])),__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dilConstants[\"133\"]))),__dil.jsx(\"title\",{\"size\":\"lg\"},__dilConstants[\"134\"]),__dil.jsx(\"badge\",{\"color\":\"success\"},__dilConstants[\"135\"]),__dil.jsx(\"text\",null,__dilConstants[\"136\"]),__dil.jsx(\"box\",{\"border\":true,\"radius\":\"lg\",\"padding\":3,\"gap\":3},__dil.jsx(\"box\",{\"background\":\"rgba(59,130,246,0.08)\",\"radius\":\"md\",\"padding\":3,\"align\":\"center\"},__dil.jsx(\"title\",{\"size\":\"lg\",\"color\":\"#3B82F6\"},__dilConstants[\"137\"]),__dil.jsx(\"text\",null,__dil.jsx(\"bold\",null,__dilConstants[\"138\"])),__dil.jsx(\"text\",null,__dilConstants[\"139\"])),__dil.jsx(\"box\",{\"align\":\"center\",\"gap\":1},__dil.jsx(\"icon\",{\"name\":\"arrow-down\",\"color\":\"secondary\",\"size\":\"xl\"}),__dil.jsx(\"text\",{\"color\":\"secondary\",\"size\":\"xs\"},__dilConstants[\"140\"])),__dil.jsx(\"box\",{\"background\":\"rgba(16,185,129,0.08)\",\"radius\":\"md\",\"padding\":3,\"align\":\"center\"},__dil.jsx(\"title\",{\"size\":\"lg\",\"color\":\"#16A34A\"},__dilConstants[\"141\"]),__dil.jsx(\"text\",null,__dil.jsx(\"bold\",null,__dilConstants[\"142\"])),__dil.jsx(\"badge\",{\"color\":\"success\"},__dilConstants[\"143\"]))),__dil.jsx(\"text\",null,__dil.jsx(\"code\",null,__dilConstants[\"144\"]),__dilConstants[\"145\"]),__dil.jsx(\"text\",null,__dilConstants[\"146\"]),__dil.jsx(\"title\",{\"size\":\"lg\"},__dilConstants[\"147\"]),__dil.jsx(\"badge\",{\"color\":\"success\"},__dilConstants[\"148\"]),__dil.jsx(\"text\",null,__dilConstants[\"149\"],__dil.jsx(\"code\",null,__dilConstants[\"150\"]),__dilConstants[\"151\"]),__dil.jsx(\"table\",null,__dil.jsx(\"table-row\",null,__dil.jsx(\"table-cell\",{\"header\":true},__dil.jsx(\"text\",null,__dilConstants[\"152\"])),__dil.jsx(\"table-cell\",{\"header\":true},__dil.jsx(\"text\",null,__dilConstants[\"153\"]))),__dil.jsx(\"table-row\",null,__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dilConstants[\"154\"])),__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dilConstants[\"155\"]))),__dil.jsx(\"table-row\",null,__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dilConstants[\"156\"])),__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dilConstants[\"157\"]))),__dil.jsx(\"table-row\",null,__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dilConstants[\"158\"])),__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dilConstants[\"159\"]))),__dil.jsx(\"table-row\",null,__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dilConstants[\"160\"])),__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dilConstants[\"161\"]))),__dil.jsx(\"table-row\",null,__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dilConstants[\"162\"])),__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dilConstants[\"163\"])))),__dil.jsx(\"text\",null,__dil.jsx(\"code\",null,__dilConstants[\"164\"]),__dilConstants[\"165\"]),__dil.jsx(\"text\",null,__dil.jsx(\"bold\",null,__dilConstants[\"166\"])),__dil.jsx(\"text\",null,__dilConstants[\"167\"]),__dil.jsx(\"list\",{\"marker\":\"bullet\"},__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dilConstants[\"168\"])),__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dilConstants[\"169\"])),__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dilConstants[\"170\"])),__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dilConstants[\"171\"]))),__dil.jsx(\"text\",null,__dilConstants[\"172\"]),__dil.jsx(\"title\",{\"size\":\"lg\"},__dilConstants[\"173\"]),__dil.jsx(\"text\",null,__dilConstants[\"174\"]),__dil.jsx(\"blockquote\",null,__dil.jsx(\"text\",null,__dilConstants[\"175\"])),__dil.jsx(\"text\",null,__dilConstants[\"176\"]),(__dilConstants[\"178\"]==null?__dil.jsx(\"__chatgptClientDefinedWidget\",{\"key\":\"cdw:1\",\"invocationId\":__dilConstants[\"177\"]}):__dilConstants[\"178\"].type===\"math\"?__dil.jsx(\"math\",{\"key\":\"cdw:1\",\"value\":__dilConstants[\"178\"].value}):__dilConstants[\"178\"].type===\"text\"?__dil.jsx(\"text\",{\"key\":\"cdw:1\"},__dilConstants[\"178\"].value):null),__dil.jsx(\"divider\",null),__dil.jsx(\"title\",{\"size\":\"xl\"},__dilConstants[\"179\"]),__dil.jsx(\"text\",null,__dilConstants[\"180\"]),__dil.jsx(\"table\",null,__dil.jsx(\"table-row\",null,__dil.jsx(\"table-cell\",{\"header\":true},__dil.jsx(\"text\",null,__dilConstants[\"181\"])),__dil.jsx(\"table-cell\",{\"header\":true},__dil.jsx(\"text\",null,__dilConstants[\"182\"])),__dil.jsx(\"table-cell\",{\"header\":true},__dil.jsx(\"text\",null,__dilConstants[\"183\"]))),__dil.jsx(\"table-row\",null,__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dilConstants[\"184\"])),__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dilConstants[\"185\"])),__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dilConstants[\"186\"]))),__dil.jsx(\"table-row\",null,__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dilConstants[\"187\"])),__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dilConstants[\"188\"])),__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dilConstants[\"189\"]))),__dil.jsx(\"table-row\",null,__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dilConstants[\"190\"])),__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dilConstants[\"191\"])),__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dilConstants[\"192\"]))),__dil.jsx(\"table-row\",null,__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dilConstants[\"193\"])),__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dilConstants[\"194\"])),__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dilConstants[\"195\"]))),__dil.jsx(\"table-row\",null,__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dilConstants[\"196\"])),__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dilConstants[\"197\"])),__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dilConstants[\"198\"]))),__dil.jsx(\"table-row\",null,__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dilConstants[\"199\"])),__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dilConstants[\"200\"])),__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dilConstants[\"201\"])))),__dil.jsx(\"text\",null,__dilConstants[\"202\"]),__dil.jsx(\"text\",null,__dil.jsx(\"bold\",null,__dilConstants[\"203\"])),__dil.jsx(\"divider\",null),__dil.jsx(\"title\",{\"size\":\"xl\"},__dilConstants[\"204\"]),__dil.jsx(\"text\",null,__dilConstants[\"205\"]),__dil.jsx(\"text\",null,__dilConstants[\"206\"]),__dil.jsx(\"text\",null,__dilConstants[\"207\"]),(__dilConstants[\"209\"]==null?__dil.jsx(\"__chatgptClientDefinedWidget\",{\"key\":\"cdw:2\",\"invocationId\":__dilConstants[\"208\"]}):__dilConstants[\"209\"].type===\"math\"?__dil.jsx(\"math\",{\"key\":\"cdw:2\",\"value\":__dilConstants[\"209\"].value}):__dilConstants[\"209\"].type===\"text\"?__dil.jsx(\"text\",{\"key\":\"cdw:2\"},__dilConstants[\"209\"].value):null),__dil.jsx(\"text\",null,__dilConstants[\"210\"]),__dil.jsx(\"list\",{\"marker\":\"bullet\"},__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dil.jsx(\"code\",null,__dilConstants[\"211\"]),__dilConstants[\"212\"])),__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dil.jsx(\"code\",null,__dilConstants[\"213\"]),__dilConstants[\"214\"]))),__dil.jsx(\"text\",null,__dilConstants[\"215\"]),__dil.jsx(\"text\",null,__dil.jsx(\"bold\",null,__dilConstants[\"216\"])));},{\"key\":\"body:0\"}));", 
+                    "constants": {
+                        "0": "目前 Handoff Protocol 的核心设计已经基本确定。接下来不再增加形式性的状态或字段，而是将已确认的规则整合成一套可以实际执行的协议，并检查异常交接场景是否能够闭环。", 
+                        "1": "Handoff Protocol — V1 设计整合", 
+                        "2": "1. 设计目标", 
+                        "3": "Handoff Protocol 负责规范同一个 Role 的执行主体发生更换时，如何移交工作现场，使新的 Agent 能够准确恢复上下文并继续完成剩余工作。", 
+                        "4": "核心原则：", 
+                        "5": "Handoff 由 Owner 主导。", 
+                        "6": "Handoff 以独立文档作为交接载体。", 
+                        "7": "Task 和 Work Step 是工作进度的事实来源。", 
+                        "8": "项目实际状态是工作现场的事实来源。", 
+                        "9": "交接必须区分原有记录与接替 Agent 恢复后补充的信息。", 
+                        "10": "Handoff 不代替 Task Protocol、Memory 或正式项目文档。", 
+                        "11": "2. Handoff 触发范围", 
+                        "12": "已确认", 
+                        "13": "只包含两种情况：", 
+                        "14": "类型", 
+                        "15": "说明", 
+                        "16": "主动更换 Agent", 
+                        "17": "Owner 主动决定更换当前 Role 的执行 Agent", 
+                        "18": "未完成工作移交", 
+                        "19": "当前工作尚未完成，需要另一个 Agent 接手", 
+                        "20": "原 Agent 异常中断属于第二种情况的特殊场景，不单独增加第三种类型。", 
+                        "21": "3. Handoff 文档管理", 
+                        "22": "已确认", 
+                        "23": "每次发生 Handoff，创建一份独立文档。", 
+                        "24": "目录结构：", 
+                        "25": "196424b0-15d2-5189-9e69-08eaf2a43cc7", 
+                        "26": null, 
+                        "27": "管理规则：", 
+                        "28": "文件名中的编号就是 Handoff 的唯一标识。", 
+                        "29": "不在正文中重复记录 Handoff ID。", 
+                        "30": "每次 Handoff 保留独立历史记录。", 
+                        "31": "Task Card 负责关联 Handoff 文档。", 
+                        "32": "已完成的 Handoff 不重新打开；再次交接时创建新文档。", 
+                        "33": "4. Handoff Document 正式结构", 
+                        "34": "H05 已确认", 
+                        "35": "当前确定的结构如下：", 
+                        "36": "章节", 
+                        "37": "内容与约束", 
+                        "38": "Handoff Metadata", 
+                        "39": "交接时间、交接原因", 
+                        "40": "Task Reference", 
+                        "41": "交接发生时 Task 的状态快照", 
+                        "42": "Work Progress", 
+                        "43": "仅记录未完成的 Work Step、当前进度及后续待执行事项", 
+                        "44": "Modified Artifacts", 
+                        "45": "仅记录与未完成工作有关的已修改文件、模块、函数及修改状态", 
+                        "46": "Technical Findings", 
+                        "47": "执行期间发现的重要技术事实和结论", 
+                        "48": "Validation Status", 
+                        "49": "构建、测试及其他验证结果", 
+                        "50": "Outstanding Issues", 
+                        "51": "尚未解决的问题、阻塞和风险", 
+                        "52": "References", 
+                        "53": "需要阅读的其他正式文档、决策和记录", 
+                        "54": "4.1 Handoff Metadata", 
+                        "55": "包含：", 
+                        "56": "交接时间。", 
+                        "57": "交接原因。", 
+                        "58": "异常交接必须在交接原因中明确说明异常情况。", 
+                        "59": "不再重复记录 Handoff ID，因为文件名已经提供唯一标识。", 
+                        "60": "4.2 Task Reference", 
+                        "61": "明确记录交接发生时 Task 的状态快照，而不是简单提供一个 Task Card 文件路径。", 
+                        "62": "它描述的是交接时间点的 Task 状态，不会随着后续 Task 状态变化而改变。", 
+                        "63": "4.3 Work Progress", 
+                        "64": "只记录尚未完成的工作：", 
+                        "65": "尚未完成的 Work Step。", 
+                        "66": "当前执行进度。", 
+                        "67": "已经完成到什么程度。", 
+                        "68": "尚待执行的具体事项。", 
+                        "69": "不重复记录已经完成的 Work Step。", 
+                        "70": "4.4 Modified Artifacts", 
+                        "71": "只记录与未完成工作有关的修改：", 
+                        "72": "文件。", 
+                        "73": "模块。", 
+                        "74": "函数。", 
+                        "75": "修改内容。", 
+                        "76": "当前修改状态。", 
+                        "77": "特别需要记录已经修改、但尚未完成或尚未确认的内容。", 
+                        "78": "4.5 其他章节", 
+                        "79": "Technical Findings", 
+                        "80": "、", 
+                        "81": "Validation Status", 
+                        "82": "、", 
+                        "83": "Outstanding Issues", 
+                        "84": " 和 ", 
+                        "85": "References", 
+                        "86": " 分别承担技术发现、验证结果、未解决问题和相关资料索引的职责。", 
+                        "87": "不再单独设置 ", 
+                        "88": "Next Actions", 
+                        "89": "，后续行动直接纳入 ", 
+                        "90": "Work Progress", 
+                        "91": "。", 
+                        "92": "5. Handoff 创建责任", 
+                        "93": "H06 已确认", 
+                        "94": "场景", 
+                        "95": "创建者", 
+                        "96": "处理方式", 
+                        "97": "正常交接", 
+                        "98": "原 Agent", 
+                        "99": "整理当前工作状态并创建 Handoff Document", 
+                        "100": "异常交接", 
+                        "101": "接替 Agent", 
+                        "102": "先执行 Working State Recovery，再创建 Handoff Document", 
+                        "103": "异常交接时，必须明确区分：", 
+                        "104": "原 Agent 已经留下的记录。", 
+                        "105": "接替 Agent 通过工作现场检查恢复的信息。", 
+                        "106": "仍然无法确认的信息。", 
+                        "107": "不得将接替 Agent 自己恢复的信息伪装成原 Agent 的交接说明。", 
+                        "108": "6. Working State Recovery", 
+                        "109": "H02 已确认", 
+                        "110": "这是异常交接的关键机制。", 
+                        "111": "当原 Agent 异常中断，未能完整记录已经发生的修改时，接替 Agent 必须恢复实际工作现场。", 
+                        "112": "恢复过程：", 
+                        "113": "读取已有记录", 
+                        "114": "阅读现存 Task Card、Memory、项目文档及已有 Handoff 记录。", 
+                        "115": "检查项目实际状态", 
+                        "116": "检查 Git 工作区、已暂存文件、未跟踪文件及实际文件差异。", 
+                        "117": "识别未记录修改", 
+                        "118": "找出原 Agent 已经修改，但尚未记录在文档中的代码、模块和文件。", 
+                        "119": "判断修改状态", 
+                        "120": "区分已完成、未完成、意图不明确的修改。", 
+                        "121": "检查验证情况", 
+                        "122": "检查构建、测试及其他验证结果。", 
+                        "123": "形成恢复记录", 
+                        "124": "整理发现的差异，明确哪些信息已确认，哪些仍然无法确认。", 
+                        "125": "报告不确定事项", 
+                        "126": "无法判断的修改及重要差异必须报告 Owner，不得自行猜测。", 
+                        "127": "创建 Handoff Document", 
+                        "128": "将恢复结果与原有记录区分，形成正式交接文档。", 
+                        "129": "特别强调：", 
+                        "130": "已经修改的代码不能因为没有记录就被忽略。", 
+                        "131": "已经存在的修改不能因为看起来合理就被认定为正确。", 
+                        "132": "不能擅自回滚无法确认意图的修改。", 
+                        "133": "项目实际状态与已有文档不一致时，必须报告差异。", 
+                        "134": "7. Handoff 生命周期", 
+                        "135": "H07、H10 已确认", 
+                        "136": "采用两个状态：", 
+                        "137": "PREPARED", 
+                        "138": "交接文档已创建", 
+                        "139": "等待新 Agent 接收", 
+                        "140": "新 Agent 完成阅读、核对并明确接受", 
+                        "141": "ACCEPTED", 
+                        "142": "交接已接受", 
+                        "143": "终态", 
+                        "144": "ACCEPTED", 
+                        "145": " 是单次 Handoff 的终态。", 
+                        "146": "后续工作进度由 Task Card 和 Work Step 记录，不继续修改已经完成的 Handoff 状态。", 
+                        "147": "8. Handoff 接收条件", 
+                        "148": "H09 已确认", 
+                        "149": "新 Agent 将 Handoff 标记为 ", 
+                        "150": "ACCEPTED", 
+                        "151": " 前，必须完成：", 
+                        "152": "检查项", 
+                        "153": "接收要求", 
+                        "154": "文档理解", 
+                        "155": "已阅读 Handoff Document", 
+                        "156": "工作现场", 
+                        "157": "已核对项目实际状态", 
+                        "158": "修改状态", 
+                        "159": "已了解已有修改及其完成情况", 
+                        "160": "验证状态", 
+                        "161": "已了解构建、测试及其他验证结果", 
+                        "162": "未解决事项", 
+                        "163": "已了解问题、阻塞和风险", 
+                        "164": "ACCEPTED", 
+                        "165": " 的含义是：", 
+                        "166": "新 Agent 已经理解并接受接手工作。", 
+                        "167": "它不代表：", 
+                        "168": "原 Agent 的所有实现都正确。", 
+                        "169": "所有代码都已经通过验证。", 
+                        "170": "Task 已经完成。", 
+                        "171": "所有遗留问题都已经解决。", 
+                        "172": "如果发现重大差异或无法确认的修改，按照 H02 向 Owner 报告。", 
+                        "173": "9. 实际使用流程", 
+                        "174": "结合你通常使用的指令：", 
+                        "175": "现在你是 XXXX（Role 中的一种），阅读 xxxx（交接文档的文件名），继续完成剩余的工作。", 
+                        "176": "整个工作过程可以表示为：", 
+                        "177": "87d0787a-800b-5785-b217-76cb2c5aef7b", 
+                        "178": null, 
+                        "179": "10. 与现有机制的一致性检查", 
+                        "180": "目前 Handoff 与其他 Framework 机制的边界如下：", 
+                        "181": "机制", 
+                        "182": "职责", 
+                        "183": "Handoff 的关系", 
+                        "184": "Task Protocol", 
+                        "185": "定义工作目标、范围、交付和验收", 
+                        "186": "Handoff 移交 Task 的未完成工作", 
+                        "187": "Work Step", 
+                        "188": "记录 Task 内部执行进度", 
+                        "189": "Handoff 引用未完成步骤", 
+                        "190": "Task Card", 
+                        "191": "记录 Task 正式状态", 
+                        "192": "Handoff 保存交接时的状态快照", 
+                        "193": "Memory", 
+                        "194": "保存可复用知识", 
+                        "195": "Handoff 不能替代 Memory", 
+                        "196": "Project Baseline", 
+                        "197": "保存正式需求、架构和决策", 
+                        "198": "Handoff 引用相关正式依据", 
+                        "199": "Approval Protocol", 
+                        "200": "管理 Owner 批准事项", 
+                        "201": "Handoff 不产生新的批准权限", 
+                        "202": "这里有一个重要的设计边界：", 
+                        "203": "Handoff 是工作状态和执行上下文的移交机制，不是项目需求、架构或技术决策的变更机制。", 
+                        "204": "11. 下一步工作", 
+                        "205": "Handoff Protocol 的核心规则已经具备完整的执行路径，异常中断场景也已经纳入。", 
+                        "206": "接下来应当将其整理成正式规范文档，而不是继续增加低价值的字段和状态。", 
+                        "207": "建议文档归属如下：", 
+                        "208": "1b144b3d-0a8f-5276-857e-4de9bb8168af", 
+                        "209": null, 
+                        "210": "其中：", 
+                        "211": "HANDOFF_PROTOCOL.md", 
+                        "212": "：定义触发条件、创建责任、工作现场恢复、接收条件及生命周期。", 
+                        "213": "HANDOFF_RECORD.md", 
+                        "214": "：提供实际交接文档模板。", 
+                        "215": "这两个文档的内容应严格遵循本次已经确认的设计结论。", 
+                        "216": "当前结论：Handoff Protocol 的核心设计已完成，可以进入正式规范文档编写阶段。"
+                    }, 
+                    "fallbackMarkdown": "目前 Handoff Protocol 的核心设计已经基本确定。接下来不再增加形式性的状态或字段，而是将已确认的规则整合成一套可以实际执行的协议，并检查异常交接场景是否能够闭环。
+
+# Handoff Protocol — V1 设计整合
+
+## 1\\. 设计目标
+
+Handoff Protocol 负责规范同一个 Role 的执行主体发生更换时，如何移交工作现场，使新的 Agent 能够准确恢复上下文并继续完成剩余工作。
+
+核心原则：
+
+1. Handoff 由 Owner 主导。
+2. Handoff 以独立文档作为交接载体。
+3. Task 和 Work Step 是工作进度的事实来源。
+4. 项目实际状态是工作现场的事实来源。
+5. 交接必须区分原有记录与接替 Agent 恢复后补充的信息。
+6. Handoff 不代替 Task Protocol、Memory 或正式项目文档。
+
+## 2\\. Handoff 触发范围
+
+(已确认)
+
+只包含两种情况：
+
+| 类型 | 说明 |
+|--------|--------|
+| 主动更换 Agent | Owner 主动决定更换当前 Role 的执行 Agent |
+| 未完成工作移交 | 当前工作尚未完成，需要另一个 Agent 接手 |
+
+原 Agent 异常中断属于第二种情况的特殊场景，不单独增加第三种类型。
+
+## 3\\. Handoff 文档管理
+
+(已确认)
+
+每次发生 Handoff，创建一份独立文档。
+
+目录结构：
+
+```text
+TASKS/
+└── TASK-001/
+    ├── TASK_CARD.md
+    └── HANDOFFS/
+        ├── HANDOFF-001.md
+        ├── HANDOFF-002.md
+        └── HANDOFF-003.md
+```
+
+管理规则：
+
+- 文件名中的编号就是 Handoff 的唯一标识。
+- 不在正文中重复记录 Handoff ID。
+- 每次 Handoff 保留独立历史记录。
+- Task Card 负责关联 Handoff 文档。
+- 已完成的 Handoff 不重新打开；再次交接时创建新文档。
+
+## 4\\. Handoff Document 正式结构
+
+(H05 已确认)
+
+当前确定的结构如下：
+
+| 章节 | 内容与约束 |
+|--------|--------|
+| Handoff Metadata | 交接时间、交接原因 |
+| Task Reference | 交接发生时 Task 的状态快照 |
+| Work Progress | 仅记录未完成的 Work Step、当前进度及后续待执行事项 |
+| Modified Artifacts | 仅记录与未完成工作有关的已修改文件、模块、函数及修改状态 |
+| Technical Findings | 执行期间发现的重要技术事实和结论 |
+| Validation Status | 构建、测试及其他验证结果 |
+| Outstanding Issues | 尚未解决的问题、阻塞和风险 |
+| References | 需要阅读的其他正式文档、决策和记录 |
+
+### 4.1 Handoff Metadata
+
+包含：
+
+- 交接时间。
+- 交接原因。
+
+异常交接必须在交接原因中明确说明异常情况。
+
+不再重复记录 Handoff ID，因为文件名已经提供唯一标识。
+
+### 4.2 Task Reference
+
+明确记录交接发生时 Task 的状态快照，而不是简单提供一个 Task Card 文件路径。
+
+它描述的是交接时间点的 Task 状态，不会随着后续 Task 状态变化而改变。
+
+### 4.3 Work Progress
+
+只记录尚未完成的工作：
+
+- 尚未完成的 Work Step。
+- 当前执行进度。
+- 已经完成到什么程度。
+- 尚待执行的具体事项。
+
+不重复记录已经完成的 Work Step。
+
+### 4.4 Modified Artifacts
+
+只记录与未完成工作有关的修改：
+
+- 文件。
+- 模块。
+- 函数。
+- 修改内容。
+- 当前修改状态。
+
+特别需要记录已经修改、但尚未完成或尚未确认的内容。
+
+### 4.5 其他章节
+
+`Technical Findings`、`Validation Status`、`Outstanding Issues` 和 `References` 分别承担技术发现、验证结果、未解决问题和相关资料索引的职责。
+
+不再单独设置 `Next Actions`，后续行动直接纳入 `Work Progress`。
+
+## 5\\. Handoff 创建责任
+
+(H06 已确认)
+
+| 场景 | 创建者 | 处理方式 |
+|--------|--------|--------|
+| 正常交接 | 原 Agent | 整理当前工作状态并创建 Handoff Document |
+| 异常交接 | 接替 Agent | 先执行 Working State Recovery，再创建 Handoff Document |
+
+异常交接时，必须明确区分：
+
+- 原 Agent 已经留下的记录。
+- 接替 Agent 通过工作现场检查恢复的信息。
+- 仍然无法确认的信息。
+
+不得将接替 Agent 自己恢复的信息伪装成原 Agent 的交接说明。
+
+## 6\\. Working State Recovery
+
+(H02 已确认)
+
+这是异常交接的关键机制。
+
+当原 Agent 异常中断，未能完整记录已经发生的修改时，接替 Agent 必须恢复实际工作现场。
+
+恢复过程：
+
+1. **读取已有记录**
+   
+   阅读现存 Task Card、Memory、项目文档及已有 Handoff 记录。
+2. **检查项目实际状态**
+   
+   检查 Git 工作区、已暂存文件、未跟踪文件及实际文件差异。
+3. **识别未记录修改**
+   
+   找出原 Agent 已经修改，但尚未记录在文档中的代码、模块和文件。
+4. **判断修改状态**
+   
+   区分已完成、未完成、意图不明确的修改。
+5. **检查验证情况**
+   
+   检查构建、测试及其他验证结果。
+6. **形成恢复记录**
+   
+   整理发现的差异，明确哪些信息已确认，哪些仍然无法确认。
+7. **报告不确定事项**
+   
+   无法判断的修改及重要差异必须报告 Owner，不得自行猜测。
+8. **创建 Handoff Document**
+   
+   将恢复结果与原有记录区分，形成正式交接文档。
+
+特别强调：
+
+- 已经修改的代码不能因为没有记录就被忽略。
+- 已经存在的修改不能因为看起来合理就被认定为正确。
+- 不能擅自回滚无法确认意图的修改。
+- 项目实际状态与已有文档不一致时，必须报告差异。
+
+## 7\\. Handoff 生命周期
+
+(H07、H10 已确认)
+
+采用两个状态：
+
+## PREPARED
+
+**交接文档已创建**
+
+等待新 Agent 接收
+
+新 Agent 完成阅读、核对并明确接受
+
+## ACCEPTED
+
+**交接已接受**
+
+(终态)
+
+`ACCEPTED` 是单次 Handoff 的终态。
+
+后续工作进度由 Task Card 和 Work Step 记录，不继续修改已经完成的 Handoff 状态。
+
+## 8\\. Handoff 接收条件
+
+(H09 已确认)
+
+新 Agent 将 Handoff 标记为 `ACCEPTED` 前，必须完成：
+
+| 检查项 | 接收要求 |
+|--------|--------|
+| 文档理解 | 已阅读 Handoff Document |
+| 工作现场 | 已核对项目实际状态 |
+| 修改状态 | 已了解已有修改及其完成情况 |
+| 验证状态 | 已了解构建、测试及其他验证结果 |
+| 未解决事项 | 已了解问题、阻塞和风险 |
+
+`ACCEPTED` 的含义是：
+
+**新 Agent 已经理解并接受接手工作。**
+
+它不代表：
+
+- 原 Agent 的所有实现都正确。
+- 所有代码都已经通过验证。
+- Task 已经完成。
+- 所有遗留问题都已经解决。
+
+如果发现重大差异或无法确认的修改，按照 H02 向 Owner 报告。
+
+## 9\\. 实际使用流程
+
+结合你通常使用的指令：
+
+> 现在你是 XXXX（Role 中的一种），阅读 xxxx（交接文档的文件名），继续完成剩余的工作。
+
+整个工作过程可以表示为：
+
+```mermaid
+flowchart TD
+    A[\"Owner 决定更换 Agent\"] --> B{\"原 Agent 能否正常交接？\"}
+    B -->|可以| C[\"原 Agent 创建 Handoff Document\"]
+    B -->|不可以| D[\"新 Agent 执行 Working State Recovery\"]
+    D --> E[\"新 Agent 创建 Handoff Document\"]
+    C --> F[\"Handoff: PREPARED\"]
+    E --> F
+    F --> G[\"Owner 指定新 Agent 担任原 Role\"]
+    G --> H[\"新 Agent 阅读交接文档\"]
+    H --> I[\"核对项目实际状态\"]
+    I --> J{\"是否满足接收条件？\"}
+    J -->|是| K[\"Handoff: ACCEPTED\"]
+    J -->|发现重大差异| L[\"报告 Owner\"]
+    L --> M[\"根据 Owner 决定处理\"]
+    M --> H
+    K --> N[\"继续执行剩余工作\"]
+```
+
+---
+
+# 10\\. 与现有机制的一致性检查
+
+目前 Handoff 与其他 Framework 机制的边界如下：
+
+| 机制 | 职责 | Handoff 的关系 |
+|--------|--------|--------|
+| Task Protocol | 定义工作目标、范围、交付和验收 | Handoff 移交 Task 的未完成工作 |
+| Work Step | 记录 Task 内部执行进度 | Handoff 引用未完成步骤 |
+| Task Card | 记录 Task 正式状态 | Handoff 保存交接时的状态快照 |
+| Memory | 保存可复用知识 | Handoff 不能替代 Memory |
+| Project Baseline | 保存正式需求、架构和决策 | Handoff 引用相关正式依据 |
+| Approval Protocol | 管理 Owner 批准事项 | Handoff 不产生新的批准权限 |
+
+这里有一个重要的设计边界：
+
+**Handoff 是工作状态和执行上下文的移交机制，不是项目需求、架构或技术决策的变更机制。**
+
+---
+
+# 11\\. 下一步工作
+
+Handoff Protocol 的核心规则已经具备完整的执行路径，异常中断场景也已经纳入。
+
+接下来应当将其整理成正式规范文档，而不是继续增加低价值的字段和状态。
+
+建议文档归属如下：
+
+```text
+03-workflow/
+└── HANDOFF_PROTOCOL.md
+
+04-templates/
+└── HANDOFF_RECORD.md
+```
+
+其中：
+
+- `HANDOFF_PROTOCOL.md`：定义触发条件、创建责任、工作现场恢复、接收条件及生命周期。
+- `HANDOFF_RECORD.md`：提供实际交接文档模板。
+
+这两个文档的内容应严格遵循本次已经确认的设计结论。
+
+**当前结论：Handoff Protocol 的核心设计已完成，可以进入正式规范文档编写阶段。**", 
+                    "fallbackMarkdownVersion": 1, 
+                    "clientDefinedWidgets": {
+                        "196424b0-15d2-5189-9e69-08eaf2a43cc7": {
+                            "status": "resolved", 
+                            "refIndex": 0, 
+                            "isStreaming": false
+                        }, 
+                        "87d0787a-800b-5785-b217-76cb2c5aef7b": {
+                            "status": "resolved", 
+                            "refIndex": 1, 
+                            "isStreaming": false
+                        }, 
+                        "1b144b3d-0a8f-5276-857e-4de9bb8168af": {
+                            "status": "resolved", 
+                            "refIndex": 2, 
+                            "isStreaming": false
+                        }
+                    }, 
+                    "appData": {
+                        "opGenui": {
+                            "componentResults": { }, 
+                            "interactionSurface": "mainline", 
+                            "modelDataBindings": { }
+                        }
+                    }
+                }, 
+                "view_state": { }, 
+                "resolved_model_slug": "gpt-6", 
+                "search_result_groups": [ ], 
+                "code_blocks": {
+                    "0": {
+                        "id": "xarzct", 
+                        "edited": false, 
+                        "previewable": false, 
+                        "preview_language": null
+                    }, 
+                    "1": {
+                        "id": "brgvow", 
+                        "edited": false, 
+                        "previewable": true, 
+                        "preview_language": "mermaid"
+                    }, 
+                    "2": {
+                        "id": "ompahi", 
+                        "edited": false, 
+                        "previewable": false, 
+                        "preview_language": null
+                    }
+                }, 
+                "cot_version": "v5", 
+                "conversation_followup_suggestions_eligible": true, 
+                "request_id": "99419638-f85d-441a-8d1a-233ad258fed4", 
+                "message_type": "next", 
+                "turn_exchange_id": "9460dc88-23c3-46a9-89f6-d39612363d1b", 
+                "working_turn_id": "9460dc88-23c3-46a9-89f6-d39612363d1b", 
+                "model_slug": "gpt-6", 
+                "default_model_slug": "auto", 
+                "can_save": true, 
+                "parent_id": "edad9d6b-1ed1-423b-9d0f-877b3334788e", 
+                "turn_id": "fc844ebc-6b1e-4ed0-9fb2-1df070ace425", 
+                "model_switcher_deny": [ ]
+            }, 
+            "recipient": "all", 
+            "channel": "final"
+        }, 
+        {
+            "id": "d61330e1-7afc-46df-a06c-0f33311df0dc", 
+            "author": {
+                "role": "user", 
+                "name": null, 
+                "metadata": { }
+            }, 
+            "create_time": 1795336420.092, 
+            "update_time": 1795336457.025233, 
+            "content": {
+                "content_type": "text", 
+                "parts": [
+                    "继续推进"
+                ]
+            }, 
+            "status": "finished_successfully", 
+            "end_turn": null, 
+            "weight": 1, 
+            "metadata": {
+                "turn_id": "49952e84-7871-5f8e-8c27-1fc2d00c6370", 
+                "request_id": "737ee506-934e-4c27-8ae9-1c19ad7cb9a5", 
+                "message_source": null, 
+                "turn_exchange_id": "1f1f92d0-b8f9-4ddc-986a-af1a9b2bc008", 
+                "working_turn_id": "1f1f92d0-b8f9-4ddc-986a-af1a9b2bc008", 
+                "can_save": false
+            }, 
+            "recipient": "all", 
+            "channel": null
+        }, 
+        {
+            "id": "bdb239de-840c-48cf-a4e7-bb06c406336a", 
+            "author": {
+                "role": "assistant", 
+                "name": null, 
+                "metadata": { }
+            }, 
+            "create_time": 1795336425.053627, 
+            "update_time": 1795336425.053627, 
+            "content": {
+                "content_type": "reasoning_recap", 
+                "content": "思考了几秒"
+            }, 
+            "status": "finished_successfully", 
+            "end_turn": false, 
+            "weight": 1, 
+            "metadata": {
+                "reasoning_status": "reasoning_ended", 
+                "finished_duration_sec": 3, 
+                "reasoning_start_time": 1795336421.9078817, 
+                "reasoning_end_time": 1795336425.0497513, 
+                "reasoning_recap_type": "hide_all", 
+                "cot_version": "v5", 
+                "conversation_followup_suggestions_eligible": false, 
+                "request_id": "737ee506-934e-4c27-8ae9-1c19ad7cb9a5", 
+                "message_type": "next", 
+                "turn_exchange_id": "1f1f92d0-b8f9-4ddc-986a-af1a9b2bc008", 
+                "working_turn_id": "1f1f92d0-b8f9-4ddc-986a-af1a9b2bc008", 
+                "resolved_model_slug": "gpt-6", 
+                "model_slug": "gpt-6", 
+                "default_model_slug": "auto", 
+                "can_save": false, 
+                "parent_id": "15ae5d84-3ac7-4480-bd1e-1b274d57c0a2", 
+                "turn_id": "6db305de-4241-4e80-8fae-815913cbe36d", 
+                "hide_inline_actions": true, 
+                "disable_turn_actions": true, 
+                "model_switcher_deny": [ ]
+            }, 
+            "recipient": "all", 
+            "channel": null
+        }, 
+        {
+            "id": "671aac51-4391-42e0-aa76-1161b021681b", 
+            "author": {
+                "role": "assistant", 
+                "name": null, 
+                "metadata": { }
+            }, 
+            "create_time": 1795336425.05766, 
+            "update_time": 1795336456.829307, 
+            "content": {
+                "content_type": "text", 
+                "parts": [
+                    "下一步直接形成正式文档初稿。本轮将 H01–H10 转换为可执行的规范和模板，不再增加新的设计决策。
+
+文档分为两份：
+
+1. `HANDOFF_PROTOCOL.md`：规定 Handoff 的触发、创建、恢复、接收和生命周期。
+2. `HANDOFF_RECORD.md`：规定每次交接实际使用的文档格式。
+
+## 1. HANDOFF_PROTOCOL.md
+
+<WritingBlock id=\"73182\" variant=\"document\"># HANDOFF PROTOCOL
+
+| 属性 | 内容 |
+|---|---|
+| Document Type | Workflow Protocol |
+| Document Status | Draft |
+| Framework Version | 待绑定 |
+| Document Owner | 待指定 Role |
+
+## 1. Purpose
+
+Handoff Protocol 定义 AI Software Engineering Framework 中的工作交接机制。
+
+当一个 Role 的执行主体发生更换，或者尚未完成的工作需要移交时，通过 Handoff 将当前工作进度、实际工作现场、技术发现和未解决事项传递给接替 Agent。
+
+Handoff 的目标是使接替 Agent 能够准确理解当前工作状态，并在确认交接内容后继续完成剩余工作。
+
+## 2. Core Principles
+
+1. **Owner-Driven Handoff**：Handoff 由 Owner 主导，Agent 不通过自主协商完成交接。
+2. **Document-Driven Handoff**：正式交接必须具有独立的 Handoff Document。
+3. **Task State Consistency**：Task Card 和 Work Step 是 Task 执行进度的正式记录来源。
+4. **Workspace as Evidence**：项目实际工作区是判断实际修改状态的重要依据。
+5. **Explicit Uncertainty**：无法确认的修改和状态必须明确标记，不得猜测。
+6. **Historical Preservation**：每次 Handoff 创建独立记录，不覆盖历史交接记录。
+7. **Separation of Responsibilities**：Handoff 不替代 Task Protocol、Memory、Project Baseline 或 Approval Protocol。
+
+## 3. Handoff Triggers
+
+Handoff 仅适用于以下两种情况：
+
+### 3.1 Agent Replacement
+
+Owner 主动决定更换当前 Role 的执行 Agent。
+
+原 Agent 应整理当前工作状态，并创建 Handoff Document。
+
+### 3.2 Incomplete Work Transfer
+
+当前工作尚未完成，需要由另一个 Agent 接手。
+
+此情况包括原 Agent 正常结束工作后移交，以及原 Agent 异常中断后由接替 Agent 恢复工作现场。
+
+异常中断不是独立的第三种 Handoff 类型，而是未完成工作移交的一种特殊情形。
+
+## 4. Handoff Document Management
+
+### 4.1 Document Creation
+
+每次实际发生 Handoff，必须创建一份独立的 Handoff Document。
+
+Handoff Document 存放在所属 Task 的 `HANDOFFS/` 目录中。
+
+```text
+TASKS/
+└── TASK-001/
+    ├── TASK_CARD.md
+    └── HANDOFFS/
+        ├── HANDOFF-001.md
+        └── HANDOFF-002.md
+```
+
+### 4.2 Unique Identification
+
+Handoff Document 使用文件名中的编号作为唯一标识。
+
+例如：
+
+- `HANDOFF-001.md`
+- `HANDOFF-002.md`
+
+正文不需要重复记录 Handoff ID。
+
+### 4.3 Historical Records
+
+每次 Handoff 都必须保留独立记录。
+
+后续发生新的 Handoff 时，创建新的文档，不覆盖旧文档，也不重新打开已经完成的 Handoff。
+
+### 4.4 Task Card Reference
+
+Task Card 负责关联所属 Task 的 Handoff Documents。
+
+Task Card 不承担完整交接内容的记录职责。
+
+## 5. Handoff Document Structure
+
+每份 Handoff Document 必须遵循 `HANDOFF_RECORD.md` 定义的结构。
+
+包含以下部分：
+
+| Section | Responsibility |
+|---|---|
+| Handoff Metadata | 记录交接时间、交接原因和 Handoff 接收状态 |
+| Task Reference | 记录交接发生时的 Task 状态快照 |
+| Work Progress | 记录未完成的 Work Steps、当前进度和后续待执行事项 |
+| Modified Artifacts | 记录与未完成工作有关的已修改文件、模块和函数及其修改状态 |
+| Technical Findings | 记录执行期间发现的重要技术事实和结论 |
+| Validation Status | 记录构建、测试和其他验证结果 |
+| Outstanding Issues | 记录尚未解决的问题、阻塞和风险 |
+| References | 引用需要阅读的正式文档、决策和其他记录 |
+
+### 5.1 Task State Snapshot
+
+Task Reference 必须反映 Handoff 实际发生时的 Task 状态。
+
+它是一个具有明确时间点的状态快照，不得随着 Task 后续状态变化而被覆盖。
+
+### 5.2 Work Progress
+
+Work Progress 只记录尚未完成的工作，包括：
+
+- 未完成的 Work Steps。
+- 各项工作的当前进度。
+- 已经完成的部分。
+- 尚待执行的事项。
+
+不需要重复列出已经完成的全部 Work Steps。
+
+不单独设置 Next Actions，后续待执行事项统一记录在 Work Progress 中。
+
+### 5.3 Modified Artifacts
+
+Modified Artifacts 只记录与未完成工作有关的修改。
+
+需要说明相关文件、模块或函数的修改情况及其当前状态。
+
+不得因为某项修改已经存在，就直接认定其已经完成。
+
+### 5.4 Validation Status
+
+必须区分实际验证结果和未经验证的状态。
+
+例如，代码已经修改不代表构建通过；构建通过也不代表测试通过。
+
+## 6. Handoff Creation Responsibility
+
+### 6.1 Normal Handoff
+
+原 Agent 负责：
+
+1. 整理当前 Task 和 Work Step 进度。
+2. 整理与未完成工作有关的修改。
+3. 记录重要技术发现。
+4. 记录构建、测试及其他验证结果。
+5. 记录未解决问题和风险。
+6. 创建 Handoff Document。
+7. 将 Handoff 状态设置为 `PREPARED`。
+
+### 6.2 Abnormal Handoff
+
+当原 Agent 无法正常完成交接时，接替 Agent 必须先执行 Working State Recovery。
+
+完成恢复后，由接替 Agent 创建 Handoff Document，并将其状态设置为 `PREPARED`。
+
+异常交接必须明确区分：
+
+- 原 Agent 已经留下的记录。
+- 接替 Agent 通过工作现场检查恢复的信息。
+- 仍然无法确认的信息。
+
+接替 Agent 不得将恢复后补充的信息伪装成原 Agent 的交接说明。
+
+异常情况必须在 Handoff Metadata 的交接原因中注明。
+
+## 7. Working State Recovery
+
+### 7.1 Trigger
+
+当原 Agent 异常中断，无法提供完整、可靠的交接记录时，接替 Agent 必须执行 Working State Recovery。
+
+### 7.2 Recovery Procedure
+
+接替 Agent 必须：
+
+1. 阅读 Owner 指定的 Handoff Document（如果存在）。
+2. 阅读相关 Task Card、Memory 和其他已有记录。
+3. 检查项目实际工作区。
+4. 识别已有记录中没有记录的修改。
+5. 区分已完成、未完成和意图不明确的修改。
+6. 检查构建、测试及其他验证状态。
+7. 整理恢复结果。
+8. 对无法确认的修改和状态向 Owner 报告。
+9. 根据恢复结果创建 Handoff Document。
+
+### 7.3 Workspace Inspection
+
+工作现场检查至少包括：
+
+- Git 工作区状态。
+- 已修改、已暂存和未跟踪文件。
+- 文件差异。
+- 函数和模块的实际实现进度。
+- 构建状态。
+- 测试状态。
+- 文档与代码的一致性。
+
+### 7.4 Recovery Rules
+
+必须遵循以下规则：
+
+- 代码发生变化不代表代码已经完成。
+- 没有记录在交接文档中，不代表修改可以忽略。
+- 不得擅自回滚无法确认意图的修改。
+- 不得擅自覆盖无法确认的修改。
+- 不得将无法确认的修改直接视为正确成果。
+- 重大差异和无法确认的信息必须向 Owner 报告。
+
+## 8. Handoff Lifecycle
+
+Handoff 只有两个状态：
+
+### 8.1 PREPARED
+
+表示 Handoff Document 已经创建，等待接替 Agent 接收。
+
+正常交接由原 Agent 创建 `PREPARED` 记录。
+
+异常交接由完成 Working State Recovery 的接替 Agent 创建 `PREPARED` 记录。
+
+### 8.2 ACCEPTED
+
+表示接替 Agent 已经完成交接内容的阅读、必要核对，并明确接受后续工作。
+
+`ACCEPTED` 是单次 Handoff 的终态。
+
+后续工作进度由 Task Card 和 Work Step 记录，不继续修改该 Handoff 的生命周期状态。
+
+### 8.3 State Transition
+
+```text
+PREPARED → ACCEPTED
+```
+
+不定义其他 Handoff 状态。
+
+## 9. Handoff Acceptance Requirements
+
+接替 Agent 将 Handoff 状态设置为 `ACCEPTED` 前，必须完成：
+
+1. 阅读并理解 Handoff Document。
+2. 核对项目实际工作现场。
+3. 确认已有修改及其完成状态。
+4. 了解构建、测试及其他验证结果。
+5. 了解尚未解决的问题、阻塞和风险。
+
+如果核对发现重大差异或无法确认的修改，必须按照 Working State Recovery 的规则向 Owner 报告。
+
+### 9.1 Meaning of ACCEPTED
+
+`ACCEPTED` 只表示接替 Agent 已理解并接受接手工作。
+
+它不代表：
+
+- 原有实现已经正确。
+- 原有实现已经通过验证。
+- Task 已经完成。
+- 所有遗留问题已经解决。
+
+## 10. Relationship with Other Framework Mechanisms
+
+### 10.1 Task Protocol
+
+Task Protocol 定义 Task 的目标、范围、交付物和验收规则。
+
+Handoff 负责移交 Task 尚未完成的工作，不改变 Task 的正式定义。
+
+### 10.2 Work Step Protocol
+
+Work Step 记录 Task 内部的执行步骤和进度。
+
+Handoff 只需要记录未完成的 Work Steps 及其当前状态，不取代 Work Step 的正式记录。
+
+### 10.3 Task Card
+
+Task Card 持续维护 Task 状态和执行进度，并关联 Handoff Documents。
+
+Handoff Document 保存交接发生时的状态快照及交接所需的详细信息。
+
+### 10.4 Memory
+
+Memory 用于保存可复用知识和长期上下文。
+
+Memory 不替代 Handoff Document，也不承担正式交接职责。
+
+### 10.5 Project Baseline
+
+正式需求、架构、接口和技术决策应保存在相应的 Project Baseline 文档中。
+
+Handoff 可以引用这些文档，但不得通过 Handoff 擅自修改正式项目结论。
+
+### 10.6 Approval Protocol
+
+Handoff 本身不构成 Approval，也不授予新的审批权限。
+
+涉及正式需求、架构、技术路线或其他需要批准的变更时，仍然必须遵循 Approval Protocol。
+
+## 11. Completion Criteria
+
+一次 Handoff 在满足以下条件时视为完成：
+
+- Handoff Document 已创建。
+- Handoff 状态已达到 `ACCEPTED`。
+- 接替 Agent 已完成必要的交接核对。
+- 发现的重大差异和无法确认事项已经按照规定报告 Owner。
+
+Handoff 完成不代表所属 Task 完成。
+
+Task 仍然按照 Task Protocol 独立推进和验收。</WritingBlock>
+
+## 2. HANDOFF_RECORD.md
+
+<WritingBlock id=\"84519\" variant=\"document\"># HANDOFF RECORD
+
+> 本文档是单次 Handoff 的正式记录。每次交接创建独立文件，文件名使用 `HANDOFF-xxx.md`。
+
+## 1. Handoff Metadata
+
+| Field | Value |
+|---|---|
+| Handoff Status | `PREPARED` |
+| Handoff Time | YYYY-MM-DD HH:MM |
+| Handoff Reason | 主动更换 Agent / 未完成工作移交 / 异常中断 |
+
+## 2. Task Reference
+
+| Field | Value |
+|---|---|
+| Task ID | TASK-xxx |
+| Task Status at Handoff | Task 在交接发生时的状态 |
+| Snapshot Time | YYYY-MM-DD HH:MM |
+
+> 本部分记录交接发生时的 Task 状态快照，不随 Task 后续状态变化而更新。
+
+## 3. Work Progress
+
+仅记录尚未完成的 Work Steps。
+
+### 3.1 Incomplete Work Steps
+
+| Work Step | Status | Current Progress |
+|---|---|---|
+| WS-001 | IN_PROGRESS | 当前执行进度 |
+
+### 3.2 Pending Work
+
+记录接替 Agent 尚待执行的具体事项。
+
+- [ ] 待执行事项 1
+- [ ] 待执行事项 2
+
+## 4. Modified Artifacts
+
+仅记录与未完成工作有关的修改。
+
+| Artifact | Modification | Current State |
+|---|---|---|
+| path/to/file | 修改内容 | 已完成 / 未完成 / 意图不明确 |
+
+需要时进一步说明相关模块、函数和具体代码位置。
+
+## 5. Technical Findings
+
+记录执行期间发现的重要技术事实和结论。
+
+### Finding 1
+
+- **Description**：
+- **Evidence**：
+- **Impact**：
+
+## 6. Validation Status
+
+| Validation Item | Status | Evidence / Details |
+|---|---|---|
+| Build | PASS / FAIL / NOT RUN / UNKNOWN | |
+| Test | PASS / FAIL / NOT RUN / UNKNOWN | |
+| Other Validation | | |
+
+不得将未经执行的验证标记为 PASS。
+
+## 7. Outstanding Issues
+
+记录尚未解决的问题、阻塞和风险。
+
+### Issue 1
+
+- **Description**：
+- **Impact**：
+- **Current Status**：
+- **Required Attention**：
+
+## 8. References
+
+列出接替 Agent 需要阅读的正式文档、技术决策和其他记录。
+
+- [ ] Task Card：
+- [ ] Requirement：
+- [ ] Architecture：
+- [ ] Technical Decision：
+- [ ] Other Reference：
+
+---
+
+## Handoff Acceptance
+
+> 由接替 Agent 完成必要核对后填写。
+
+| Field | Value |
+|---|---|
+| Handoff Status | `PREPARED` / `ACCEPTED` |
+| Acceptance Time | YYYY-MM-DD HH:MM |
+
+### Acceptance Confirmation
+
+- [ ] 已阅读并理解 Handoff Document。
+- [ ] 已核对项目实际工作现场。
+- [ ] 已确认已有修改及其完成状态。
+- [ ] 已了解构建、测试及其他验证结果。
+- [ ] 已了解尚未解决的问题、阻塞和风险。
+
+### Recovery Findings
+
+如果接收过程中发现交接文档未记录的修改、重大差异或无法确认的信息，在此记录并向 Owner 报告。
+
+| Finding | Evidence | Status |
+|---|---|---|
+| 发现内容 | 实际证据 | 已确认 / 待 Owner 确认 |
+
+### Acceptance Statement
+
+接替 Agent 在完成必要核对后，明确确认接受后续工作。
+
+`ACCEPTED` 仅表示接替 Agent 已理解并接受接手工作，不代表 Task 已完成，也不代表原有实现已经通过验证。</WritingBlock>
+
+## 3. 本轮整合结果
+
+两份文档之间的职责关系是：
+
+| 文档 | 解决的问题 |
+|---|---|
+| `HANDOFF_PROTOCOL.md` | 规定交接行为必须遵循什么规则 |
+| `HANDOFF_RECORD.md` | 规定每次交接必须如何记录 |
+
+目前有一个需要特别注意的实现细节：`HANDOFF_RECORD.md` 中的 `Handoff Status` 在创建时为 `PREPARED`，接替 Agent 完成接收后更新为 `ACCEPTED`。这与 Handoff 两状态生命周期一致，不需要额外的状态记录文件。
+
+**当前阶段：Handoff Protocol 已形成完整的规范初稿和记录模板。** 后续整合 Framework 时，应将它们纳入 `03-workflow/` 和 `04-templates/`，并在 Framework 文档索引中登记；目前仍是 Draft，不能视为已经正式批准发布。"
+                ]
+            }, 
+            "status": "finished_successfully", 
+            "end_turn": true, 
+            "weight": 1, 
+            "metadata": {
+                "finish_details": {
+                    "type": "stop", 
+                    "stop_tokens": [
+                        200002
+                    ]
+                }, 
+                "is_complete": true, 
+                "citations": [ ], 
+                "content_references": [
+                    {
+                        "type": "client_defined_widget", 
+                        "category": "writing_block", 
+                        "data": {
+                            "content": "# HANDOFF PROTOCOL
+
+| 属性 | 内容 |
+|---|---|
+| Document Type | Workflow Protocol |
+| Document Status | Draft |
+| Framework Version | 待绑定 |
+| Document Owner | 待指定 Role |
+
+## 1. Purpose
+
+Handoff Protocol 定义 AI Software Engineering Framework 中的工作交接机制。
+
+当一个 Role 的执行主体发生更换，或者尚未完成的工作需要移交时，通过 Handoff 将当前工作进度、实际工作现场、技术发现和未解决事项传递给接替 Agent。
+
+Handoff 的目标是使接替 Agent 能够准确理解当前工作状态，并在确认交接内容后继续完成剩余工作。
+
+## 2. Core Principles
+
+1. **Owner-Driven Handoff**：Handoff 由 Owner 主导，Agent 不通过自主协商完成交接。
+2. **Document-Driven Handoff**：正式交接必须具有独立的 Handoff Document。
+3. **Task State Consistency**：Task Card 和 Work Step 是 Task 执行进度的正式记录来源。
+4. **Workspace as Evidence**：项目实际工作区是判断实际修改状态的重要依据。
+5. **Explicit Uncertainty**：无法确认的修改和状态必须明确标记，不得猜测。
+6. **Historical Preservation**：每次 Handoff 创建独立记录，不覆盖历史交接记录。
+7. **Separation of Responsibilities**：Handoff 不替代 Task Protocol、Memory、Project Baseline 或 Approval Protocol。
+
+## 3. Handoff Triggers
+
+Handoff 仅适用于以下两种情况：
+
+### 3.1 Agent Replacement
+
+Owner 主动决定更换当前 Role 的执行 Agent。
+
+原 Agent 应整理当前工作状态，并创建 Handoff Document。
+
+### 3.2 Incomplete Work Transfer
+
+当前工作尚未完成，需要由另一个 Agent 接手。
+
+此情况包括原 Agent 正常结束工作后移交，以及原 Agent 异常中断后由接替 Agent 恢复工作现场。
+
+异常中断不是独立的第三种 Handoff 类型，而是未完成工作移交的一种特殊情形。
+
+## 4. Handoff Document Management
+
+### 4.1 Document Creation
+
+每次实际发生 Handoff，必须创建一份独立的 Handoff Document。
+
+Handoff Document 存放在所属 Task 的 `HANDOFFS/` 目录中。
+
+```text
+TASKS/
+└── TASK-001/
+    ├── TASK_CARD.md
+    └── HANDOFFS/
+        ├── HANDOFF-001.md
+        └── HANDOFF-002.md
+```
+
+### 4.2 Unique Identification
+
+Handoff Document 使用文件名中的编号作为唯一标识。
+
+例如：
+
+- `HANDOFF-001.md`
+- `HANDOFF-002.md`
+
+正文不需要重复记录 Handoff ID。
+
+### 4.3 Historical Records
+
+每次 Handoff 都必须保留独立记录。
+
+后续发生新的 Handoff 时，创建新的文档，不覆盖旧文档，也不重新打开已经完成的 Handoff。
+
+### 4.4 Task Card Reference
+
+Task Card 负责关联所属 Task 的 Handoff Documents。
+
+Task Card 不承担完整交接内容的记录职责。
+
+## 5. Handoff Document Structure
+
+每份 Handoff Document 必须遵循 `HANDOFF_RECORD.md` 定义的结构。
+
+包含以下部分：
+
+| Section | Responsibility |
+|---|---|
+| Handoff Metadata | 记录交接时间、交接原因和 Handoff 接收状态 |
+| Task Reference | 记录交接发生时的 Task 状态快照 |
+| Work Progress | 记录未完成的 Work Steps、当前进度和后续待执行事项 |
+| Modified Artifacts | 记录与未完成工作有关的已修改文件、模块和函数及其修改状态 |
+| Technical Findings | 记录执行期间发现的重要技术事实和结论 |
+| Validation Status | 记录构建、测试和其他验证结果 |
+| Outstanding Issues | 记录尚未解决的问题、阻塞和风险 |
+| References | 引用需要阅读的正式文档、决策和其他记录 |
+
+### 5.1 Task State Snapshot
+
+Task Reference 必须反映 Handoff 实际发生时的 Task 状态。
+
+它是一个具有明确时间点的状态快照，不得随着 Task 后续状态变化而被覆盖。
+
+### 5.2 Work Progress
+
+Work Progress 只记录尚未完成的工作，包括：
+
+- 未完成的 Work Steps。
+- 各项工作的当前进度。
+- 已经完成的部分。
+- 尚待执行的事项。
+
+不需要重复列出已经完成的全部 Work Steps。
+
+不单独设置 Next Actions，后续待执行事项统一记录在 Work Progress 中。
+
+### 5.3 Modified Artifacts
+
+Modified Artifacts 只记录与未完成工作有关的修改。
+
+需要说明相关文件、模块或函数的修改情况及其当前状态。
+
+不得因为某项修改已经存在，就直接认定其已经完成。
+
+### 5.4 Validation Status
+
+必须区分实际验证结果和未经验证的状态。
+
+例如，代码已经修改不代表构建通过；构建通过也不代表测试通过。
+
+## 6. Handoff Creation Responsibility
+
+### 6.1 Normal Handoff
+
+原 Agent 负责：
+
+1. 整理当前 Task 和 Work Step 进度。
+2. 整理与未完成工作有关的修改。
+3. 记录重要技术发现。
+4. 记录构建、测试及其他验证结果。
+5. 记录未解决问题和风险。
+6. 创建 Handoff Document。
+7. 将 Handoff 状态设置为 `PREPARED`。
+
+### 6.2 Abnormal Handoff
+
+当原 Agent 无法正常完成交接时，接替 Agent 必须先执行 Working State Recovery。
+
+完成恢复后，由接替 Agent 创建 Handoff Document，并将其状态设置为 `PREPARED`。
+
+异常交接必须明确区分：
+
+- 原 Agent 已经留下的记录。
+- 接替 Agent 通过工作现场检查恢复的信息。
+- 仍然无法确认的信息。
+
+接替 Agent 不得将恢复后补充的信息伪装成原 Agent 的交接说明。
+
+异常情况必须在 Handoff Metadata 的交接原因中注明。
+
+## 7. Working State Recovery
+
+### 7.1 Trigger
+
+当原 Agent 异常中断，无法提供完整、可靠的交接记录时，接替 Agent 必须执行 Working State Recovery。
+
+### 7.2 Recovery Procedure
+
+接替 Agent 必须：
+
+1. 阅读 Owner 指定的 Handoff Document（如果存在）。
+2. 阅读相关 Task Card、Memory 和其他已有记录。
+3. 检查项目实际工作区。
+4. 识别已有记录中没有记录的修改。
+5. 区分已完成、未完成和意图不明确的修改。
+6. 检查构建、测试及其他验证状态。
+7. 整理恢复结果。
+8. 对无法确认的修改和状态向 Owner 报告。
+9. 根据恢复结果创建 Handoff Document。
+
+### 7.3 Workspace Inspection
+
+工作现场检查至少包括：
+
+- Git 工作区状态。
+- 已修改、已暂存和未跟踪文件。
+- 文件差异。
+- 函数和模块的实际实现进度。
+- 构建状态。
+- 测试状态。
+- 文档与代码的一致性。
+
+### 7.4 Recovery Rules
+
+必须遵循以下规则：
+
+- 代码发生变化不代表代码已经完成。
+- 没有记录在交接文档中，不代表修改可以忽略。
+- 不得擅自回滚无法确认意图的修改。
+- 不得擅自覆盖无法确认的修改。
+- 不得将无法确认的修改直接视为正确成果。
+- 重大差异和无法确认的信息必须向 Owner 报告。
+
+## 8. Handoff Lifecycle
+
+Handoff 只有两个状态：
+
+### 8.1 PREPARED
+
+表示 Handoff Document 已经创建，等待接替 Agent 接收。
+
+正常交接由原 Agent 创建 `PREPARED` 记录。
+
+异常交接由完成 Working State Recovery 的接替 Agent 创建 `PREPARED` 记录。
+
+### 8.2 ACCEPTED
+
+表示接替 Agent 已经完成交接内容的阅读、必要核对，并明确接受后续工作。
+
+`ACCEPTED` 是单次 Handoff 的终态。
+
+后续工作进度由 Task Card 和 Work Step 记录，不继续修改该 Handoff 的生命周期状态。
+
+### 8.3 State Transition
+
+```text
+PREPARED → ACCEPTED
+```
+
+不定义其他 Handoff 状态。
+
+## 9. Handoff Acceptance Requirements
+
+接替 Agent 将 Handoff 状态设置为 `ACCEPTED` 前，必须完成：
+
+1. 阅读并理解 Handoff Document。
+2. 核对项目实际工作现场。
+3. 确认已有修改及其完成状态。
+4. 了解构建、测试及其他验证结果。
+5. 了解尚未解决的问题、阻塞和风险。
+
+如果核对发现重大差异或无法确认的修改，必须按照 Working State Recovery 的规则向 Owner 报告。
+
+### 9.1 Meaning of ACCEPTED
+
+`ACCEPTED` 只表示接替 Agent 已理解并接受接手工作。
+
+它不代表：
+
+- 原有实现已经正确。
+- 原有实现已经通过验证。
+- Task 已经完成。
+- 所有遗留问题已经解决。
+
+## 10. Relationship with Other Framework Mechanisms
+
+### 10.1 Task Protocol
+
+Task Protocol 定义 Task 的目标、范围、交付物和验收规则。
+
+Handoff 负责移交 Task 尚未完成的工作，不改变 Task 的正式定义。
+
+### 10.2 Work Step Protocol
+
+Work Step 记录 Task 内部的执行步骤和进度。
+
+Handoff 只需要记录未完成的 Work Steps 及其当前状态，不取代 Work Step 的正式记录。
+
+### 10.3 Task Card
+
+Task Card 持续维护 Task 状态和执行进度，并关联 Handoff Documents。
+
+Handoff Document 保存交接发生时的状态快照及交接所需的详细信息。
+
+### 10.4 Memory
+
+Memory 用于保存可复用知识和长期上下文。
+
+Memory 不替代 Handoff Document，也不承担正式交接职责。
+
+### 10.5 Project Baseline
+
+正式需求、架构、接口和技术决策应保存在相应的 Project Baseline 文档中。
+
+Handoff 可以引用这些文档，但不得通过 Handoff 擅自修改正式项目结论。
+
+### 10.6 Approval Protocol
+
+Handoff 本身不构成 Approval，也不授予新的审批权限。
+
+涉及正式需求、架构、技术路线或其他需要批准的变更时，仍然必须遵循 Approval Protocol。
+
+## 11. Completion Criteria
+
+一次 Handoff 在满足以下条件时视为完成：
+
+- Handoff Document 已创建。
+- Handoff 状态已达到 `ACCEPTED`。
+- 接替 Agent 已完成必要的交接核对。
+- 发现的重大差异和无法确认事项已经按照规定报告 Owner。
+
+Handoff 完成不代表所属 Task 完成。
+
+Task 仍然按照 Task Protocol 独立推进和验收。", 
+                            "id": "73182", 
+                            "variant": "document", 
+                            "widget_type": "writing_block"
+                        }, 
+                        "matched_text": ":::writing{variant=\"document\" id=\"73182\"}
+# HANDOFF PROTOCOL
+
+| 属性 | 内容 |
+|---|---|
+| Document Type | Workflow Protocol |
+| Document Status | Draft |
+| Framework Version | 待绑定 |
+| Document Owner | 待指定 Role |
+
+## 1. Purpose
+
+Handoff Protocol 定义 AI Software Engineering Framework 中的工作交接机制。
+
+当一个 Role 的执行主体发生更换，或者尚未完成的工作需要移交时，通过 Handoff 将当前工作进度、实际工作现场、技术发现和未解决事项传递给接替 Agent。
+
+Handoff 的目标是使接替 Agent 能够准确理解当前工作状态，并在确认交接内容后继续完成剩余工作。
+
+## 2. Core Principles
+
+1. **Owner-Driven Handoff**：Handoff 由 Owner 主导，Agent 不通过自主协商完成交接。
+2. **Document-Driven Handoff**：正式交接必须具有独立的 Handoff Document。
+3. **Task State Consistency**：Task Card 和 Work Step 是 Task 执行进度的正式记录来源。
+4. **Workspace as Evidence**：项目实际工作区是判断实际修改状态的重要依据。
+5. **Explicit Uncertainty**：无法确认的修改和状态必须明确标记，不得猜测。
+6. **Historical Preservation**：每次 Handoff 创建独立记录，不覆盖历史交接记录。
+7. **Separation of Responsibilities**：Handoff 不替代 Task Protocol、Memory、Project Baseline 或 Approval Protocol。
+
+## 3. Handoff Triggers
+
+Handoff 仅适用于以下两种情况：
+
+### 3.1 Agent Replacement
+
+Owner 主动决定更换当前 Role 的执行 Agent。
+
+原 Agent 应整理当前工作状态，并创建 Handoff Document。
+
+### 3.2 Incomplete Work Transfer
+
+当前工作尚未完成，需要由另一个 Agent 接手。
+
+此情况包括原 Agent 正常结束工作后移交，以及原 Agent 异常中断后由接替 Agent 恢复工作现场。
+
+异常中断不是独立的第三种 Handoff 类型，而是未完成工作移交的一种特殊情形。
+
+## 4. Handoff Document Management
+
+### 4.1 Document Creation
+
+每次实际发生 Handoff，必须创建一份独立的 Handoff Document。
+
+Handoff Document 存放在所属 Task 的 `HANDOFFS/` 目录中。
+
+```text
+TASKS/
+└── TASK-001/
+    ├── TASK_CARD.md
+    └── HANDOFFS/
+        ├── HANDOFF-001.md
+        └── HANDOFF-002.md
+```
+
+### 4.2 Unique Identification
+
+Handoff Document 使用文件名中的编号作为唯一标识。
+
+例如：
+
+- `HANDOFF-001.md`
+- `HANDOFF-002.md`
+
+正文不需要重复记录 Handoff ID。
+
+### 4.3 Historical Records
+
+每次 Handoff 都必须保留独立记录。
+
+后续发生新的 Handoff 时，创建新的文档，不覆盖旧文档，也不重新打开已经完成的 Handoff。
+
+### 4.4 Task Card Reference
+
+Task Card 负责关联所属 Task 的 Handoff Documents。
+
+Task Card 不承担完整交接内容的记录职责。
+
+## 5. Handoff Document Structure
+
+每份 Handoff Document 必须遵循 `HANDOFF_RECORD.md` 定义的结构。
+
+包含以下部分：
+
+| Section | Responsibility |
+|---|---|
+| Handoff Metadata | 记录交接时间、交接原因和 Handoff 接收状态 |
+| Task Reference | 记录交接发生时的 Task 状态快照 |
+| Work Progress | 记录未完成的 Work Steps、当前进度和后续待执行事项 |
+| Modified Artifacts | 记录与未完成工作有关的已修改文件、模块和函数及其修改状态 |
+| Technical Findings | 记录执行期间发现的重要技术事实和结论 |
+| Validation Status | 记录构建、测试和其他验证结果 |
+| Outstanding Issues | 记录尚未解决的问题、阻塞和风险 |
+| References | 引用需要阅读的正式文档、决策和其他记录 |
+
+### 5.1 Task State Snapshot
+
+Task Reference 必须反映 Handoff 实际发生时的 Task 状态。
+
+它是一个具有明确时间点的状态快照，不得随着 Task 后续状态变化而被覆盖。
+
+### 5.2 Work Progress
+
+Work Progress 只记录尚未完成的工作，包括：
+
+- 未完成的 Work Steps。
+- 各项工作的当前进度。
+- 已经完成的部分。
+- 尚待执行的事项。
+
+不需要重复列出已经完成的全部 Work Steps。
+
+不单独设置 Next Actions，后续待执行事项统一记录在 Work Progress 中。
+
+### 5.3 Modified Artifacts
+
+Modified Artifacts 只记录与未完成工作有关的修改。
+
+需要说明相关文件、模块或函数的修改情况及其当前状态。
+
+不得因为某项修改已经存在，就直接认定其已经完成。
+
+### 5.4 Validation Status
+
+必须区分实际验证结果和未经验证的状态。
+
+例如，代码已经修改不代表构建通过；构建通过也不代表测试通过。
+
+## 6. Handoff Creation Responsibility
+
+### 6.1 Normal Handoff
+
+原 Agent 负责：
+
+1. 整理当前 Task 和 Work Step 进度。
+2. 整理与未完成工作有关的修改。
+3. 记录重要技术发现。
+4. 记录构建、测试及其他验证结果。
+5. 记录未解决问题和风险。
+6. 创建 Handoff Document。
+7. 将 Handoff 状态设置为 `PREPARED`。
+
+### 6.2 Abnormal Handoff
+
+当原 Agent 无法正常完成交接时，接替 Agent 必须先执行 Working State Recovery。
+
+完成恢复后，由接替 Agent 创建 Handoff Document，并将其状态设置为 `PREPARED`。
+
+异常交接必须明确区分：
+
+- 原 Agent 已经留下的记录。
+- 接替 Agent 通过工作现场检查恢复的信息。
+- 仍然无法确认的信息。
+
+接替 Agent 不得将恢复后补充的信息伪装成原 Agent 的交接说明。
+
+异常情况必须在 Handoff Metadata 的交接原因中注明。
+
+## 7. Working State Recovery
+
+### 7.1 Trigger
+
+当原 Agent 异常中断，无法提供完整、可靠的交接记录时，接替 Agent 必须执行 Working State Recovery。
+
+### 7.2 Recovery Procedure
+
+接替 Agent 必须：
+
+1. 阅读 Owner 指定的 Handoff Document（如果存在）。
+2. 阅读相关 Task Card、Memory 和其他已有记录。
+3. 检查项目实际工作区。
+4. 识别已有记录中没有记录的修改。
+5. 区分已完成、未完成和意图不明确的修改。
+6. 检查构建、测试及其他验证状态。
+7. 整理恢复结果。
+8. 对无法确认的修改和状态向 Owner 报告。
+9. 根据恢复结果创建 Handoff Document。
+
+### 7.3 Workspace Inspection
+
+工作现场检查至少包括：
+
+- Git 工作区状态。
+- 已修改、已暂存和未跟踪文件。
+- 文件差异。
+- 函数和模块的实际实现进度。
+- 构建状态。
+- 测试状态。
+- 文档与代码的一致性。
+
+### 7.4 Recovery Rules
+
+必须遵循以下规则：
+
+- 代码发生变化不代表代码已经完成。
+- 没有记录在交接文档中，不代表修改可以忽略。
+- 不得擅自回滚无法确认意图的修改。
+- 不得擅自覆盖无法确认的修改。
+- 不得将无法确认的修改直接视为正确成果。
+- 重大差异和无法确认的信息必须向 Owner 报告。
+
+## 8. Handoff Lifecycle
+
+Handoff 只有两个状态：
+
+### 8.1 PREPARED
+
+表示 Handoff Document 已经创建，等待接替 Agent 接收。
+
+正常交接由原 Agent 创建 `PREPARED` 记录。
+
+异常交接由完成 Working State Recovery 的接替 Agent 创建 `PREPARED` 记录。
+
+### 8.2 ACCEPTED
+
+表示接替 Agent 已经完成交接内容的阅读、必要核对，并明确接受后续工作。
+
+`ACCEPTED` 是单次 Handoff 的终态。
+
+后续工作进度由 Task Card 和 Work Step 记录，不继续修改该 Handoff 的生命周期状态。
+
+### 8.3 State Transition
+
+```text
+PREPARED → ACCEPTED
+```
+
+不定义其他 Handoff 状态。
+
+## 9. Handoff Acceptance Requirements
+
+接替 Agent 将 Handoff 状态设置为 `ACCEPTED` 前，必须完成：
+
+1. 阅读并理解 Handoff Document。
+2. 核对项目实际工作现场。
+3. 确认已有修改及其完成状态。
+4. 了解构建、测试及其他验证结果。
+5. 了解尚未解决的问题、阻塞和风险。
+
+如果核对发现重大差异或无法确认的修改，必须按照 Working State Recovery 的规则向 Owner 报告。
+
+### 9.1 Meaning of ACCEPTED
+
+`ACCEPTED` 只表示接替 Agent 已理解并接受接手工作。
+
+它不代表：
+
+- 原有实现已经正确。
+- 原有实现已经通过验证。
+- Task 已经完成。
+- 所有遗留问题已经解决。
+
+## 10. Relationship with Other Framework Mechanisms
+
+### 10.1 Task Protocol
+
+Task Protocol 定义 Task 的目标、范围、交付物和验收规则。
+
+Handoff 负责移交 Task 尚未完成的工作，不改变 Task 的正式定义。
+
+### 10.2 Work Step Protocol
+
+Work Step 记录 Task 内部的执行步骤和进度。
+
+Handoff 只需要记录未完成的 Work Steps 及其当前状态，不取代 Work Step 的正式记录。
+
+### 10.3 Task Card
+
+Task Card 持续维护 Task 状态和执行进度，并关联 Handoff Documents。
+
+Handoff Document 保存交接发生时的状态快照及交接所需的详细信息。
+
+### 10.4 Memory
+
+Memory 用于保存可复用知识和长期上下文。
+
+Memory 不替代 Handoff Document，也不承担正式交接职责。
+
+### 10.5 Project Baseline
+
+正式需求、架构、接口和技术决策应保存在相应的 Project Baseline 文档中。
+
+Handoff 可以引用这些文档，但不得通过 Handoff 擅自修改正式项目结论。
+
+### 10.6 Approval Protocol
+
+Handoff 本身不构成 Approval，也不授予新的审批权限。
+
+涉及正式需求、架构、技术路线或其他需要批准的变更时，仍然必须遵循 Approval Protocol。
+
+## 11. Completion Criteria
+
+一次 Handoff 在满足以下条件时视为完成：
+
+- Handoff Document 已创建。
+- Handoff 状态已达到 `ACCEPTED`。
+- 接替 Agent 已完成必要的交接核对。
+- 发现的重大差异和无法确认事项已经按照规定报告 Owner。
+
+Handoff 完成不代表所属 Task 完成。
+
+Task 仍然按照 Task Protocol 独立推进和验收。
+:::", 
+                        "start_idx": 186, 
+                        "end_idx": 5926, 
+                        "safe_urls": [ ], 
+                        "refs": [ ], 
+                        "alt": null, 
+                        "prompt_text": null
+                    }, 
+                    {
+                        "type": "client_defined_widget", 
+                        "category": "writing_block", 
+                        "data": {
+                            "content": "# HANDOFF RECORD
+
+> 本文档是单次 Handoff 的正式记录。每次交接创建独立文件，文件名使用 `HANDOFF-xxx.md`。
+
+## 1. Handoff Metadata
+
+| Field | Value |
+|---|---|
+| Handoff Status | `PREPARED` |
+| Handoff Time | YYYY-MM-DD HH:MM |
+| Handoff Reason | 主动更换 Agent / 未完成工作移交 / 异常中断 |
+
+## 2. Task Reference
+
+| Field | Value |
+|---|---|
+| Task ID | TASK-xxx |
+| Task Status at Handoff | Task 在交接发生时的状态 |
+| Snapshot Time | YYYY-MM-DD HH:MM |
+
+> 本部分记录交接发生时的 Task 状态快照，不随 Task 后续状态变化而更新。
+
+## 3. Work Progress
+
+仅记录尚未完成的 Work Steps。
+
+### 3.1 Incomplete Work Steps
+
+| Work Step | Status | Current Progress |
+|---|---|---|
+| WS-001 | IN_PROGRESS | 当前执行进度 |
+
+### 3.2 Pending Work
+
+记录接替 Agent 尚待执行的具体事项。
+
+- [ ] 待执行事项 1
+- [ ] 待执行事项 2
+
+## 4. Modified Artifacts
+
+仅记录与未完成工作有关的修改。
+
+| Artifact | Modification | Current State |
+|---|---|---|
+| path/to/file | 修改内容 | 已完成 / 未完成 / 意图不明确 |
+
+需要时进一步说明相关模块、函数和具体代码位置。
+
+## 5. Technical Findings
+
+记录执行期间发现的重要技术事实和结论。
+
+### Finding 1
+
+- **Description**：
+- **Evidence**：
+- **Impact**：
+
+## 6. Validation Status
+
+| Validation Item | Status | Evidence / Details |
+|---|---|---|
+| Build | PASS / FAIL / NOT RUN / UNKNOWN | |
+| Test | PASS / FAIL / NOT RUN / UNKNOWN | |
+| Other Validation | | |
+
+不得将未经执行的验证标记为 PASS。
+
+## 7. Outstanding Issues
+
+记录尚未解决的问题、阻塞和风险。
+
+### Issue 1
+
+- **Description**：
+- **Impact**：
+- **Current Status**：
+- **Required Attention**：
+
+## 8. References
+
+列出接替 Agent 需要阅读的正式文档、技术决策和其他记录。
+
+- [ ] Task Card：
+- [ ] Requirement：
+- [ ] Architecture：
+- [ ] Technical Decision：
+- [ ] Other Reference：
+
+---
+
+## Handoff Acceptance
+
+> 由接替 Agent 完成必要核对后填写。
+
+| Field | Value |
+|---|---|
+| Handoff Status | `PREPARED` / `ACCEPTED` |
+| Acceptance Time | YYYY-MM-DD HH:MM |
+
+### Acceptance Confirmation
+
+- [ ] 已阅读并理解 Handoff Document。
+- [ ] 已核对项目实际工作现场。
+- [ ] 已确认已有修改及其完成状态。
+- [ ] 已了解构建、测试及其他验证结果。
+- [ ] 已了解尚未解决的问题、阻塞和风险。
+
+### Recovery Findings
+
+如果接收过程中发现交接文档未记录的修改、重大差异或无法确认的信息，在此记录并向 Owner 报告。
+
+| Finding | Evidence | Status |
+|---|---|---|
+| 发现内容 | 实际证据 | 已确认 / 待 Owner 确认 |
+
+### Acceptance Statement
+
+接替 Agent 在完成必要核对后，明确确认接受后续工作。
+
+`ACCEPTED` 仅表示接替 Agent 已理解并接受接手工作，不代表 Task 已完成，也不代表原有实现已经通过验证。", 
+                            "id": "84519", 
+                            "variant": "document", 
+                            "widget_type": "writing_block"
+                        }, 
+                        "matched_text": ":::writing{variant=\"document\" id=\"84519\"}
+# HANDOFF RECORD
+
+> 本文档是单次 Handoff 的正式记录。每次交接创建独立文件，文件名使用 `HANDOFF-xxx.md`。
+
+## 1. Handoff Metadata
+
+| Field | Value |
+|---|---|
+| Handoff Status | `PREPARED` |
+| Handoff Time | YYYY-MM-DD HH:MM |
+| Handoff Reason | 主动更换 Agent / 未完成工作移交 / 异常中断 |
+
+## 2. Task Reference
+
+| Field | Value |
+|---|---|
+| Task ID | TASK-xxx |
+| Task Status at Handoff | Task 在交接发生时的状态 |
+| Snapshot Time | YYYY-MM-DD HH:MM |
+
+> 本部分记录交接发生时的 Task 状态快照，不随 Task 后续状态变化而更新。
+
+## 3. Work Progress
+
+仅记录尚未完成的 Work Steps。
+
+### 3.1 Incomplete Work Steps
+
+| Work Step | Status | Current Progress |
+|---|---|---|
+| WS-001 | IN_PROGRESS | 当前执行进度 |
+
+### 3.2 Pending Work
+
+记录接替 Agent 尚待执行的具体事项。
+
+- [ ] 待执行事项 1
+- [ ] 待执行事项 2
+
+## 4. Modified Artifacts
+
+仅记录与未完成工作有关的修改。
+
+| Artifact | Modification | Current State |
+|---|---|---|
+| path/to/file | 修改内容 | 已完成 / 未完成 / 意图不明确 |
+
+需要时进一步说明相关模块、函数和具体代码位置。
+
+## 5. Technical Findings
+
+记录执行期间发现的重要技术事实和结论。
+
+### Finding 1
+
+- **Description**：
+- **Evidence**：
+- **Impact**：
+
+## 6. Validation Status
+
+| Validation Item | Status | Evidence / Details |
+|---|---|---|
+| Build | PASS / FAIL / NOT RUN / UNKNOWN | |
+| Test | PASS / FAIL / NOT RUN / UNKNOWN | |
+| Other Validation | | |
+
+不得将未经执行的验证标记为 PASS。
+
+## 7. Outstanding Issues
+
+记录尚未解决的问题、阻塞和风险。
+
+### Issue 1
+
+- **Description**：
+- **Impact**：
+- **Current Status**：
+- **Required Attention**：
+
+## 8. References
+
+列出接替 Agent 需要阅读的正式文档、技术决策和其他记录。
+
+- [ ] Task Card：
+- [ ] Requirement：
+- [ ] Architecture：
+- [ ] Technical Decision：
+- [ ] Other Reference：
+
+---
+
+## Handoff Acceptance
+
+> 由接替 Agent 完成必要核对后填写。
+
+| Field | Value |
+|---|---|
+| Handoff Status | `PREPARED` / `ACCEPTED` |
+| Acceptance Time | YYYY-MM-DD HH:MM |
+
+### Acceptance Confirmation
+
+- [ ] 已阅读并理解 Handoff Document。
+- [ ] 已核对项目实际工作现场。
+- [ ] 已确认已有修改及其完成状态。
+- [ ] 已了解构建、测试及其他验证结果。
+- [ ] 已了解尚未解决的问题、阻塞和风险。
+
+### Recovery Findings
+
+如果接收过程中发现交接文档未记录的修改、重大差异或无法确认的信息，在此记录并向 Owner 报告。
+
+| Finding | Evidence | Status |
+|---|---|---|
+| 发现内容 | 实际证据 | 已确认 / 待 Owner 确认 |
+
+### Acceptance Statement
+
+接替 Agent 在完成必要核对后，明确确认接受后续工作。
+
+`ACCEPTED` 仅表示接替 Agent 已理解并接受接手工作，不代表 Task 已完成，也不代表原有实现已经通过验证。
+:::", 
+                        "start_idx": 5955, 
+                        "end_idx": 8080, 
+                        "safe_urls": [ ], 
+                        "refs": [ ], 
+                        "alt": null, 
+                        "prompt_text": null
+                    }
+                ], 
+                "model_dil_v2": {
+                    "code": "DIL.render(__dil.jsx(()=>{const __dilConstants=DIL.useConstants();const __dilModelDataBindings=DIL.useAppData((appData)=>appData.opGenui?.modelDataBindings??{});return __dil.jsx(__dil.Fragment,null,__dil.jsx(\"text\",null,__dilConstants[\"0\"]),__dil.jsx(\"text\",null,__dilConstants[\"1\"]),__dil.jsx(\"list\",{\"marker\":\"number\"},__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dil.jsx(\"code\",null,__dilConstants[\"2\"]),__dilConstants[\"3\"])),__dil.jsx(\"list-item\",null,__dil.jsx(\"text\",null,__dil.jsx(\"code\",null,__dilConstants[\"4\"]),__dilConstants[\"5\"]))),__dil.jsx(\"title\",{\"size\":\"lg\"},__dilConstants[\"6\"]),(__dilConstants[\"8\"]==null?__dil.jsx(\"__chatgptClientDefinedWidget\",{\"key\":\"cdw:0\",\"invocationId\":__dilConstants[\"7\"]}):__dilConstants[\"8\"].type===\"math\"?__dil.jsx(\"math\",{\"key\":\"cdw:0\",\"value\":__dilConstants[\"8\"].value}):__dilConstants[\"8\"].type===\"text\"?__dil.jsx(\"text\",{\"key\":\"cdw:0\"},__dilConstants[\"8\"].value):null),__dil.jsx(\"title\",{\"size\":\"lg\"},__dilConstants[\"9\"]),(__dilConstants[\"11\"]==null?__dil.jsx(\"__chatgptClientDefinedWidget\",{\"key\":\"cdw:1\",\"invocationId\":__dilConstants[\"10\"]}):__dilConstants[\"11\"].type===\"math\"?__dil.jsx(\"math\",{\"key\":\"cdw:1\",\"value\":__dilConstants[\"11\"].value}):__dilConstants[\"11\"].type===\"text\"?__dil.jsx(\"text\",{\"key\":\"cdw:1\"},__dilConstants[\"11\"].value):null),__dil.jsx(\"title\",{\"size\":\"lg\"},__dilConstants[\"12\"]),__dil.jsx(\"text\",null,__dilConstants[\"13\"]),__dil.jsx(\"table\",null,__dil.jsx(\"table-row\",null,__dil.jsx(\"table-cell\",{\"header\":true},__dil.jsx(\"text\",null,__dilConstants[\"14\"])),__dil.jsx(\"table-cell\",{\"header\":true},__dil.jsx(\"text\",null,__dilConstants[\"15\"]))),__dil.jsx(\"table-row\",null,__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dil.jsx(\"code\",null,__dilConstants[\"16\"]))),__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dilConstants[\"17\"]))),__dil.jsx(\"table-row\",null,__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dil.jsx(\"code\",null,__dilConstants[\"18\"]))),__dil.jsx(\"table-cell\",null,__dil.jsx(\"text\",null,__dilConstants[\"19\"])))),__dil.jsx(\"text\",null,__dilConstants[\"20\"],__dil.jsx(\"code\",null,__dilConstants[\"21\"]),__dilConstants[\"22\"],__dil.jsx(\"code\",null,__dilConstants[\"23\"]),__dilConstants[\"24\"],__dil.jsx(\"code\",null,__dilConstants[\"25\"]),__dilConstants[\"26\"],__dil.jsx(\"code\",null,__dilConstants[\"27\"]),__dilConstants[\"28\"]),__dil.jsx(\"text\",null,__dil.jsx(\"bold\",null,__dilConstants[\"29\"]),__dilConstants[\"30\"],__dil.jsx(\"code\",null,__dilConstants[\"31\"]),__dilConstants[\"32\"],__dil.jsx(\"code\",null,__dilConstants[\"33\"]),__dilConstants[\"34\"]));},{\"key\":\"body:0\"}));", 
+                    "constants": {
+                        "0": "下一步直接形成正式文档初稿。本轮将 H01–H10 转换为可执行的规范和模板，不再增加新的设计决策。", 
+                        "1": "文档分为两份：", 
+                        "2": "HANDOFF_PROTOCOL.md", 
+                        "3": "：规定 Handoff 的触发、创建、恢复、接收和生命周期。", 
+                        "4": "HANDOFF_RECORD.md", 
+                        "5": "：规定每次交接实际使用的文档格式。", 
+                        "6": "1. HANDOFF_PROTOCOL.md", 
+                        "7": "dbbb25c0-baea-5db0-b695-523fc9a77417", 
+                        "8": null, 
+                        "9": "2. HANDOFF_RECORD.md", 
+                        "10": "247d2be1-a14e-5f54-a551-ce2f40139262", 
+                        "11": null, 
+                        "12": "3. 本轮整合结果", 
+                        "13": "两份文档之间的职责关系是：", 
+                        "14": "文档", 
+                        "15": "解决的问题", 
+                        "16": "HANDOFF_PROTOCOL.md", 
+                        "17": "规定交接行为必须遵循什么规则", 
+                        "18": "HANDOFF_RECORD.md", 
+                        "19": "规定每次交接必须如何记录", 
+                        "20": "目前有一个需要特别注意的实现细节：", 
+                        "21": "HANDOFF_RECORD.md", 
+                        "22": " 中的 ", 
+                        "23": "Handoff Status", 
+                        "24": " 在创建时为 ", 
+                        "25": "PREPARED", 
+                        "26": "，接替 Agent 完成接收后更新为 ", 
+                        "27": "ACCEPTED", 
+                        "28": "。这与 Handoff 两状态生命周期一致，不需要额外的状态记录文件。", 
+                        "29": "当前阶段：Handoff Protocol 已形成完整的规范初稿和记录模板。", 
+                        "30": " 后续整合 Framework 时，应将它们纳入 ", 
+                        "31": "03-workflow/", 
+                        "32": " 和 ", 
+                        "33": "04-templates/", 
+                        "34": "，并在 Framework 文档索引中登记；目前仍是 Draft，不能视为已经正式批准发布。"
+                    }, 
+                    "fallbackMarkdown": "下一步直接形成正式文档初稿。本轮将 H01–H10 转换为可执行的规范和模板，不再增加新的设计决策。
+
+文档分为两份：
+
+1. `HANDOFF_PROTOCOL.md`：规定 Handoff 的触发、创建、恢复、接收和生命周期。
+2. `HANDOFF_RECORD.md`：规定每次交接实际使用的文档格式。
+
+## 1\\. HANDOFF\\_PROTOCOL.md
+
+:::writing{variant=\"document\" id=\"73182\"}
+# HANDOFF PROTOCOL
+
+| 属性 | 内容 |
+|---|---|
+| Document Type | Workflow Protocol |
+| Document Status | Draft |
+| Framework Version | 待绑定 |
+| Document Owner | 待指定 Role |
+
+## 1. Purpose
+
+Handoff Protocol 定义 AI Software Engineering Framework 中的工作交接机制。
+
+当一个 Role 的执行主体发生更换，或者尚未完成的工作需要移交时，通过 Handoff 将当前工作进度、实际工作现场、技术发现和未解决事项传递给接替 Agent。
+
+Handoff 的目标是使接替 Agent 能够准确理解当前工作状态，并在确认交接内容后继续完成剩余工作。
+
+## 2. Core Principles
+
+1. **Owner-Driven Handoff**：Handoff 由 Owner 主导，Agent 不通过自主协商完成交接。
+2. **Document-Driven Handoff**：正式交接必须具有独立的 Handoff Document。
+3. **Task State Consistency**：Task Card 和 Work Step 是 Task 执行进度的正式记录来源。
+4. **Workspace as Evidence**：项目实际工作区是判断实际修改状态的重要依据。
+5. **Explicit Uncertainty**：无法确认的修改和状态必须明确标记，不得猜测。
+6. **Historical Preservation**：每次 Handoff 创建独立记录，不覆盖历史交接记录。
+7. **Separation of Responsibilities**：Handoff 不替代 Task Protocol、Memory、Project Baseline 或 Approval Protocol。
+
+## 3. Handoff Triggers
+
+Handoff 仅适用于以下两种情况：
+
+### 3.1 Agent Replacement
+
+Owner 主动决定更换当前 Role 的执行 Agent。
+
+原 Agent 应整理当前工作状态，并创建 Handoff Document。
+
+### 3.2 Incomplete Work Transfer
+
+当前工作尚未完成，需要由另一个 Agent 接手。
+
+此情况包括原 Agent 正常结束工作后移交，以及原 Agent 异常中断后由接替 Agent 恢复工作现场。
+
+异常中断不是独立的第三种 Handoff 类型，而是未完成工作移交的一种特殊情形。
+
+## 4. Handoff Document Management
+
+### 4.1 Document Creation
+
+每次实际发生 Handoff，必须创建一份独立的 Handoff Document。
+
+Handoff Document 存放在所属 Task 的 `HANDOFFS/` 目录中。
+
+```text
+TASKS/
+└── TASK-001/
+    ├── TASK_CARD.md
+    └── HANDOFFS/
+        ├── HANDOFF-001.md
+        └── HANDOFF-002.md
+```
+
+### 4.2 Unique Identification
+
+Handoff Document 使用文件名中的编号作为唯一标识。
+
+例如：
+
+- `HANDOFF-001.md`
+- `HANDOFF-002.md`
+
+正文不需要重复记录 Handoff ID。
+
+### 4.3 Historical Records
+
+每次 Handoff 都必须保留独立记录。
+
+后续发生新的 Handoff 时，创建新的文档，不覆盖旧文档，也不重新打开已经完成的 Handoff。
+
+### 4.4 Task Card Reference
+
+Task Card 负责关联所属 Task 的 Handoff Documents。
+
+Task Card 不承担完整交接内容的记录职责。
+
+## 5. Handoff Document Structure
+
+每份 Handoff Document 必须遵循 `HANDOFF_RECORD.md` 定义的结构。
+
+包含以下部分：
+
+| Section | Responsibility |
+|---|---|
+| Handoff Metadata | 记录交接时间、交接原因和 Handoff 接收状态 |
+| Task Reference | 记录交接发生时的 Task 状态快照 |
+| Work Progress | 记录未完成的 Work Steps、当前进度和后续待执行事项 |
+| Modified Artifacts | 记录与未完成工作有关的已修改文件、模块和函数及其修改状态 |
+| Technical Findings | 记录执行期间发现的重要技术事实和结论 |
+| Validation Status | 记录构建、测试和其他验证结果 |
+| Outstanding Issues | 记录尚未解决的问题、阻塞和风险 |
+| References | 引用需要阅读的正式文档、决策和其他记录 |
+
+### 5.1 Task State Snapshot
+
+Task Reference 必须反映 Handoff 实际发生时的 Task 状态。
+
+它是一个具有明确时间点的状态快照，不得随着 Task 后续状态变化而被覆盖。
+
+### 5.2 Work Progress
+
+Work Progress 只记录尚未完成的工作，包括：
+
+- 未完成的 Work Steps。
+- 各项工作的当前进度。
+- 已经完成的部分。
+- 尚待执行的事项。
+
+不需要重复列出已经完成的全部 Work Steps。
+
+不单独设置 Next Actions，后续待执行事项统一记录在 Work Progress 中。
+
+### 5.3 Modified Artifacts
+
+Modified Artifacts 只记录与未完成工作有关的修改。
+
+需要说明相关文件、模块或函数的修改情况及其当前状态。
+
+不得因为某项修改已经存在，就直接认定其已经完成。
+
+### 5.4 Validation Status
+
+必须区分实际验证结果和未经验证的状态。
+
+例如，代码已经修改不代表构建通过；构建通过也不代表测试通过。
+
+## 6. Handoff Creation Responsibility
+
+### 6.1 Normal Handoff
+
+原 Agent 负责：
+
+1. 整理当前 Task 和 Work Step 进度。
+2. 整理与未完成工作有关的修改。
+3. 记录重要技术发现。
+4. 记录构建、测试及其他验证结果。
+5. 记录未解决问题和风险。
+6. 创建 Handoff Document。
+7. 将 Handoff 状态设置为 `PREPARED`。
+
+### 6.2 Abnormal Handoff
+
+当原 Agent 无法正常完成交接时，接替 Agent 必须先执行 Working State Recovery。
+
+完成恢复后，由接替 Agent 创建 Handoff Document，并将其状态设置为 `PREPARED`。
+
+异常交接必须明确区分：
+
+- 原 Agent 已经留下的记录。
+- 接替 Agent 通过工作现场检查恢复的信息。
+- 仍然无法确认的信息。
+
+接替 Agent 不得将恢复后补充的信息伪装成原 Agent 的交接说明。
+
+异常情况必须在 Handoff Metadata 的交接原因中注明。
+
+## 7. Working State Recovery
+
+### 7.1 Trigger
+
+当原 Agent 异常中断，无法提供完整、可靠的交接记录时，接替 Agent 必须执行 Working State Recovery。
+
+### 7.2 Recovery Procedure
+
+接替 Agent 必须：
+
+1. 阅读 Owner 指定的 Handoff Document（如果存在）。
+2. 阅读相关 Task Card、Memory 和其他已有记录。
+3. 检查项目实际工作区。
+4. 识别已有记录中没有记录的修改。
+5. 区分已完成、未完成和意图不明确的修改。
+6. 检查构建、测试及其他验证状态。
+7. 整理恢复结果。
+8. 对无法确认的修改和状态向 Owner 报告。
+9. 根据恢复结果创建 Handoff Document。
+
+### 7.3 Workspace Inspection
+
+工作现场检查至少包括：
+
+- Git 工作区状态。
+- 已修改、已暂存和未跟踪文件。
+- 文件差异。
+- 函数和模块的实际实现进度。
+- 构建状态。
+- 测试状态。
+- 文档与代码的一致性。
+
+### 7.4 Recovery Rules
+
+必须遵循以下规则：
+
+- 代码发生变化不代表代码已经完成。
+- 没有记录在交接文档中，不代表修改可以忽略。
+- 不得擅自回滚无法确认意图的修改。
+- 不得擅自覆盖无法确认的修改。
+- 不得将无法确认的修改直接视为正确成果。
+- 重大差异和无法确认的信息必须向 Owner 报告。
+
+## 8. Handoff Lifecycle
+
+Handoff 只有两个状态：
+
+### 8.1 PREPARED
+
+表示 Handoff Document 已经创建，等待接替 Agent 接收。
+
+正常交接由原 Agent 创建 `PREPARED` 记录。
+
+异常交接由完成 Working State Recovery 的接替 Agent 创建 `PREPARED` 记录。
+
+### 8.2 ACCEPTED
+
+表示接替 Agent 已经完成交接内容的阅读、必要核对，并明确接受后续工作。
+
+`ACCEPTED` 是单次 Handoff 的终态。
+
+后续工作进度由 Task Card 和 Work Step 记录，不继续修改该 Handoff 的生命周期状态。
+
+### 8.3 State Transition
+
+```text
+PREPARED → ACCEPTED
+```
+
+不定义其他 Handoff 状态。
+
+## 9. Handoff Acceptance Requirements
+
+接替 Agent 将 Handoff 状态设置为 `ACCEPTED` 前，必须完成：
+
+1. 阅读并理解 Handoff Document。
+2. 核对项目实际工作现场。
+3. 确认已有修改及其完成状态。
+4. 了解构建、测试及其他验证结果。
+5. 了解尚未解决的问题、阻塞和风险。
+
+如果核对发现重大差异或无法确认的修改，必须按照 Working State Recovery 的规则向 Owner 报告。
+
+### 9.1 Meaning of ACCEPTED
+
+`ACCEPTED` 只表示接替 Agent 已理解并接受接手工作。
+
+它不代表：
+
+- 原有实现已经正确。
+- 原有实现已经通过验证。
+- Task 已经完成。
+- 所有遗留问题已经解决。
+
+## 10. Relationship with Other Framework Mechanisms
+
+### 10.1 Task Protocol
+
+Task Protocol 定义 Task 的目标、范围、交付物和验收规则。
+
+Handoff 负责移交 Task 尚未完成的工作，不改变 Task 的正式定义。
+
+### 10.2 Work Step Protocol
+
+Work Step 记录 Task 内部的执行步骤和进度。
+
+Handoff 只需要记录未完成的 Work Steps 及其当前状态，不取代 Work Step 的正式记录。
+
+### 10.3 Task Card
+
+Task Card 持续维护 Task 状态和执行进度，并关联 Handoff Documents。
+
+Handoff Document 保存交接发生时的状态快照及交接所需的详细信息。
+
+### 10.4 Memory
+
+Memory 用于保存可复用知识和长期上下文。
+
+Memory 不替代 Handoff Document，也不承担正式交接职责。
+
+### 10.5 Project Baseline
+
+正式需求、架构、接口和技术决策应保存在相应的 Project Baseline 文档中。
+
+Handoff 可以引用这些文档，但不得通过 Handoff 擅自修改正式项目结论。
+
+### 10.6 Approval Protocol
+
+Handoff 本身不构成 Approval，也不授予新的审批权限。
+
+涉及正式需求、架构、技术路线或其他需要批准的变更时，仍然必须遵循 Approval Protocol。
+
+## 11. Completion Criteria
+
+一次 Handoff 在满足以下条件时视为完成：
+
+- Handoff Document 已创建。
+- Handoff 状态已达到 `ACCEPTED`。
+- 接替 Agent 已完成必要的交接核对。
+- 发现的重大差异和无法确认事项已经按照规定报告 Owner。
+
+Handoff 完成不代表所属 Task 完成。
+
+Task 仍然按照 Task Protocol 独立推进和验收。
+:::
+
+## 2\\. HANDOFF\\_RECORD.md
+
+:::writing{variant=\"document\" id=\"84519\"}
+# HANDOFF RECORD
+
+> 本文档是单次 Handoff 的正式记录。每次交接创建独立文件，文件名使用 `HANDOFF-xxx.md`。
+
+## 1. Handoff Metadata
+
+| Field | Value |
+|---|---|
+| Handoff Status | `PREPARED` |
+| Handoff Time | YYYY-MM-DD HH:MM |
+| Handoff Reason | 主动更换 Agent / 未完成工作移交 / 异常中断 |
+
+## 2. Task Reference
+
+| Field | Value |
+|---|---|
+| Task ID | TASK-xxx |
+| Task Status at Handoff | Task 在交接发生时的状态 |
+| Snapshot Time | YYYY-MM-DD HH:MM |
+
+> 本部分记录交接发生时的 Task 状态快照，不随 Task 后续状态变化而更新。
+
+## 3. Work Progress
+
+仅记录尚未完成的 Work Steps。
+
+### 3.1 Incomplete Work Steps
+
+| Work Step | Status | Current Progress |
+|---|---|---|
+| WS-001 | IN_PROGRESS | 当前执行进度 |
+
+### 3.2 Pending Work
+
+记录接替 Agent 尚待执行的具体事项。
+
+- [ ] 待执行事项 1
+- [ ] 待执行事项 2
+
+## 4. Modified Artifacts
+
+仅记录与未完成工作有关的修改。
+
+| Artifact | Modification | Current State |
+|---|---|---|
+| path/to/file | 修改内容 | 已完成 / 未完成 / 意图不明确 |
+
+需要时进一步说明相关模块、函数和具体代码位置。
+
+## 5. Technical Findings
+
+记录执行期间发现的重要技术事实和结论。
+
+### Finding 1
+
+- **Description**：
+- **Evidence**：
+- **Impact**：
+
+## 6. Validation Status
+
+| Validation Item | Status | Evidence / Details |
+|---|---|---|
+| Build | PASS / FAIL / NOT RUN / UNKNOWN | |
+| Test | PASS / FAIL / NOT RUN / UNKNOWN | |
+| Other Validation | | |
+
+不得将未经执行的验证标记为 PASS。
+
+## 7. Outstanding Issues
+
+记录尚未解决的问题、阻塞和风险。
+
+### Issue 1
+
+- **Description**：
+- **Impact**：
+- **Current Status**：
+- **Required Attention**：
+
+## 8. References
+
+列出接替 Agent 需要阅读的正式文档、技术决策和其他记录。
+
+- [ ] Task Card：
+- [ ] Requirement：
+- [ ] Architecture：
+- [ ] Technical Decision：
+- [ ] Other Reference：
+
+---
+
+## Handoff Acceptance
+
+> 由接替 Agent 完成必要核对后填写。
+
+| Field | Value |
+|---|---|
+| Handoff Status | `PREPARED` / `ACCEPTED` |
+| Acceptance Time | YYYY-MM-DD HH:MM |
+
+### Acceptance Confirmation
+
+- [ ] 已阅读并理解 Handoff Document。
+- [ ] 已核对项目实际工作现场。
+- [ ] 已确认已有修改及其完成状态。
+- [ ] 已了解构建、测试及其他验证结果。
+- [ ] 已了解尚未解决的问题、阻塞和风险。
+
+### Recovery Findings
+
+如果接收过程中发现交接文档未记录的修改、重大差异或无法确认的信息，在此记录并向 Owner 报告。
+
+| Finding | Evidence | Status |
+|---|---|---|
+| 发现内容 | 实际证据 | 已确认 / 待 Owner 确认 |
+
+### Acceptance Statement
+
+接替 Agent 在完成必要核对后，明确确认接受后续工作。
+
+`ACCEPTED` 仅表示接替 Agent 已理解并接受接手工作，不代表 Task 已完成，也不代表原有实现已经通过验证。
+:::
+
+## 3\\. 本轮整合结果
+
+两份文档之间的职责关系是：
+
+| 文档 | 解决的问题 |
+|--------|--------|
+| `HANDOFF_PROTOCOL.md` | 规定交接行为必须遵循什么规则 |
+| `HANDOFF_RECORD.md` | 规定每次交接必须如何记录 |
+
+目前有一个需要特别注意的实现细节：`HANDOFF_RECORD.md` 中的 `Handoff Status` 在创建时为 `PREPARED`，接替 Agent 完成接收后更新为 `ACCEPTED`。这与 Handoff 两状态生命周期一致，不需要额外的状态记录文件。
+
+**当前阶段：Handoff Protocol 已形成完整的规范初稿和记录模板。** 后续整合 Framework 时，应将它们纳入 `03-workflow/` 和 `04-templates/`，并在 Framework 文档索引中登记；目前仍是 Draft，不能视为已经正式批准发布。", 
+                    "fallbackMarkdownVersion": 1, 
+                    "clientDefinedWidgets": {
+                        "dbbb25c0-baea-5db0-b695-523fc9a77417": {
+                            "status": "resolved", 
+                            "refIndex": 0, 
+                            "isStreaming": false
+                        }, 
+                        "247d2be1-a14e-5f54-a551-ce2f40139262": {
+                            "status": "resolved", 
+                            "refIndex": 1, 
+                            "isStreaming": false
+                        }
+                    }, 
+                    "appData": {
+                        "opGenui": {
+                            "componentResults": { }, 
+                            "interactionSurface": "mainline", 
+                            "modelDataBindings": { }
+                        }
+                    }
+                }, 
+                "view_state": { }, 
+                "genui_components": [
+                    {
+                        "type": "writing_block", 
+                        "tree_range": [
+                            8, 
+                            9
+                        ], 
+                        "start_index": 184, 
+                        "end_index": 5937
+                    }, 
+                    {
+                        "type": "writing_block", 
+                        "tree_range": [
+                            10, 
+                            11
+                        ], 
+                        "start_index": 5964, 
+                        "end_index": 8102
+                    }
+                ], 
+                "resolved_model_slug": "gpt-6", 
+                "search_result_groups": [ ], 
+                "code_blocks": {
+                    "0": {
+                        "id": "jq57h1", 
+                        "edited": false, 
+                        "previewable": false, 
+                        "preview_language": null
+                    }, 
+                    "1": {
+                        "id": "q9hvh5", 
+                        "edited": false, 
+                        "previewable": false, 
+                        "preview_language": null
+                    }
+                }, 
+                "cot_version": "v5", 
+                "conversation_followup_suggestions_eligible": false, 
+                "request_id": "737ee506-934e-4c27-8ae9-1c19ad7cb9a5", 
+                "message_type": "next", 
+                "turn_exchange_id": "1f1f92d0-b8f9-4ddc-986a-af1a9b2bc008", 
+                "working_turn_id": "1f1f92d0-b8f9-4ddc-986a-af1a9b2bc008", 
+                "model_slug": "gpt-6", 
+                "default_model_slug": "auto", 
+                "can_save": true, 
+                "parent_id": "bdb239de-840c-48cf-a4e7-bb06c406336a", 
+                "turn_id": "6db305de-4241-4e80-8fae-815913cbe36d", 
+                "model_switcher_deny": [ ]
+            }, 
+            "recipient": "all", 
+            "channel": "final"
+        }
+    ], 
+    "current_node": "671aac51-4391-42e0-aa76-1161b021681b", 
+    "page_info": {
+        "start_cursor": "574bd13c-f1e3-4670-adc5-032d2040169a", 
+        "end_cursor": "671aac51-4391-42e0-aa76-1161b021681b", 
+        "has_previous_page": true, 
+        "has_next_page": false
+    }, 
+    "context_truncation_continuation": {
+        "boundary_message_id": "648473f8-a144-460d-8411-f3be66bd05dc", 
+        "source_conversation_id": "6b018551-08f8-83e8-a3f2-e972ee6f7a98", 
+        "source_conversation_title": "设计AI软件团队工作流骨架 (3)", 
+        "visible_from_message_id": null, 
+        "source_conversation_gizmo_id": null, 
+        "source_conversation_owner_id": "user-KHCSezUxKbb6qTNB2T5JBVKu"
+    }
+}
