@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT 会话 HTML 导出器
 // @namespace    https://github.com/JKwarn/upload-my
-// @version      2.7.5
+// @version      2.7.6
 // @description  通过会话接口校验消息，并复用 ChatGPT 原生 DOM 与 CSS 导出独立 HTML
 // @match        https://chatgpt.com/c/*
 // @run-at       document-idle
@@ -11,7 +11,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '2.7.5';
+  const VERSION = '2.7.6';
   const PREFIX = '[ChatGPT 会话 HTML 导出器]';
   const IDS = {
     button: 'chatgpt-html-exporter-button',
@@ -21,7 +21,8 @@
     toast: 'chatgpt-html-exporter-toast',
     logDownload: 'chatgpt-html-exporter-log-download',
     logToggle: 'chatgpt-html-exporter-log-toggle',
-    logToggleLabel: 'chatgpt-html-exporter-log-toggle-label'
+    logToggleLabel: 'chatgpt-html-exporter-log-toggle-label',
+    stopButton: 'chatgpt-html-exporter-stop'
   };
   const CONFIG = {
     sessionApi: '/api/auth/session',
@@ -35,7 +36,7 @@
     maxScrollDelay: 10000,
     scrollDelayStorageKey: 'chatgpt-html-exporter-scroll-delay'
   };
-  const state = { running: false, observer: null };
+  const state = { running: false, observer: null, abortController: null, stopRequested: false };
   const diagnostics = {
     version: VERSION,
     timestamp: new Date().toISOString(),
@@ -50,6 +51,24 @@
     result: null
   };
 
+  function throwIfStopped() {
+    if (state.stopRequested || state.abortController?.signal.aborted) {
+      const error = new Error('用户请求停止导出。'); error.name = 'AbortError'; throw error;
+    }
+  }
+  function requestStop() {
+    if (!state.running || state.stopRequested) return;
+    state.stopRequested = true;
+    diagnostics.stop = {
+      requestedAt: new Date().toISOString(),
+      stage: diagnostics.dom?.traversal?.currentStage || 'unknown',
+      scrollTop: diagnostics.dom?.traversal?.scrollElement?.scrollTop ?? window.scrollY,
+      pageScrollY: window.scrollY
+    };
+    diagnostics.warnings.push('用户点击停止按钮，中止当前导出流程。');
+    state.abortController?.abort();
+    setStatus('正在停止并保存诊断日志…', 'info');
+  }
   function createDiagnosticFilename() {
     const timestamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d{3}Z$/, 'Z');
     const conversation = String(diagnostics.conversationId || 'unknown').replace(/[^a-zA-Z0-9_-]/g, '-');
@@ -79,9 +98,9 @@
     return { filename, size: blob.size };
   }
 
-  function log() {
+  function log(force = false) {
     const logToggle = document.getElementById(IDS.logToggle);
-    if (!logToggle?.checked) return;
+    if (!force && !logToggle?.checked) return;
     const success = Boolean(diagnostics.result && diagnostics.result.success);
     try {
       const file = downloadDiagnostics();
@@ -180,6 +199,9 @@
         #${IDS.button}{display:flex;align-items:center;justify-content:center;gap:8px;min-width:148px;height:40px;padding:0 15px;border:1px solid rgba(255,255,255,.15);border-radius:9px;background:#10a37f;color:#fff;font-family:inherit;font-size:14px;font-weight:600;line-height:1.2;cursor:pointer}
         #${IDS.button}:hover{background:#0d8f70}
         #${IDS.button}:disabled{opacity:.65;cursor:wait}
+        #${IDS.stopButton}{height:40px;padding:0 12px;border:1px solid rgba(255,255,255,.18);border-radius:9px;background:#b42318;color:#fff;font:600 13px inherit;cursor:pointer}
+        #${IDS.stopButton}:hover{background:#912018}
+        #${IDS.stopButton}[hidden]{display:none!important}
         #${IDS.logDownload}{height:40px;padding:0 11px;border:1px solid rgba(255,255,255,.2);border-radius:9px;background:rgba(255,255,255,.12);color:#fff;font-family:inherit;font-size:12px;cursor:pointer}
         #${IDS.logDownload}:hover{background:rgba(255,255,255,.2)}
         #${IDS.logDownload}:disabled{opacity:.6;cursor:wait}
@@ -258,6 +280,13 @@
       const button = document.getElementById(IDS.button);
       if (button.parentElement !== controls) controls.appendChild(button);
     }
+    if (!document.getElementById(IDS.stopButton)) {
+      const stopButton = document.createElement('button');
+      stopButton.id = IDS.stopButton; stopButton.type = 'button';
+      stopButton.textContent = '■ 停止'; stopButton.hidden = true;
+      stopButton.addEventListener('click', requestStop);
+      controls.appendChild(stopButton);
+    }
     if (!document.getElementById(IDS.logDownload)) {
       const logButton = document.createElement('button');
       logButton.id = IDS.logDownload;
@@ -286,7 +315,12 @@
   }
 
   async function fetchJSON(url, options = {}) {
+    throwIfStopped();
     const controller = new AbortController();
+    const externalSignal = state.abortController?.signal;
+    const abortFromExport = () => controller.abort();
+    if (externalSignal?.aborted) controller.abort();
+    else externalSignal?.addEventListener('abort', abortFromExport, { once: true });
     const timer = setTimeout(() => controller.abort(), CONFIG.requestTimeout);
     try {
       const response = await fetch(url, {
@@ -306,6 +340,7 @@
       return await response.json();
     } finally {
       clearTimeout(timer);
+      externalSignal?.removeEventListener('abort', abortFromExport);
     }
   }
 
@@ -930,7 +965,7 @@
   }
 
   function waitForVirtualizedUpdate(previousSignature, timeout = 2500,
-      minimumDelay = CONFIG.defaultScrollDelay, observedRoot = document.documentElement) {
+      minimumDelay = CONFIG.defaultScrollDelay, observedRoot = document.documentElement, signal = state.abortController?.signal) {
     return new Promise(resolve => {
       const startedAt = performance.now();
       let finished = false;
@@ -942,6 +977,7 @@
       let stableTimer = null;
       let hardTimeoutTimer = null;
       let completionPoll = null;
+      const onAbort = () => finish('cancelled');
 
       const finish = finishReason => {
         if (finished) return;
@@ -952,6 +988,7 @@
         clearTimeout(stableTimer);
         clearTimeout(hardTimeoutTimer);
         clearInterval(completionPoll);
+        signal?.removeEventListener('abort', onAbort);
         resolve({
           changed: getVirtualizedSignature() !== previousSignature,
           waitedMs: Math.round(performance.now() - startedAt),
@@ -983,6 +1020,8 @@
         if (mutationDetected) checkStable();
       });
 
+      if (signal?.aborted) { finish('cancelled'); return; }
+      signal?.addEventListener('abort', onAbort, { once: true });
       try {
         observer.observe(observedRoot || document.documentElement, {
           childList: true, subtree: true, characterData: true
@@ -1222,13 +1261,23 @@
         traversal.preheat.stepSize = preheatStepSize;
 
         const moveAndWait = async (direction, requestedTop, stepNumber) => {
+          throwIfStopped();
+          const beforeTop = scrollElement.scrollTop;
+          const beforeMax = Math.max(0, scrollElement.scrollHeight - scrollElement.clientHeight);
           const beforeSignature = getVirtualizedSignature();
+          const beforeIds = [...document.querySelectorAll('[data-virtualized-turn]')].map(n => (n.innerText || '').slice(0,100));
+          const moveStartedAt = new Date().toISOString();
           scrollElement.scrollTop = requestedTop;
           const waitResult = await waitForVirtualizedUpdate(
             beforeSignature, traversal.preheat.mutationWaitTimeoutMs, scrollDelay, scrollElement
           );
+          throwIfStopped();
+          const afterSignature = getVirtualizedSignature();
+          const afterIds = [...document.querySelectorAll('[data-virtualized-turn]')].map(n => (n.innerText || '').slice(0,100));
           const entry = {
-            step: stepNumber,
+            step: stepNumber, timestamp: moveStartedAt, direction,
+            beforeScrollTop: Math.round(beforeTop), beforeMaxScrollTop: Math.round(beforeMax),
+            beforeSignature, afterSignature, beforeVisibleTurnFingerprints: beforeIds, afterVisibleTurnFingerprints: afterIds,
             requestedScrollTop: Math.round(requestedTop),
             actualScrollTop: Math.round(scrollElement.scrollTop),
             maxScrollTop: Math.max(0, scrollElement.scrollHeight - scrollElement.clientHeight),
@@ -1236,6 +1285,14 @@
             waitResult
           };
           traversal.preheat.directions.at(-1).steps.push(entry);
+          traversal.preheat.recentTrace ||= [];
+          traversal.preheat.recentTrace.push({
+            timestamp: moveStartedAt, direction, before: Math.round(beforeTop),
+            requested: Math.round(requestedTop), actual: entry.actualScrollTop,
+            maxBefore: Math.round(beforeMax), maxAfter: entry.maxScrollTop,
+            beforeSignature, afterSignature, wait: waitResult.finishReason
+          });
+          if (traversal.preheat.recentTrace.length > 60) traversal.preheat.recentTrace.shift();
           return entry;
         };
 
@@ -1246,10 +1303,12 @@
           const phase = traversal.preheat.directions.at(-1);
           let noProgressCount = 0;
           let stepCount = 0;
+          const repeatedTransitions = new Map();
           const maxSteps = 800;
           const maxNoProgress = 4;
 
           while (stepCount < maxSteps) {
+            throwIfStopped(); traversal.preheat.currentStage = label;
             const currentTop = Math.max(0, scrollElement.scrollTop);
             const currentMax = Math.max(0, scrollElement.scrollHeight - scrollElement.clientHeight);
             const atBoundary = isUp ? currentTop <= 2 : currentTop >= currentMax - 2;
@@ -1265,6 +1324,16 @@
               ? Math.max(0, currentTop - preheatStepSize)
               : Math.min(currentMax, currentTop + preheatStepSize);
             const entry = await moveAndWait(direction, requestedTop, ++stepCount);
+            throwIfStopped();
+            const transitionKey = [direction, Math.round(requestedTop/100), Math.round(scrollElement.scrollTop/100), entry.waitResult.finishReason].join('|');
+            const transitionCount = (repeatedTransitions.get(transitionKey) || 0) + 1;
+            repeatedTransitions.set(transitionKey, transitionCount);
+            entry.transitionRepeatCount = transitionCount;
+            if (transitionCount >= 3) {
+              phase.relocationLoopDetected = true;
+              phase.relocationLoop = { key: transitionKey, repeatCount: transitionCount, detectedAt: new Date().toISOString() };
+              throw new Error(`检测到分页加载引起的滚动重定位循环：方向 ${direction}，请求位置 ${Math.round(requestedTop)}，实际位置 ${Math.round(scrollElement.scrollTop)}，相同转换重复 ${transitionCount} 次。`);
+            }
             const actualTop = Math.max(0, scrollElement.scrollTop);
             const newMax = Math.max(0, scrollElement.scrollHeight - scrollElement.clientHeight);
             const progressed = isUp
@@ -1326,6 +1395,7 @@
         traversal.preheat.completedAt = new Date().toISOString();
 
         setStatus('页面预热完成，正在正式采集消息…');
+        throwIfStopped();
         const topWaitSignature = getVirtualizedSignature();
         const topWaitStartedAt = performance.now();
         scrollElement.scrollTop = 0;
@@ -1378,6 +1448,8 @@
         }
       } catch (error) {
         traversal.failure = error?.message || String(error);
+        traversal.stopped = error?.name === 'AbortError' || state.stopRequested;
+        traversal.stopDetectedAt = traversal.stopped ? new Date().toISOString() : null;
       } finally {
         try {
           scrollElement.scrollTop = originalScrollTop;
@@ -1777,11 +1849,15 @@ document.addEventListener('click',e=>{if(!e.target.closest('.menu-wrap'))menu.cl
       return;
     }
     state.running = true;
+    state.stopRequested = false;
+    state.abortController = new AbortController();
     const button = document.getElementById(IDS.button);
     if (button) {
       button.disabled = true;
       button.textContent = '正在导出…';
     }
+    const stopButton = document.getElementById(IDS.stopButton);
+    if (stopButton) stopButton.hidden = false;
     const speedInput = document.getElementById(IDS.speed);
     if (speedInput) speedInput.disabled = true;
     const logToggle = document.getElementById(IDS.logToggle);
@@ -1797,6 +1873,7 @@ document.addEventListener('click',e=>{if(!e.target.closest('.menu-wrap'))menu.cl
     try {
       setStatus('正在获取会话数据…');
       const allMessages = await fetchMessages(conversationId);
+      throwIfStopped();
       const selected = selectMessages(allMessages);
       if (!selected.length) throw new Error('没有找到可导出的用户消息或 assistant 最终回答。');
       if (diagnostics.api.hasUnfetchedPages) {
@@ -1808,6 +1885,7 @@ document.addEventListener('click',e=>{if(!e.target.closest('.menu-wrap'))menu.cl
 
       setStatus(`接口已筛选 ${selected.length} 条消息，正在遍历虚拟滚动页面…`);
       const exported = await cloneNativeMessages(selected);
+      throwIfStopped();
       if (exported.length !== selected.length) {
         const missingCount = diagnostics.dom.missingMessageCount + diagnostics.dom.duplicateMessageCount;
         throw new Error(`虚拟滚动遍历后仍无法完整对应接口消息：目标 ${selected.length} 条，匹配 ${exported.length} 条，缺失或歧义 ${missingCount} 条。未生成不完整文件。`);
@@ -1844,11 +1922,15 @@ document.addEventListener('click',e=>{if(!e.target.closest('.menu-wrap'))menu.cl
         message: error?.message || String(error),
         stack: error?.stack || ''
       });
-      diagnostics.result = { success: false, reason: error?.message || String(error) };
-      setStatus(`导出失败：${error?.message || String(error)}`, 'error');
-      log();
+      const wasStopped = error?.name === 'AbortError' || state.stopRequested;
+      diagnostics.result = { success: false, cancelled: wasStopped, reason: error?.message || String(error) };
+      setStatus(wasStopped ? '已停止导出，正在保存诊断日志。' : `导出失败：${error?.message || String(error)}`, wasStopped ? 'info' : 'error');
+      log(wasStopped);
     } finally {
       state.running = false;
+      state.abortController = null;
+      const currentStopButton = document.getElementById(IDS.stopButton);
+      if (currentStopButton) currentStopButton.hidden = true;
       const currentButton = document.getElementById(IDS.button);
       if (currentButton) {
         currentButton.disabled = false;
