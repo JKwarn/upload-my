@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT 会话 HTML 导出器
 // @namespace    https://github.com/JKwarn/upload-my
-// @version      2.7.2
+// @version      2.7.3
 // @description  通过会话接口校验消息，并复用 ChatGPT 原生 DOM 与 CSS 导出独立 HTML
 // @match        https://chatgpt.com/c/*
 // @run-at       document-idle
@@ -11,7 +11,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '2.7.2';
+  const VERSION = '2.7.3';
   const PREFIX = '[ChatGPT 会话 HTML 导出器]';
   const IDS = {
     button: 'chatgpt-html-exporter-button',
@@ -46,7 +46,7 @@
     api: {},
     dom: {},
     css: {},
-    mermaid: { events: [] },
+    mermaid: { events: [], waitResults: [] },
     result: null
   };
 
@@ -1048,7 +1048,89 @@
     }
   }
 
-  function captureVisibleMessages(selected, captured, duplicates, observedDom) {
+  const MERMAID_RENDER_TIMEOUT_MS = 15000;
+
+  function getMermaidRenderStates(root) {
+    const containers = [];
+    if (root instanceof Element && root.matches('[data-chatgpt-mermaid-preview]')) containers.push(root);
+    if (root?.querySelectorAll) containers.push(...root.querySelectorAll('[data-chatgpt-mermaid-preview]'));
+    return containers.map((container, index) => {
+      const svgs = [...container.querySelectorAll('svg[id^="chatgpt-mermaid-"], svg[aria-roledescription]')];
+      const loadingIndicators = [...container.querySelectorAll('[data-loading-indicator], [aria-label*="加载"]')];
+      return {
+        index: index + 1,
+        renderStatus: container.getAttribute('data-mermaid-render-status'),
+        svgCount: svgs.length,
+        svgs: svgs.map(svg => ({
+          id: svg.id || null, width: svg.getAttribute('width'),
+          height: svg.getAttribute('height'), viewBox: svg.getAttribute('viewBox'),
+          ariaRoleDescription: svg.getAttribute('aria-roledescription'),
+          outerHTMLLength: svg.outerHTML.length
+        })),
+        loadingIndicatorCount: loadingIndicators.length,
+        hasLoadingIndicator: loadingIndicators.length > 0,
+        complete: svgs.length > 0 && loadingIndicators.length === 0
+      };
+    });
+  }
+
+  function waitForMermaidRender(root, context = {}, timeoutMs = MERMAID_RENDER_TIMEOUT_MS) {
+    const startedAt = performance.now();
+    const initialStates = getMermaidRenderStates(root);
+    if (!initialStates.length || initialStates.every(item => item.complete)) {
+      const result = {
+        status: initialStates.length ? 'already-rendered' : 'not-present',
+        elapsedMs: 0, timeoutMs, containerCount: initialStates.length, containers: initialStates
+      };
+      recordMermaidState(root, 'wait-before-clone-complete', { ...context, ...result });
+      return Promise.resolve(result);
+    }
+
+    recordMermaidState(root, 'wait-before-clone-start', {
+      ...context, timeoutMs, containers: initialStates
+    });
+
+    return new Promise(resolve => {
+      let settled = false;
+      let observer = null;
+      let timeoutId = null;
+      const finish = (timedOut, states) => {
+        if (settled) return;
+        settled = true;
+        observer?.disconnect();
+        if (timeoutId !== null) clearTimeout(timeoutId);
+        const result = {
+          status: timedOut ? 'timeout' : 'rendered',
+          elapsedMs: Math.round(performance.now() - startedAt),
+          timeoutMs, containerCount: states.length,
+          incompleteContainerCount: states.filter(item => !item.complete).length,
+          containers: states
+        };
+        diagnostics.mermaid.waitResults ||= [];
+        diagnostics.mermaid.waitResults.push({ ...context, ...result });
+        recordMermaidState(root, timedOut ? 'wait-before-clone-timeout' : 'wait-before-clone-complete', {
+          ...context, ...result
+        });
+        resolve(result);
+      };
+      const check = () => {
+        const states = getMermaidRenderStates(root);
+        if (!states.length || states.every(item => item.complete)) finish(false, states);
+      };
+      try {
+        observer = new MutationObserver(check);
+        observer.observe(root, { childList: true, subtree: true, attributes: true, characterData: true });
+      } catch (error) {
+        diagnostics.errors.push({
+          stage: 'mermaid-render-observer', message: error?.message || String(error), ...context
+        });
+      }
+      timeoutId = setTimeout(() => finish(true, getMermaidRenderStates(root)), timeoutMs);
+      check();
+    });
+  }
+
+  async function captureVisibleMessages(selected, captured, duplicates, observedDom) {
     collectVisibleDomMessageIds(observedDom);
     let newlyCaptured = 0;
     for (const [index, item] of selected.entries()) {
@@ -1073,8 +1155,13 @@
         });
         continue;
       }
-      recordMermaidState(sourceRoot, 'source-before-clone', {
+      const mermaidWait = await waitForMermaidRender(sourceRoot, {
         messageIndex: index + 1, messageId, role: item.role
+      });
+      recordMermaidState(sourceRoot, 'source-before-clone', {
+        messageIndex: index + 1, messageId, role: item.role,
+        mermaidWaitStatus: mermaidWait.status,
+        mermaidWaitElapsedMs: mermaidWait.elapsedMs
       });
       const clone = sourceRoot.cloneNode(true);
       recordMermaidState(clone, 'clone-immediately-after-clone', {
@@ -1114,7 +1201,8 @@
       reachedTop: false, reachedBottom: false,
       restoredOriginalScrollTop: false, failure: null
     };
-    traversal.initialCaptureCount = captureVisibleMessages(selected, captured, duplicates, observedDom);
+    traversal.mermaidWaitTimeoutMs = MERMAID_RENDER_TIMEOUT_MS;
+    traversal.initialCaptureCount = await captureVisibleMessages(selected, captured, duplicates, observedDom);
     const found = findConversationScrollContainer();
     const scrollElement = found.element;
     traversal.container = found.details;
@@ -1135,7 +1223,7 @@
           topWaitSignature, traversal.mutationWaitTimeoutMs, scrollDelay, scrollElement
         );
         traversal.initialTopWait.elapsedFromStartMs = Math.round(performance.now() - topWaitStartedAt);
-        captureVisibleMessages(selected, captured, duplicates, observedDom);
+        await captureVisibleMessages(selected, captured, duplicates, observedDom);
         traversal.reachedTop = scrollElement.scrollTop <= 2;
         let previousTop = scrollElement.scrollTop;
         const maxSteps = Math.min(600, Math.ceil(traversal.maxScrollTop / Math.max(1, traversal.stepSize)) + 8);
@@ -1151,7 +1239,7 @@
           const waitResult = await waitForVirtualizedUpdate(
             beforeSignature, traversal.mutationWaitTimeoutMs, scrollDelay, scrollElement
           );
-          const capturedNow = captureVisibleMessages(selected, captured, duplicates, observedDom);
+          const capturedNow = await captureVisibleMessages(selected, captured, duplicates, observedDom);
           traversal.stepCount++;
           traversal.capturedPerStep.push({
             step: traversal.stepCount, requestedScrollTop: nextTop,
@@ -1505,9 +1593,20 @@ document.addEventListener('click',e=>{if(!e.target.closest('.menu-wrap'))menu.cl
     const mermaidLoadingCount = mermaidContainers.reduce(
       (total, node) => total + node.querySelectorAll('[data-loading-indicator], [aria-label*="加载"]').length, 0
     );
+    const incompleteMermaidContainers = mermaidContainers
+      .map((node, index) => ({
+        containerIndex: index + 1,
+        messageId: node.closest('.export-message')?.dataset.messageId || null,
+        messageIndex: Number(node.closest('.export-message')?.dataset.messageIndex) || null,
+        svgCount: node.querySelectorAll('svg[id^="chatgpt-mermaid-"], svg[aria-roledescription]').length,
+        loadingIndicatorCount: node.querySelectorAll('[data-loading-indicator], [aria-label*="加载"]').length
+      }))
+      .filter(item => item.svgCount === 0 || item.loadingIndicatorCount > 0);
     diagnostics.mermaid.documentValidation = {
       timestamp: new Date().toISOString(),
       containerCount: mermaidContainers.length,
+      incompleteContainerCount: incompleteMermaidContainers.length,
+      incompleteContainers: incompleteMermaidContainers,
       svgCount: mermaidSvgCount,
       loadingIndicatorCount: mermaidLoadingCount,
       containers: mermaidContainers.map((node, index) => ({
