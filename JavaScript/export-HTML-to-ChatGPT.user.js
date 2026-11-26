@@ -36,7 +36,7 @@
     maxScrollDelay: 10000,
     scrollDelayStorageKey: 'chatgpt-html-exporter-scroll-delay'
   };
-  const state = { running: false, observer: null, abortController: null, stopRequested: false };
+  const state = { running: false, observer: null, abortController: null, stopRequested: false, currentTraversal: null, currentScrollElement: null };
   const diagnostics = {
     version: VERSION,
     timestamp: new Date().toISOString(),
@@ -61,8 +61,10 @@
     state.stopRequested = true;
     diagnostics.stop = {
       requestedAt: new Date().toISOString(),
-      stage: diagnostics.dom?.traversal?.currentStage || 'unknown',
-      scrollTop: diagnostics.dom?.traversal?.scrollElement?.scrollTop ?? window.scrollY,
+      stage: state.currentTraversal?.preheat?.currentStage || 'unknown',
+      scrollTop: state.currentScrollElement?.scrollTop ?? window.scrollY,
+      maxScrollTop: state.currentScrollElement ? Math.max(0, state.currentScrollElement.scrollHeight - state.currentScrollElement.clientHeight) : null,
+      recentScrollTrace: state.currentTraversal?.preheat?.recentTrace?.slice(-20) || [],
       pageScrollY: window.scrollY
     };
     diagnostics.warnings.push('用户点击停止按钮，中止当前导出流程。');
@@ -1113,7 +1115,7 @@
     });
   }
 
-  function waitForMermaidRender(root, context = {}, timeoutMs = MERMAID_RENDER_TIMEOUT_MS) {
+  function waitForMermaidRender(root, context = {}, timeoutMs = MERMAID_RENDER_TIMEOUT_MS, signal = state.abortController?.signal) {
     const startedAt = performance.now();
     const initialStates = getMermaidRenderStates(root);
     if (!initialStates.length || initialStates.every(item => item.complete)) {
@@ -1133,13 +1135,15 @@
       let settled = false;
       let observer = null;
       let timeoutId = null;
-      const finish = (timedOut, states) => {
+      const onAbort = () => finish(true, getMermaidRenderStates(root), 'cancelled');
+      const finish = (timedOut, states, forcedStatus = null) => {
         if (settled) return;
         settled = true;
         observer?.disconnect();
         if (timeoutId !== null) clearTimeout(timeoutId);
+        signal?.removeEventListener('abort', onAbort);
         const result = {
-          status: timedOut ? 'timeout' : 'rendered',
+          status: forcedStatus || (timedOut ? 'timeout' : 'rendered'),
           elapsedMs: Math.round(performance.now() - startedAt),
           timeoutMs, containerCount: states.length,
           incompleteContainerCount: states.filter(item => !item.complete).length,
@@ -1156,6 +1160,8 @@
         const states = getMermaidRenderStates(root);
         if (!states.length || states.every(item => item.complete)) finish(false, states);
       };
+      if (signal?.aborted) { finish(true, initialStates, 'cancelled'); return; }
+      signal?.addEventListener('abort', onAbort, { once: true });
       try {
         observer = new MutationObserver(check);
         observer.observe(root, { childList: true, subtree: true, attributes: true, characterData: true });
@@ -1194,9 +1200,11 @@
         });
         continue;
       }
+      throwIfStopped();
       const mermaidWait = await waitForMermaidRender(sourceRoot, {
         messageIndex: index + 1, messageId, role: item.role
-      });
+      }, MERMAID_RENDER_TIMEOUT_MS, state.abortController?.signal);
+      throwIfStopped();
       recordMermaidState(sourceRoot, 'source-before-clone', {
         messageIndex: index + 1, messageId, role: item.role,
         mermaidWaitStatus: mermaidWait.status,
@@ -1244,6 +1252,8 @@
     traversal.mermaidWaitTimeoutMs = MERMAID_RENDER_TIMEOUT_MS;
     const found = findConversationScrollContainer();
     const scrollElement = found.element;
+    state.currentTraversal = traversal;
+    state.currentScrollElement = scrollElement;
     traversal.container = found.details;
 
     if (!scrollElement) {
@@ -1929,6 +1939,8 @@ document.addEventListener('click',e=>{if(!e.target.closest('.menu-wrap'))menu.cl
     } finally {
       state.running = false;
       state.abortController = null;
+      state.currentTraversal = null;
+      state.currentScrollElement = null;
       const currentStopButton = document.getElementById(IDS.stopButton);
       if (currentStopButton) currentStopButton.hidden = true;
       const currentButton = document.getElementById(IDS.button);
