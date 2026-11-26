@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT 会话 HTML 导出器
 // @namespace    https://github.com/JKwarn/upload-my
-// @version      2.6.9
+// @version      2.7.0
 // @description  通过会话接口校验消息，并复用 ChatGPT 原生 DOM 与 CSS 导出独立 HTML
 // @match        https://chatgpt.com/c/*
 // @run-at       document-idle
@@ -11,7 +11,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '2.6.9';
+  const VERSION = '2.7.0';
   const PREFIX = '[ChatGPT 会话 HTML 导出器]';
   const IDS = {
     button: 'chatgpt-html-exporter-button',
@@ -355,12 +355,28 @@
     const firstCursor = newer?.page_info?.start_cursor;
     if (typeof firstCursor !== 'string' || !firstCursor) throw new Error('第一阶段响应缺少 page_info.start_cursor。');
     const olderPages=[]; const seenCursors=new Set([firstCursor]); let cursor=firstCursor;
-    let boundaryMessageId=typeof newer.boundary_message_id==='string'?newer.boundary_message_id:null;
+    const readBoundaryInfo = response => {
+      const continuation = response?.context_truncation_continuation;
+      const nestedId = continuation?.boundary_message_id;
+      const legacyId = response?.boundary_message_id;
+      const id = typeof nestedId === 'string' ? nestedId : typeof legacyId === 'string' ? legacyId : null;
+      if (!id) return null;
+      return {
+        messageId: id,
+        source: typeof nestedId === 'string' ? 'context_truncation_continuation.boundary_message_id' : 'boundary_message_id',
+        sourceConversationId: continuation?.source_conversation_id ?? null,
+        sourceConversationTitle: continuation?.source_conversation_title ?? null,
+        visibleFromMessageId: continuation?.visible_from_message_id ?? null
+      };
+    };
+    let boundaryInfo = readBoundaryInfo(newer);
+    let boundaryMessageId = boundaryInfo?.messageId ?? null;
     let boundaryReached=false; let stopReason=null;
     for(let i=0;i<CONFIG.maxPaginationPages;i++){
       const url=`${base}/messages?before=${encodeURIComponent(cursor)}&num_turns=${CONFIG.numTurns}&include_has_versions=true`;
       const page=await requestPage(url,`older-${i+1}`); olderPages.push(page);
-      if(!boundaryMessageId&&typeof page.boundary_message_id==='string') boundaryMessageId=page.boundary_message_id;
+      if(!boundaryInfo) boundaryInfo = readBoundaryInfo(page);
+      if(!boundaryMessageId && boundaryInfo) boundaryMessageId = boundaryInfo.messageId;
       const pageStart=page?.page_info?.start_cursor??null;
       const ids=new Set(page.messages.map(m=>m?.id).filter(id=>typeof id==='string'));
       if(boundaryMessageId&&(ids.has(boundaryMessageId)||pageStart===boundaryMessageId)){
@@ -372,7 +388,9 @@
       seenCursors.add(pageStart);cursor=pageStart;
       if(i===CONFIG.maxPaginationPages-1){stopReason='max-pagination-pages-reached';warn(`历史分页达到安全上限 ${CONFIG.maxPaginationPages} 页。`);}
     }
-    const summarizePage=page=>({messageCount:page.messages.length,boundaryMessageId:page.boundary_message_id??null,
+    const summarizePage=page=>({messageCount:page.messages.length,
+      boundaryMessageId:readBoundaryInfo(page)?.messageId??null,
+      boundarySource:readBoundaryInfo(page)?.source??null,
       pageInfo:{startCursor:page.page_info?.start_cursor??null,endCursor:page.page_info?.end_cursor??null,
       hasPreviousPage:page.page_info?.has_previous_page??null,hasNextPage:page.page_info?.has_next_page??null},
       messages:page.messages.map(summarizeApiMessage)});
@@ -384,7 +402,7 @@
     }
     const newestInfo=newer.page_info||{}; const oldestInfo=olderPages.length?olderPages[olderPages.length-1].page_info||{}:{};
     const terminalPage=olderPages.length?olderPages[olderPages.length-1]:null;
-    let boundarySource=boundaryMessageId?'response.boundary_message_id':null;
+    let boundarySource=boundaryInfo?.source??(boundaryMessageId?'response.boundary_message_id':null);
     if(!boundaryMessageId&&terminalPage?.page_info?.has_previous_page===false){
       const start=terminalPage.page_info?.start_cursor;
       const end=terminalPage.page_info?.end_cursor;
@@ -403,14 +421,22 @@
       requestPageCount:requests.length,requests,pages:{newer:summarizePage(newer),older:olderPages.map(summarizePage)},
       mergedMessageCount:merged.length,exportableMessageCount:filteredMessages.length,
       duplicateCount,missingIdCount,responseOrder:['最旧历史页到较新历史页','第一阶段新消息 response'],
-      boundary:{boundaryMessageId,boundarySource,reached:boundaryReached,stopReason,
-        boundaryMessagePresent,excludedBoundaryMessageCount:merged.length-filteredMessages.length},
+      boundary:{
+        boundaryMessageId,boundarySource,reached:boundaryReached,stopReason,boundaryMessagePresent,
+        excludedBoundaryMessageCount:merged.length-filteredMessages.length,
+        sourceConversationId:boundaryInfo?.sourceConversationId??null,
+        sourceConversationTitle:boundaryInfo?.sourceConversationTitle??null,
+        visibleFromMessageId:boundaryInfo?.visibleFromMessageId??null
+      },
       pagination:{newerPage:{hasPreviousPage:newestInfo.has_previous_page??null,hasNextPage:newestInfo.has_next_page??null},
       oldestFetchedPage:{hasPreviousPage:oldestInfo.has_previous_page??null,hasNextPage:oldestInfo.has_next_page??null},fetchedOlderPageCount:olderPages.length},
       hasUnfetchedPages};
     if(missingIdCount)warn(`${missingIdCount} 条消息缺少 ID，无法精确匹配 DOM。`);
     if(!boundaryMessageId)warn('响应未提供 boundary_message_id，且无法从终止页游标推导边界 ID。');
-    else if(boundarySource!=='response.boundary_message_id')warn('未提供 boundary_message_id；已根据 has_previous_page=false 且 start_cursor=end_cursor 推导边界消息，并从导出候选中排除该边界消息。');
+    else if(boundarySource==='context_truncation_continuation.boundary_message_id')
+      warn('已读取 context_truncation_continuation 中的上下文截断边界消息，并从当前会话导出候选中排除该消息。');
+    else if(boundarySource!=='boundary_message_id')
+      warn('未提供 boundary_message_id；已根据 has_previous_page=false 且 start_cursor=end_cursor 推导边界消息，并从导出候选中排除该边界消息。');
     return filteredMessages;
   }
 
@@ -1364,8 +1390,14 @@ const update=()=>{const n=checks.filter(x=>x.checked).length;count.textContent=n
 const choose=fn=>{rows.forEach((row,i)=>checks[i].checked=fn(row));update()};
 const clearCurrentHighlight=()=>{document.querySelectorAll('.export-message.nav-highlight').forEach(node=>node.classList.remove('nav-highlight'));rows.forEach(row=>row.classList.remove('active'))};
 checks.forEach(check=>{check.addEventListener('click',e=>e.stopPropagation());check.addEventListener('change',update)});
-const navigate=row=>{const target=[...document.querySelectorAll('.export-message')].find(node=>node.dataset.messageId===row.dataset.target);if(!target)return;
-clearCurrentHighlight();row.classList.add('active');target.scrollIntoView({behavior:'smooth',block:'start'});target.classList.add('nav-highlight')};
+const activateMessage=(target,scroll=false)=>{if(!target)return;
+clearCurrentHighlight();target.classList.add('nav-highlight');
+const row=rows.find(item=>item.dataset.target===target.dataset.messageId);
+if(row){row.classList.add('active');if(scroll)row.scrollIntoView({behavior:'smooth',block:'nearest'})}
+if(scroll)target.scrollIntoView({behavior:'smooth',block:'start'})};
+const navigate=row=>{const target=[...document.querySelectorAll('.export-message')].find(node=>node.dataset.messageId===row.dataset.target);if(!target)return;activateMessage(target,true)};
+const content=document.querySelector('.export-main .export-page');
+content?.addEventListener('click',e=>{const target=e.target.closest('.export-message');if(target&&content.contains(target))activateMessage(target,false)});
 rows.forEach(row=>{row.addEventListener('click',e=>{if(e.target.closest('.nav-check'))return;navigate(row)});
 row.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&!e.target.closest('.nav-check')){e.preventDefault();navigate(row)}})});
 collapse.addEventListener('click',()=>{layout.classList.add('sidebar-collapsed');expand.style.display='block'});
