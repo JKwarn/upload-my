@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT 会话 HTML 导出器
 // @namespace    https://github.com/JKwarn/upload-my
-// @version      2.6.8
+// @version      2.6.9
 // @description  通过会话接口校验消息，并复用 ChatGPT 原生 DOM 与 CSS 导出独立 HTML
 // @match        https://chatgpt.com/c/*
 // @run-at       document-idle
@@ -11,7 +11,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '2.6.8';
+  const VERSION = '2.6.9';
   const PREFIX = '[ChatGPT 会话 HTML 导出器]';
   const IDS = {
     button: 'chatgpt-html-exporter-button',
@@ -1332,7 +1332,8 @@ body{margin:0;padding:0;background:var(--main-surface-primary,#fff);color:var(--
 .export-message>*{width:100%;min-width:0;max-width:100%}.export-message.nav-highlight{outline:2px solid #3b82f6;outline-offset:8px;background:rgba(59,130,246,.035)}
 .export-message [data-virtualized-turn]{height:auto!important;min-height:0!important;max-height:none!important;margin-top:0!important;contain:none!important;overflow:visible!important;content-visibility:visible!important}
 .export-message pre,.export-message code,.export-message table{max-width:100%}
-.export-message [data-code-block="true"],.export-message [class*="CodeSurface"],.export-message [class*="InlineCodePane"],.export-message .chatgpt-code-scrollport{height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;contain:none!important}
+.export-message [data-code-block="true"],.export-message [class*="CodeSurface"]{height:auto!important;min-height:0!important;max-height:none!important;overflow:clip!important;contain:none!important}
+.export-message [class*="InlineCodePane"],.export-message .chatgpt-code-scrollport{height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;contain:none!important}
 .export-message [data-code-block="true"] pre,.export-message [class*="CodeSurface"] pre{height:auto!important;max-height:none!important;overflow:visible!important}
 .export-message img,.export-message video,.export-message svg{max-width:100%;height:auto}
 .export-layout.sidebar-collapsed .export-sidebar{display:none}.export-layout.sidebar-collapsed .export-main{padding-left:12mm}
