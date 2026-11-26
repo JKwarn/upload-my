@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT 会话 HTML 导出器
 // @namespace    https://github.com/JKwarn/upload-my
-// @version      2.7.1
+// @version      2.7.2
 // @description  通过会话接口校验消息，并复用 ChatGPT 原生 DOM 与 CSS 导出独立 HTML
 // @match        https://chatgpt.com/c/*
 // @run-at       document-idle
@@ -11,7 +11,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '2.7.1';
+  const VERSION = '2.7.2';
   const PREFIX = '[ChatGPT 会话 HTML 导出器]';
   const IDS = {
     button: 'chatgpt-html-exporter-button',
@@ -46,6 +46,7 @@
     api: {},
     dom: {},
     css: {},
+    mermaid: { events: [] },
     result: null
   };
 
@@ -111,6 +112,7 @@
       api: {},
       dom: {},
       css: {},
+      mermaid: { events: [] },
       result: null
     });
   }
@@ -616,8 +618,57 @@
     };
   }
 
+  function describeMermaidState(root, stage, context = {}) {
+    const containers = [];
+    if (root instanceof Element && root.matches('[data-chatgpt-mermaid-preview]')) {
+      containers.push(root);
+    }
+    if (root?.querySelectorAll) {
+      containers.push(...root.querySelectorAll('[data-chatgpt-mermaid-preview]'));
+    }
+    return {
+      type: 'MERMAID_DIAGNOSTIC',
+      stage,
+      timestamp: new Date().toISOString(),
+      ...context,
+      containerCount: containers.length,
+      containers: containers.map((container, index) => {
+        const svgs = [...container.querySelectorAll('svg')];
+        const loadingIndicators = [...container.querySelectorAll('[data-loading-indicator], [aria-label*="加载"]')];
+        return {
+          index: index + 1,
+          renderStatus: container.getAttribute('data-mermaid-render-status'),
+          svgCount: svgs.length,
+          svgs: svgs.map(svg => ({
+            id: svg.id || null,
+            width: svg.getAttribute('width'),
+            height: svg.getAttribute('height'),
+            viewBox: svg.getAttribute('viewBox'),
+            ariaRoleDescription: svg.getAttribute('aria-roledescription'),
+            outerHTMLLength: svg.outerHTML.length
+          })),
+          loadingIndicatorCount: loadingIndicators.length,
+          hasLoadingIndicator: loadingIndicators.length > 0
+        };
+      })
+    };
+  }
+
+  function recordMermaidState(root, stage, context = {}) {
+    const snapshot = describeMermaidState(root, stage, context);
+    diagnostics.mermaid.events.push(snapshot);
+    return snapshot;
+  }
+
   function removeVirtualizationArtifacts(root) {
-    const nodes = [root, ...root.querySelectorAll('*')];
+    // Only reset the actual virtualized-turn wrapper. Descendant components may
+    // use height/min-height/overflow as intentional layout (e.g. progress bars).
+    const nodes = [];
+    if (root instanceof HTMLElement && root.hasAttribute('data-virtualized-turn')) {
+      nodes.push(root);
+    }
+    nodes.push(...root.querySelectorAll('[data-virtualized-turn]'));
+
     for (const node of nodes) {
       if (!(node instanceof HTMLElement)) continue;
       node.style.removeProperty('height');
@@ -628,12 +679,13 @@
       node.style.removeProperty('overflow');
       node.style.removeProperty('overflow-y');
       node.style.removeProperty('content-visibility');
-      if (node.hasAttribute('data-virtualized-turn')) {
-        node.style.setProperty('height', 'auto', 'important');
-        node.style.setProperty('min-height', '0', 'important');
-        node.style.setProperty('max-height', 'none', 'important');
-        node.style.setProperty('overflow', 'visible', 'important');
-      }
+      node.style.setProperty('height', 'auto', 'important');
+      node.style.setProperty('min-height', '0', 'important');
+      node.style.setProperty('max-height', 'none', 'important');
+      node.style.setProperty('margin-top', '0', 'important');
+      node.style.setProperty('contain', 'none', 'important');
+      node.style.setProperty('overflow', 'visible', 'important');
+      node.style.setProperty('content-visibility', 'visible', 'important');
     }
   }
 
@@ -1021,10 +1073,19 @@
         });
         continue;
       }
+      recordMermaidState(sourceRoot, 'source-before-clone', {
+        messageIndex: index + 1, messageId, role: item.role
+      });
       const clone = sourceRoot.cloneNode(true);
+      recordMermaidState(clone, 'clone-immediately-after-clone', {
+        messageIndex: index + 1, messageId, role: item.role
+      });
       removeVirtualizationArtifacts(clone);
       const codeDiagnostics = expandNativeCodeContainers(sourceRoot, clone);
       removeNonContentControls(clone);
+      recordMermaidState(clone, 'clone-after-export-cleanup', {
+        messageIndex: index + 1, messageId, role: item.role
+      });
       const wrapper = document.createElement('section');
       wrapper.className = 'export-message';
       wrapper.dataset.messageIndex = String(index + 1);
@@ -1439,6 +1500,23 @@ document.addEventListener('click',e=>{if(!e.target.closest('.menu-wrap'))menu.cl
     const textLength = (parsed.body.innerText || parsed.body.textContent || '').length;
     const ids = [...parsed.querySelectorAll('.export-message')].map(node => node.dataset.messageId);
     const uniqueIds = new Set(ids.filter(Boolean));
+    const mermaidContainers = [...parsed.querySelectorAll('[data-chatgpt-mermaid-preview]')];
+    const mermaidSvgCount = mermaidContainers.reduce((total, node) => total + node.querySelectorAll('svg').length, 0);
+    const mermaidLoadingCount = mermaidContainers.reduce(
+      (total, node) => total + node.querySelectorAll('[data-loading-indicator], [aria-label*="加载"]').length, 0
+    );
+    diagnostics.mermaid.documentValidation = {
+      timestamp: new Date().toISOString(),
+      containerCount: mermaidContainers.length,
+      svgCount: mermaidSvgCount,
+      loadingIndicatorCount: mermaidLoadingCount,
+      containers: mermaidContainers.map((node, index) => ({
+        index: index + 1,
+        renderStatus: node.getAttribute('data-mermaid-render-status'),
+        svgCount: node.querySelectorAll('svg').length,
+        loadingIndicatorCount: node.querySelectorAll('[data-loading-indicator], [aria-label*="加载"]').length
+      }))
+    };
     const validation = {
       expectedMessageCount: expectedCount,
       actualMessageCount: actualCount,
@@ -1447,7 +1525,10 @@ document.addEventListener('click',e=>{if(!e.target.closest('.menu-wrap'))menu.cl
       hasDoctype: /^<!doctype html>/i.test(html),
       hasOriginalMarkdownRoots: parsed.querySelectorAll('[class*="MarkdownRoot-"]').length > 0,
       hasCodeBlocks: parsed.querySelectorAll('pre, [data-code-block="true"]').length > 0,
-      hasSvg: parsed.querySelectorAll('svg').length > 0
+      hasSvg: parsed.querySelectorAll('svg').length > 0,
+      mermaidContainerCount: mermaidContainers.length,
+      mermaidSvgCount,
+      mermaidLoadingIndicatorCount: mermaidLoadingCount
     };
     if (!validation.hasDoctype) throw new Error('最终 HTML 缺少 DOCTYPE。');
     if (actualCount !== expectedCount) {
@@ -1497,6 +1578,11 @@ document.addEventListener('click',e=>{if(!e.target.closest('.menu-wrap'))menu.cl
     const logToggle = document.getElementById(IDS.logToggle);
     if (logToggle) logToggle.disabled = true;
     resetDiagnostics(conversationId);
+    recordMermaidState(document, 'export-button-click', {
+      conversationId,
+      scrollTop: window.scrollY,
+      documentReadyState: document.readyState
+    });
     diagnostics.dom.configuredScrollDelayMs = getScrollDelay();
 
     try {
