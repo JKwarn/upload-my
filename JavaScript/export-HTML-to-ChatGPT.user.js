@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT 会话 HTML 导出器
 // @namespace    https://github.com/JKwarn/upload-my
-// @version      2.6.7
+// @version      2.6.8
 // @description  通过会话接口校验消息，并复用 ChatGPT 原生 DOM 与 CSS 导出独立 HTML
 // @match        https://chatgpt.com/c/*
 // @run-at       document-idle
@@ -11,7 +11,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '2.6.7';
+  const VERSION = '2.6.8';
   const PREFIX = '[ChatGPT 会话 HTML 导出器]';
   const IDS = {
     button: 'chatgpt-html-exporter-button',
@@ -670,7 +670,7 @@
           cloneNode.style.setProperty('max-height', 'none', 'important');
           cloneNode.style.setProperty('height', 'auto', 'important');
           cloneNode.style.setProperty('min-height', '0', 'important');
-          cloneNode.style.setProperty('overflow', 'visible', 'important');
+          cloneNode.style.setProperty('overflow', isCodeSurface ? 'clip' : 'visible', 'important');
           cloneNode.style.setProperty('contain', 'none', 'important');
           changed = true;
           overriddenNodeCount++;
@@ -706,6 +706,9 @@
     };
   }
   function removeNonContentControls(root) {
+    root.querySelectorAll('[data-chatgpt-mermaid-preview] [data-block-actions="true"]').forEach(node => {
+      node.remove();
+    });
     root.querySelectorAll(
       '[data-testid*="action-bar"],[role="toolbar"],.sr-only'
     ).forEach(node => {
