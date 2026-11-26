@@ -11,7 +11,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '2.7.4';
+  const VERSION = '2.7.5';
   const PREFIX = '[ChatGPT 会话 HTML 导出器]';
   const IDS = {
     button: 'chatgpt-html-exporter-button',
@@ -1236,81 +1236,92 @@
             waitResult
           };
           traversal.preheat.directions.at(-1).steps.push(entry);
-          return entry.actualScrollTop;
+          return entry;
         };
 
-        // Phase 1: reach the top.
-        setStatus('预热页面（1/3）：正在滚动到顶部…');
-        traversal.preheat.directions.push({ direction: 'up-to-top', steps: [] });
-        await moveAndWait('up', 0, 1);
+        // Traverse using live scroll coordinates. Virtualized lists can change
+        // their scroll range and the browser may adjust scrollTop after each render.
+        const preheatTraverse = async (direction, label) => {
+          const isUp = direction === 'up';
+          const phase = traversal.preheat.directions.at(-1);
+          let noProgressCount = 0;
+          let stepCount = 0;
+          const maxSteps = 800;
+          const maxNoProgress = 4;
 
-        // Phase 2: traverse top-to-bottom without capturing, triggering lazy rendering.
-        setStatus('预热页面（2/3）：正在向下滚动以触发内容渲染…');
+          while (stepCount < maxSteps) {
+            const currentTop = Math.max(0, scrollElement.scrollTop);
+            const currentMax = Math.max(0, scrollElement.scrollHeight - scrollElement.clientHeight);
+            const atBoundary = isUp ? currentTop <= 2 : currentTop >= currentMax - 2;
+            if (atBoundary) {
+              phase.reachedBoundary = true;
+              phase.finalScrollTop = Math.round(currentTop);
+              phase.finalMaxScrollTop = Math.round(currentMax);
+              phase.noProgressCount = noProgressCount;
+              return true;
+            }
+
+            const requestedTop = isUp
+              ? Math.max(0, currentTop - preheatStepSize)
+              : Math.min(currentMax, currentTop + preheatStepSize);
+            const entry = await moveAndWait(direction, requestedTop, ++stepCount);
+            const actualTop = Math.max(0, scrollElement.scrollTop);
+            const newMax = Math.max(0, scrollElement.scrollHeight - scrollElement.clientHeight);
+            const progressed = isUp
+              ? actualTop < currentTop - 1
+              : actualTop > currentTop + 1;
+
+            entry.beforeScrollTop = Math.round(currentTop);
+            entry.beforeMaxScrollTop = Math.round(currentMax);
+            entry.actualMaxScrollTop = Math.round(newMax);
+            entry.progressed = progressed;
+
+            const nowAtBoundary = isUp ? actualTop <= 2 : actualTop >= newMax - 2;
+            if (nowAtBoundary) {
+              phase.reachedBoundary = true;
+              phase.finalScrollTop = Math.round(actualTop);
+              phase.finalMaxScrollTop = Math.round(newMax);
+              phase.noProgressCount = noProgressCount;
+              return true;
+            }
+
+            if (progressed) {
+              noProgressCount = 0;
+            } else {
+              noProgressCount++;
+              entry.noProgressAttempt = noProgressCount;
+              if (noProgressCount >= maxNoProgress) {
+                throw new Error(
+                  `预热${isUp ? '向上' : '向下'}滚动连续 ${noProgressCount} 次未取得进展；` +
+                  `当前位置 ${Math.round(actualTop)}，最大滚动位置 ${Math.round(newMax)}。`
+                );
+              }
+              // Re-read live coordinates on the next iteration instead of
+              // reusing a stale target from before the virtualized DOM update.
+              await new Promise(resolve => setTimeout(resolve, 300));
+            }
+          }
+
+          throw new Error(`预热${label}超过安全步数上限（${maxSteps}）。`);
+        };
+
+        // Phase 1: incrementally reach the top from the current position.
+        setStatus('预热页面（1/3）：正在逐步滚动到顶部…');
+        traversal.preheat.directions.push({ direction: 'up-to-top', steps: [] });
+        traversal.preheat.reachedTop = await preheatTraverse('up', '向上到顶部');
+
+        // Phase 2: incrementally traverse to the bottom.
+        setStatus('预热页面（2/3）：正在逐步向下滚动以触发内容渲染…');
         traversal.preheat.directions.push({ direction: 'down-to-bottom', steps: [] });
-        let preheatTop = scrollElement.scrollTop;
-        let preheatReachedBottom = false;
-        const preheatDownLimit = Math.min(600,
-          Math.ceil(Math.max(0, scrollElement.scrollHeight - scrollElement.clientHeight) /
-            Math.max(1, preheatStepSize)) + 12);
-        for (let step = 0; step < preheatDownLimit; step++) {
-          const currentMax = Math.max(0, scrollElement.scrollHeight - scrollElement.clientHeight);
-          const nextTop = Math.min(currentMax, preheatTop + preheatStepSize);
-          if (nextTop <= preheatTop + 1) {
-            preheatReachedBottom = true;
-            break;
-          }
-          const actualTop = await moveAndWait('down', nextTop, step + 1);
-          if (actualTop <= preheatTop + 1) {
-            preheatReachedBottom = actualTop >=
-              Math.max(0, scrollElement.scrollHeight - scrollElement.clientHeight) - 2;
-            if (!preheatReachedBottom) throw new Error('预热向下滚动时滚动位置未能前进。');
-            break;
-          }
-          preheatTop = actualTop;
-          if (actualTop >= Math.max(0, scrollElement.scrollHeight - scrollElement.clientHeight) - 2) {
-            preheatReachedBottom = true;
-            break;
-          }
-        }
-        traversal.preheat.reachedBottom = preheatReachedBottom;
-        if (!preheatReachedBottom) {
-          const currentMax = Math.max(0, scrollElement.scrollHeight - scrollElement.clientHeight);
-          preheatReachedBottom = scrollElement.scrollTop >= currentMax - 2;
-          traversal.preheat.reachedBottom = preheatReachedBottom;
-          if (!preheatReachedBottom) throw new Error('预热向下滚动未能到达底部。');
-        }
+        traversal.preheat.reachedBottom = await preheatTraverse('down', '向下到底部');
 
-        // Phase 3: traverse bottom-to-top, again allowing each virtualized update to settle.
-        setStatus('预热页面（3/3）：正在向上滚动以完成渲染…');
-        traversal.preheat.directions.push({ direction: 'up-to-top', steps: [] });
-        preheatTop = scrollElement.scrollTop;
-        let preheatReachedTop = false;
-        const preheatUpLimit = Math.min(600,
-          Math.ceil(preheatTop / Math.max(1, preheatStepSize)) + 12);
-        for (let step = 0; step < preheatUpLimit; step++) {
-          const nextTop = Math.max(0, preheatTop - preheatStepSize);
-          if (nextTop >= preheatTop - 1) {
-            preheatReachedTop = true;
-            break;
-          }
-          const actualTop = await moveAndWait('up', nextTop, step + 1);
-          if (actualTop >= preheatTop - 1) {
-            preheatReachedTop = actualTop <= 2;
-            if (!preheatReachedTop) throw new Error('预热向上滚动时滚动位置未能后退。');
-            break;
-          }
-          preheatTop = actualTop;
-          if (actualTop <= 2) {
-            preheatReachedTop = true;
-            break;
-          }
+        // Phase 3: return to the top using the same live-coordinate algorithm.
+        setStatus('预热页面（3/3）：正在逐步向上滚动以完成渲染…');
+        traversal.preheat.directions.push({ direction: 'bottom-to-top', steps: [] });
+        traversal.preheat.reachedTop = await preheatTraverse('up', '返回顶部');
+        if (scrollElement.scrollTop > 2) {
+          throw new Error('预热向上滚动结束后未能确认返回顶部。');
         }
-        traversal.preheat.reachedTop = preheatReachedTop || scrollElement.scrollTop <= 2;
-        if (!traversal.preheat.reachedTop) {
-          await moveAndWait('up', 0, traversal.preheat.directions.at(-1).steps.length + 1);
-          traversal.preheat.reachedTop = scrollElement.scrollTop <= 2;
-        }
-        if (!traversal.preheat.reachedTop) throw new Error('预热向上滚动未能返回顶部。');
         traversal.preheat.completed = true;
         traversal.preheat.completedAt = new Date().toISOString();
 
