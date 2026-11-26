@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT 会话 HTML 导出器
 // @namespace    https://github.com/JKwarn/upload-my
-// @version      2.7.3
+// @version      2.7.4
 // @description  通过会话接口校验消息，并复用 ChatGPT 原生 DOM 与 CSS 导出独立 HTML
 // @match        https://chatgpt.com/c/*
 // @run-at       document-idle
@@ -11,7 +11,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '2.7.3';
+  const VERSION = '2.7.4';
   const PREFIX = '[ChatGPT 会话 HTML 导出器]';
   const IDS = {
     button: 'chatgpt-html-exporter-button',
@@ -1193,7 +1193,8 @@
     const observedDom = new Map();
     const traversal = {
       startedAt: new Date().toISOString(),
-      strategy: 'reset-to-top-then-forward-scan',
+      strategy: 'preheat-top-bottom-top-then-forward-scan',
+      preheat: { enabled: true, stepSize: null, mutationWaitTimeoutMs: 2500, directions: [] },
       container: null, initialScrollTop: null, finalScrollTop: null,
       maxScrollTop: null, stepSize: null, stepCount: 0,
       mutationWaitTimeoutMs: 2500, fallbackWaitMs: 250, configuredMinimumDelayMs: scrollDelay,
@@ -1202,7 +1203,6 @@
       restoredOriginalScrollTop: false, failure: null
     };
     traversal.mermaidWaitTimeoutMs = MERMAID_RENDER_TIMEOUT_MS;
-    traversal.initialCaptureCount = await captureVisibleMessages(selected, captured, duplicates, observedDom);
     const found = findConversationScrollContainer();
     const scrollElement = found.element;
     traversal.container = found.details;
@@ -1216,6 +1216,105 @@
       traversal.maxScrollTop = Math.max(0, scrollElement.scrollHeight - scrollElement.clientHeight);
       traversal.stepSize = Math.max(240, Math.floor(scrollElement.clientHeight * 0.68));
       try {
+        // Preheat both scroll directions before capturing any message snapshots.
+        // This gives lazy-loaded content (including Mermaid) a chance to initialize.
+        const preheatStepSize = traversal.stepSize;
+        traversal.preheat.stepSize = preheatStepSize;
+
+        const moveAndWait = async (direction, requestedTop, stepNumber) => {
+          const beforeSignature = getVirtualizedSignature();
+          scrollElement.scrollTop = requestedTop;
+          const waitResult = await waitForVirtualizedUpdate(
+            beforeSignature, traversal.preheat.mutationWaitTimeoutMs, scrollDelay, scrollElement
+          );
+          const entry = {
+            step: stepNumber,
+            requestedScrollTop: Math.round(requestedTop),
+            actualScrollTop: Math.round(scrollElement.scrollTop),
+            maxScrollTop: Math.max(0, scrollElement.scrollHeight - scrollElement.clientHeight),
+            virtualizedTurnCount: document.querySelectorAll('[data-virtualized-turn]').length,
+            waitResult
+          };
+          traversal.preheat.directions.at(-1).steps.push(entry);
+          return entry.actualScrollTop;
+        };
+
+        // Phase 1: reach the top.
+        setStatus('预热页面（1/3）：正在滚动到顶部…');
+        traversal.preheat.directions.push({ direction: 'up-to-top', steps: [] });
+        await moveAndWait('up', 0, 1);
+
+        // Phase 2: traverse top-to-bottom without capturing, triggering lazy rendering.
+        setStatus('预热页面（2/3）：正在向下滚动以触发内容渲染…');
+        traversal.preheat.directions.push({ direction: 'down-to-bottom', steps: [] });
+        let preheatTop = scrollElement.scrollTop;
+        let preheatReachedBottom = false;
+        const preheatDownLimit = Math.min(600,
+          Math.ceil(Math.max(0, scrollElement.scrollHeight - scrollElement.clientHeight) /
+            Math.max(1, preheatStepSize)) + 12);
+        for (let step = 0; step < preheatDownLimit; step++) {
+          const currentMax = Math.max(0, scrollElement.scrollHeight - scrollElement.clientHeight);
+          const nextTop = Math.min(currentMax, preheatTop + preheatStepSize);
+          if (nextTop <= preheatTop + 1) {
+            preheatReachedBottom = true;
+            break;
+          }
+          const actualTop = await moveAndWait('down', nextTop, step + 1);
+          if (actualTop <= preheatTop + 1) {
+            preheatReachedBottom = actualTop >=
+              Math.max(0, scrollElement.scrollHeight - scrollElement.clientHeight) - 2;
+            if (!preheatReachedBottom) throw new Error('预热向下滚动时滚动位置未能前进。');
+            break;
+          }
+          preheatTop = actualTop;
+          if (actualTop >= Math.max(0, scrollElement.scrollHeight - scrollElement.clientHeight) - 2) {
+            preheatReachedBottom = true;
+            break;
+          }
+        }
+        traversal.preheat.reachedBottom = preheatReachedBottom;
+        if (!preheatReachedBottom) {
+          const currentMax = Math.max(0, scrollElement.scrollHeight - scrollElement.clientHeight);
+          preheatReachedBottom = scrollElement.scrollTop >= currentMax - 2;
+          traversal.preheat.reachedBottom = preheatReachedBottom;
+          if (!preheatReachedBottom) throw new Error('预热向下滚动未能到达底部。');
+        }
+
+        // Phase 3: traverse bottom-to-top, again allowing each virtualized update to settle.
+        setStatus('预热页面（3/3）：正在向上滚动以完成渲染…');
+        traversal.preheat.directions.push({ direction: 'up-to-top', steps: [] });
+        preheatTop = scrollElement.scrollTop;
+        let preheatReachedTop = false;
+        const preheatUpLimit = Math.min(600,
+          Math.ceil(preheatTop / Math.max(1, preheatStepSize)) + 12);
+        for (let step = 0; step < preheatUpLimit; step++) {
+          const nextTop = Math.max(0, preheatTop - preheatStepSize);
+          if (nextTop >= preheatTop - 1) {
+            preheatReachedTop = true;
+            break;
+          }
+          const actualTop = await moveAndWait('up', nextTop, step + 1);
+          if (actualTop >= preheatTop - 1) {
+            preheatReachedTop = actualTop <= 2;
+            if (!preheatReachedTop) throw new Error('预热向上滚动时滚动位置未能后退。');
+            break;
+          }
+          preheatTop = actualTop;
+          if (actualTop <= 2) {
+            preheatReachedTop = true;
+            break;
+          }
+        }
+        traversal.preheat.reachedTop = preheatReachedTop || scrollElement.scrollTop <= 2;
+        if (!traversal.preheat.reachedTop) {
+          await moveAndWait('up', 0, traversal.preheat.directions.at(-1).steps.length + 1);
+          traversal.preheat.reachedTop = scrollElement.scrollTop <= 2;
+        }
+        if (!traversal.preheat.reachedTop) throw new Error('预热向上滚动未能返回顶部。');
+        traversal.preheat.completed = true;
+        traversal.preheat.completedAt = new Date().toISOString();
+
+        setStatus('页面预热完成，正在正式采集消息…');
         const topWaitSignature = getVirtualizedSignature();
         const topWaitStartedAt = performance.now();
         scrollElement.scrollTop = 0;
@@ -1223,7 +1322,7 @@
           topWaitSignature, traversal.mutationWaitTimeoutMs, scrollDelay, scrollElement
         );
         traversal.initialTopWait.elapsedFromStartMs = Math.round(performance.now() - topWaitStartedAt);
-        await captureVisibleMessages(selected, captured, duplicates, observedDom);
+        traversal.initialCaptureCount = await captureVisibleMessages(selected, captured, duplicates, observedDom);
         traversal.reachedTop = scrollElement.scrollTop <= 2;
         let previousTop = scrollElement.scrollTop;
         const maxSteps = Math.min(600, Math.ceil(traversal.maxScrollTop / Math.max(1, traversal.stepSize)) + 8);
