@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT 会话 HTML 导出器
 // @namespace    https://github.com/JKwarn/upload-my
-// @version      2.7.9
+// @version      2.7.10
 // @description  通过会话接口校验消息，并复用 ChatGPT 原生 DOM 与 CSS 导出独立 HTML
 // @match        https://chatgpt.com/c/*
 // @run-at       document-idle
@@ -11,7 +11,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '2.7.9';
+  const VERSION = '2.7.10';
   const PREFIX = '[ChatGPT 会话 HTML 导出器]';
   const IDS = {
     button: 'chatgpt-html-exporter-button',
@@ -1240,8 +1240,10 @@
         const preheatStepSize = traversal.stepSize;
         traversal.preheat.stepSize = preheatStepSize;
         traversal.preheat.paginationRecovery = {
-          suspectedEvents: 0, recoveredEvents: 0, failedEvents: 0,
-          maxRecoveryAttempts: 3, quietWindowMs: 900, maxWaitMs: 12000, events: []
+          suspectedEvents: 0, recoveredEvents: 0, failedEvents: 0, repeatedPatterns: 0,
+          maxRecoveryAttempts: 3, maxSamePatternEvents: 2,
+          quietWindowMs: 900, maxWaitMs: 12000, events: [], patternCounts: {}
+
         };
 
         const waitForPaginationSettled = async scrollTarget => {
@@ -1284,6 +1286,22 @@
           });
         };
 
+        const getNetworkActivitySnapshot = since => {
+          try {
+            return performance.getEntriesByType('resource')
+              .filter(entry => entry.startTime >= since && /(?:backend-api|conversation|messages)/i.test(entry.name))
+              .slice(-30)
+              .map(entry => ({
+                url: entry.name.split('?')[0].slice(0, 500),
+                initiatorType: entry.initiatorType || null,
+                startTime: Math.round(entry.startTime), duration: Math.round(entry.duration || 0),
+                responseStatus: Number.isFinite(entry.responseStatus) ? entry.responseStatus : null
+              }));
+          } catch (error) {
+            return [{ diagnosticError: error?.message || String(error) }];
+          }
+        };
+
         const getScrollGeometry = element => ({
           scrollTop: Math.round(element.scrollTop), scrollHeight: element.scrollHeight,
           clientHeight: element.clientHeight,
@@ -1301,12 +1319,26 @@
           const beforeGeometry = getScrollGeometry(scrollElement);
           const beforeIdentity = getVirtualizedIdentitySnapshot();
           const beforeSignature = beforeIdentity.signature;
+          const moveStartedPerformance = performance.now();
+          let moveMutationCount = 0;
+          const moveObserver = new MutationObserver(records => { moveMutationCount += records.length; });
+          try {
+            moveObserver.observe(document.documentElement, { childList: true, subtree: true, characterData: true, attributes: true });
+          } catch (error) {
+            diagnostics.warnings.push('滚动期间 DOM 观察器启动失败：' + (error?.message || String(error)));
+          }
+          const networkBefore = performance.getEntriesByType('resource').length;
           const beforeIds = [...document.querySelectorAll('[data-virtualized-turn]')].map(n => (n.innerText || '').slice(0,100));
           const moveStartedAt = new Date().toISOString();
           scrollElement.scrollTop = requestedTop;
-          const waitResult = await waitForVirtualizedUpdate(
-            beforeSignature, traversal.preheat.mutationWaitTimeoutMs, scrollDelay, scrollElement
-          );
+          let waitResult;
+          try {
+            waitResult = await waitForVirtualizedUpdate(
+              beforeSignature, traversal.preheat.mutationWaitTimeoutMs, scrollDelay, scrollElement
+            );
+          } finally {
+            moveObserver.disconnect();
+          }
           throwIfStopped();
           const afterSignature = getVirtualizedSignature();
           const afterIds = [...document.querySelectorAll('[data-virtualized-turn]')].map(n => (n.innerText || '').slice(0,100));
@@ -1318,6 +1350,10 @@
             actualScrollTop: Math.round(scrollElement.scrollTop),
             maxScrollTop: Math.max(0, scrollElement.scrollHeight - scrollElement.clientHeight),
             beforeGeometry, afterGeometry: getScrollGeometry(scrollElement),
+            domMutationRecordCount: moveMutationCount,
+            networkActivity: getNetworkActivitySnapshot(moveStartedPerformance),
+            networkResourceEntryCountBefore: networkBefore,
+            networkResourceEntryCountAfter: performance.getEntriesByType('resource').length,
             beforeIdentityCount: beforeIdentity.ids.length,
             beforeIdentityIds: beforeIdentity.ids.slice(0, 100),
             afterIdentityIds: getVirtualizedIdentitySnapshot().ids.slice(0, 100),
@@ -1383,11 +1419,39 @@
                 afterIdentityIds: identity.ids.slice(0, 120),
                 attempts: []
               };
+              const patternIdentity = identity.ids.join('|');
+              const patternKey = [
+                event.trigger,
+                Math.round((firstMax || 0) / 500),
+                Math.round((firstActualTop || 0) / 500),
+                patternIdentity
+              ].join('::');
+              const patternCount = (recovery.patternCounts[patternKey] || 0) + 1;
+              recovery.patternCounts[patternKey] = patternCount;
+              event.patternKey = patternKey.slice(0, 1600);
+              event.samePatternCount = patternCount;
               recovery.events.push(event);
+              if (patternCount >= recovery.maxSamePatternEvents) {
+                recovery.repeatedPatterns++;
+                event.repeatedPatternDetected = true;
+                event.recovered = false;
+                event.completedAt = new Date().toISOString();
+                recovery.failedEvents++;
+                phase.repeatedBouncePatternDetected = true;
+                phase.repeatedBouncePattern = {
+                  patternKey: patternKey.slice(0, 1600), count: patternCount,
+                  previousEventStep: recovery.events.slice(0, -1).reverse().find(item => item.patternKey === event.patternKey)?.step ?? null,
+                  currentStep: stepCount, geometry: getScrollGeometry(scrollElement),
+                  detectedAt: new Date().toISOString()
+                };
+                throw new Error('检测到相同的历史加载/滚动回弹模式再次出现。为避免重复回弹循环，已停止预热。请查看 paginationRecovery.events 中的 patternKey、DOM 变化及网络请求诊断。');
+              }
+              entry.recoveryEventStep = stepCount;
               const settled = await waitForPaginationSettled(scrollElement);
               event.paginationWait = settled;
               throwIfStopped();
               let recovered = false;
+              let recoveryBaselineTop = Math.max(0, scrollElement.scrollTop);
               for (let attempt = 1; attempt <= recovery.maxRecoveryAttempts; attempt++) {
                 const fromTop = Math.max(0, scrollElement.scrollTop);
                 const targetTop = Math.max(0, fromTop - preheatStepSize);
@@ -1406,13 +1470,21 @@
                 };
                 event.attempts.push(attemptInfo);
                 identity = getVirtualizedIdentitySnapshot();
-                if (afterTop < fromTop - 1 || afterTop <= 2) { recovered = true; break; }
+                if (afterTop < fromTop - 1 || afterTop <= 2) {
+                  recovered = true;
+                  event.recoveryOnlyMoved = true;
+                  event.recoveryProgressVerified = false;
+                  break;
+                }
                 await new Promise(resolve => setTimeout(resolve, 350));
               }
               event.recovered = recovered;
               event.completedAt = new Date().toISOString();
-              if (recovered) recovery.recoveredEvents++;
-              else {
+              if (recovered) {
+                recovery.recoveredEvents++;
+                event.recovered = true;
+                event.recoveryMeaning = 'scroll-position-moved-only; subsequent traversal must verify sustained progress';
+              } else {
                 recovery.failedEvents++;
                 phase.paginationRecoveryFailed = true;
                 throw new Error(`检测到向上滚动触发历史消息加载后发生回弹，等待分页加载并尝试恢复 ${recovery.maxRecoveryAttempts} 次仍未成功。当前 scrollTop=${Math.round(scrollElement.scrollTop)}，maxScrollTop=${Math.round(scrollElement.scrollHeight - scrollElement.clientHeight)}。`);
@@ -1464,6 +1536,18 @@
             entry.actualMaxScrollTop = Math.round(newMax);
             entry.afterRecoveryGeometry = getScrollGeometry(scrollElement);
             entry.progressed = progressed;
+            if (entry.recoveryEventStep) {
+              const recoveryEvent = traversal.preheat.paginationRecovery.events.find(item => item.step === entry.recoveryEventStep);
+              if (recoveryEvent) {
+                recoveryEvent.recoveryProgressVerified = Boolean(progressed);
+                recoveryEvent.progressVerification = {
+                  beforeTop: Math.round(currentTop), afterTop: Math.round(actualTop),
+                  movedUp: actualTop < currentTop - 1,
+                  newlyObservedIdentityCount: newlyObservedIds.length,
+                  earlierSelectedMessageFound
+                };
+              }
+            }
 
             const nowAtBoundary = isUp ? actualTop <= 2 : actualTop >= newMax - 2;
             if (nowAtBoundary) {
