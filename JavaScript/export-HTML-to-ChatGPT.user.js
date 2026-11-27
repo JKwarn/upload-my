@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT 会话 HTML 导出器
 // @namespace    https://github.com/JKwarn/upload-my
-// @version      2.7.12
+// @version      2.7.13
 // @description  通过会话接口校验消息，并复用 ChatGPT 原生 DOM 与 CSS 导出独立 HTML
 // @match        https://chatgpt.com/c/*
 // @run-at       document-idle
@@ -11,7 +11,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '2.7.12';
+  const VERSION = '2.7.13';
   const PREFIX = '[ChatGPT 会话 HTML 导出器]';
   const IDS = {
     button: 'chatgpt-html-exporter-button',
@@ -1462,7 +1462,8 @@
               event.paginationWait = settled;
               throwIfStopped();
               let recovered = false;
-              let recoveryBaselineTop = Math.max(0, scrollElement.scrollTop);
+              const recoveryBaselineIds = new Set(seenIdentityIds);
+              const recoveryBaselineRank = earliestSelectedRank;
               for (let attempt = 1; attempt <= recovery.maxRecoveryAttempts; attempt++) {
                 const fromTop = Math.max(0, scrollElement.scrollTop);
                 const targetTop = Math.max(0, fromTop - preheatStepSize);
@@ -1474,31 +1475,42 @@
                 throwIfStopped();
                 const afterTop = Math.max(0, scrollElement.scrollTop);
                 const afterMax = Math.max(0, scrollElement.scrollHeight - scrollElement.clientHeight);
+                identity = getVirtualizedIdentitySnapshot();
+                const newlyObservedRecoveryIds = identity.ids.filter(id => !recoveryBaselineIds.has(id));
+                const recoveryRanks = identity.ids.map(id => selectedRank.get(id)).filter(Number.isInteger);
+                const recoveryEarliestRank = recoveryRanks.length ? Math.min(...recoveryRanks) : Number.POSITIVE_INFINITY;
+                const earlierSelectedRecoveryMessage = recoveryEarliestRank < recoveryBaselineRank;
+                const positionMovedUp = afterTop < fromTop - 1;
+                const contentProgressVerified = newlyObservedRecoveryIds.length > 0 || earlierSelectedRecoveryMessage;
                 const attemptInfo = {
                   attempt, fromTop: Math.round(fromTop), targetTop: Math.round(targetTop),
                   afterTop: Math.round(afterTop), afterMax: Math.round(afterMax),
+                  positionMovedUp, newlyObservedIdentityCount: newlyObservedRecoveryIds.length,
+                  newlyObservedIdentityIds: newlyObservedRecoveryIds.slice(0, 80),
+                  earlierSelectedMessageFound: earlierSelectedRecoveryMessage,
+                  contentProgressVerified,
                   geometry: getScrollGeometry(scrollElement), waitResult: recoveryWait
                 };
                 event.attempts.push(attemptInfo);
-                identity = getVirtualizedIdentitySnapshot();
-                if (afterTop < fromTop - 1 || afterTop <= 2) {
+                if (contentProgressVerified) {
                   recovered = true;
-                  event.recoveryOnlyMoved = true;
-                  event.recoveryProgressVerified = false;
+                  event.recoveryPositionMovedUp = positionMovedUp;
+                  event.recoveryProgressVerified = true;
                   break;
                 }
-                await new Promise(resolve => setTimeout(resolve, 350));
+                if (!positionMovedUp) await new Promise(resolve => setTimeout(resolve, 350));
               }
               event.recovered = recovered;
               event.completedAt = new Date().toISOString();
               if (recovered) {
                 recovery.recoveredEvents++;
-                event.recovered = true;
-                event.recoveryMeaning = 'scroll-position-moved-only; subsequent traversal must verify sustained progress';
+                event.recoveryMeaning = 'verified-content-progress; position movement alone is insufficient';
               } else {
                 recovery.failedEvents++;
+                event.recoveryPositionMovedUp = event.attempts.some(item => item.positionMovedUp);
+                event.recoveryProgressVerified = false;
                 phase.paginationRecoveryFailed = true;
-                throw new Error(`检测到向上滚动触发历史消息加载后发生回弹，等待分页加载并尝试恢复 ${recovery.maxRecoveryAttempts} 次仍未成功。当前 scrollTop=${Math.round(scrollElement.scrollTop)}，maxScrollTop=${Math.round(scrollElement.scrollHeight - scrollElement.clientHeight)}。`);
+                throw new Error(`检测到向上滚动回弹；恢复尝试虽可能改变滚动位置，但未发现新的消息身份或更早的目标消息，不能确认历史内容已加载。当前 scrollTop=${Math.round(scrollElement.scrollTop)}，maxScrollTop=${Math.round(scrollElement.scrollHeight - scrollElement.clientHeight)}。`);
               }
             }
             const newlyObservedIds = identity.ids.filter(id => !seenIdentityIds.has(id));
@@ -1612,58 +1624,131 @@
           warn('页面预热未完整走完；保留已采集消息，并继续正式 DOM 扫描。');
         }
 
-        setStatus('正在采集可见消息并继续遍历虚拟列表…');
+        setStatus('正在正式扫描虚拟列表并采集消息…');
         throwIfStopped();
-        const topWaitSignature = getVirtualizedSignature();
-        const topWaitStartedAt = performance.now();
-        scrollElement.scrollTop = 0;
-        traversal.initialTopWait = await waitForVirtualizedUpdate(
-          topWaitSignature, traversal.mutationWaitTimeoutMs, scrollDelay, scrollElement
+        traversal.preheat.totalStepCount = traversal.preheat.directions.reduce(
+          (total, phase) => total + (phase.steps?.length || 0), 0
         );
-        traversal.initialTopWait.elapsedFromStartMs = Math.round(performance.now() - topWaitStartedAt);
-        traversal.initialCaptureCount = await captureVisibleMessages(selected, captured, duplicates, observedDom);
-        traversal.reachedTop = scrollElement.scrollTop <= 2;
-        let previousTop = scrollElement.scrollTop;
-        const maxSteps = Math.min(800, Math.ceil(Math.max(0, scrollElement.scrollHeight - scrollElement.clientHeight) / Math.max(1, traversal.stepSize)) + 12);
-        for (let step = 0; step < maxSteps; step++) {
-          const maxTop = Math.max(0, scrollElement.scrollHeight - scrollElement.clientHeight);
-          const nextTop = Math.min(maxTop, previousTop + traversal.stepSize);
-          if (nextTop <= previousTop + 1) {
-            traversal.reachedBottom = true;
-            break;
-          }
-          const beforeSignature = getVirtualizedSignature();
-          scrollElement.scrollTop = nextTop;
-          const waitResult = await waitForVirtualizedUpdate(
-            beforeSignature, traversal.mutationWaitTimeoutMs, scrollDelay, scrollElement
-          );
-          const capturedNow = await captureVisibleMessages(selected, captured, duplicates, observedDom);
-          traversal.stepCount++;
-          traversal.capturedPerStep.push({
-            step: traversal.stepCount, requestedScrollTop: nextTop,
-            actualScrollTop: scrollElement.scrollTop,
-            maxScrollTop: Math.max(0, scrollElement.scrollHeight - scrollElement.clientHeight),
-            virtualizedTurnCount: document.querySelectorAll('[data-virtualized-turn]').length,
-            newlyCapturedMessageCount: capturedNow,
-            totalCapturedMessageCount: captured.size,
-            waitResult
-          });
-          const actualTop = scrollElement.scrollTop;
-          if (actualTop <= previousTop + 1) {
-            traversal.reachedBottom = actualTop >= Math.max(0, scrollElement.scrollHeight - scrollElement.clientHeight) - 2;
-            if (!traversal.reachedBottom) {
-              traversal.failure = 'scroll-position-did-not-advance';
-              break;
+        traversal.formalScan = {
+          startedAt: new Date().toISOString(),
+          startScrollTop: Math.round(scrollElement.scrollTop),
+          startMaxScrollTop: Math.round(scrollElement.scrollHeight - scrollElement.clientHeight),
+          upward: { stepCount: 0, reachedBoundary: false, steps: [], stopReason: null },
+          downward: { stepCount: 0, reachedBoundary: false, steps: [], stopReason: null },
+          completed: false
+        };
+
+        const runFormalDirection = async (direction, phaseName) => {
+          const isUp = direction === 'up';
+          const phase = traversal.formalScan[phaseName];
+          let noProgressCount = 0;
+          const maxSteps = 800;
+          while (phase.stepCount < maxSteps) {
+            throwIfStopped();
+            const beforeTop = Math.max(0, scrollElement.scrollTop);
+            const beforeMax = Math.max(0, scrollElement.scrollHeight - scrollElement.clientHeight);
+            if (isUp ? beforeTop <= 2 : beforeTop >= beforeMax - 2) {
+              phase.reachedBoundary = true;
+              phase.finalScrollTop = Math.round(beforeTop);
+              phase.finalMaxScrollTop = Math.round(beforeMax);
+              phase.stopReason = 'boundary-reached';
+              return true;
+            }
+
+            const requestedTop = isUp
+              ? Math.max(0, beforeTop - traversal.stepSize)
+              : Math.min(beforeMax, beforeTop + traversal.stepSize);
+            const entry = await moveAndWait(direction, requestedTop, phase.stepCount + 1);
+            const afterTop = Math.max(0, scrollElement.scrollTop);
+            const afterMax = Math.max(0, scrollElement.scrollHeight - scrollElement.clientHeight);
+            const movedInDirection = isUp ? afterTop < beforeTop - 1 : afterTop > beforeTop + 1;
+            const identityChanged = entry.beforeSignature !== entry.afterSignature;
+            const capturedNow = entry.capture || 0;
+            phase.stepCount++;
+            traversal.stepCount++;
+            const stepInfo = {
+              step: phase.stepCount,
+              requestedScrollTop: Math.round(requestedTop),
+              beforeScrollTop: Math.round(beforeTop),
+              actualScrollTop: Math.round(afterTop),
+              maxScrollTop: Math.round(afterMax),
+              movedInDirection,
+              identityChanged,
+              newlyCapturedMessageCount: capturedNow,
+              totalCapturedMessageCount: captured.size,
+              waitResult: entry.waitResult,
+              beforeIdentityCount: entry.beforeIdentityCount,
+              afterIdentityCount: entry.afterIdentityIds?.length || 0,
+              recoveryEventStep: entry.recoveryEventStep || null
+            };
+            phase.steps.push(stepInfo);
+            traversal.capturedPerStep.push({
+              ...stepInfo,
+              phase: phaseName
+            });
+
+            if (movedInDirection || identityChanged || capturedNow > 0) {
+              noProgressCount = 0;
+            } else {
+              noProgressCount++;
+              if (noProgressCount >= 3) {
+                phase.stopReason = 'three-consecutive-steps-without-directional-or-identity-progress';
+                phase.noProgressCount = noProgressCount;
+                return false;
+              }
+            }
+
+            const reached = isUp ? afterTop <= 2 : afterTop >= afterMax - 2;
+            if (reached) {
+              phase.reachedBoundary = true;
+              phase.finalScrollTop = Math.round(afterTop);
+              phase.finalMaxScrollTop = Math.round(afterMax);
+              phase.stopReason = 'boundary-reached';
+              return true;
+            }
+            if (isUp && afterTop > beforeTop + 1) {
+              phase.stopReason = 'scroll-reversed-during-upward-scan';
+              phase.reversedAt = { before: Math.round(beforeTop), after: Math.round(afterTop) };
+              return false;
+            }
+            if (!isUp && afterTop < beforeTop - 1) {
+              phase.stopReason = 'scroll-reversed-during-downward-scan';
+              phase.reversedAt = { before: Math.round(beforeTop), after: Math.round(afterTop) };
+              return false;
             }
           }
-          previousTop = actualTop;
-          if (traversal.reachedBottom) break;
+          phase.stopReason = 'maximum-step-limit-reached';
+          return false;
+        };
+
+        // Start from the actual post-preheat position. Never assume that assigning
+        // scrollTop=0 succeeded: virtualized layout changes can clamp/re-anchor it.
+        traversal.formalScan.reachedTopAtStart = scrollElement.scrollTop <= 2;
+        if (!traversal.formalScan.reachedTopAtStart) {
+          setStatus('正式扫描（1/2）：从当前位置继续向上遍历…');
+          traversal.reachedTop = await runFormalDirection('up', 'upward');
+        } else {
+          traversal.reachedTop = true;
+          traversal.formalScan.upward.reachedBoundary = true;
+          traversal.formalScan.upward.stopReason = 'already-at-top';
         }
-        if (!traversal.reachedBottom && !traversal.failure) {
-          const currentMax = Math.max(0, scrollElement.scrollHeight - scrollElement.clientHeight);
-          traversal.reachedBottom = scrollElement.scrollTop >= currentMax - 2;
-          if (!traversal.reachedBottom) traversal.failure = 'maximum-scroll-steps-reached';
+
+        if (traversal.reachedTop) {
+          setStatus('正式扫描（2/2）：从顶部向下遍历…');
+          traversal.reachedBottom = await runFormalDirection('down', 'downward');
+        } else {
+          traversal.formalScan.downward.stopReason = 'skipped-because-top-was-not-reached';
+          traversal.reachedBottom = scrollElement.scrollTop >=
+            Math.max(0, scrollElement.scrollHeight - scrollElement.clientHeight) - 2;
         }
+
+        traversal.formalScan.completed = Boolean(traversal.reachedTop && traversal.reachedBottom);
+        traversal.formalScan.completedAt = new Date().toISOString();
+        traversal.formalScan.finalScrollTop = Math.round(scrollElement.scrollTop);
+        traversal.formalScan.finalMaxScrollTop = Math.round(scrollElement.scrollHeight - scrollElement.clientHeight);
+        traversal.preheat.totalStepCount = traversal.preheat.directions.reduce(
+          (total, phase) => total + (phase.steps?.length || 0), 0
+        );
       } catch (error) {
         traversal.failure = error?.message || String(error);
         traversal.stopped = error?.name === 'AbortError' || state.stopRequested;
