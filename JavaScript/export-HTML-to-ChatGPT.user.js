@@ -1317,7 +1317,7 @@
           testId: element.getAttribute?.('data-testid') || null
         });
 
-        const moveAndWait = async (direction, requestedTop, stepNumber) => {
+        const moveAndWait = async (direction, requestedTop, stepNumber, recordPreheat = true) => {
           throwIfStopped();
           const beforeTop = scrollElement.scrollTop;
           const beforeMax = Math.max(0, scrollElement.scrollHeight - scrollElement.clientHeight);
@@ -1367,7 +1367,9 @@
             waitResult
           };
           entry.capture = await captureVisibleMessages(selected, captured, duplicates, observedDom);
-          traversal.preheat.directions.at(-1).steps.push(entry);
+          if (recordPreheat) {
+            traversal.preheat.directions.at(-1).steps.push(entry);
+          }
           traversal.preheat.recentTrace ||= [];
           traversal.preheat.recentTrace.push({
             timestamp: moveStartedAt, direction, before: Math.round(beforeTop),
@@ -1658,7 +1660,7 @@
             const requestedTop = isUp
               ? Math.max(0, beforeTop - traversal.stepSize)
               : Math.min(beforeMax, beforeTop + traversal.stepSize);
-            const entry = await moveAndWait(direction, requestedTop, phase.stepCount + 1);
+            const entry = await moveAndWait(direction, requestedTop, phase.stepCount + 1, false);
             const afterTop = Math.max(0, scrollElement.scrollTop);
             const afterMax = Math.max(0, scrollElement.scrollHeight - scrollElement.clientHeight);
             const movedInDirection = isUp ? afterTop < beforeTop - 1 : afterTop > beforeTop + 1;
