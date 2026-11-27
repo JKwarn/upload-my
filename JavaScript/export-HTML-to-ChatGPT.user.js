@@ -969,7 +969,7 @@
         for (const name of ['data-message-id','data-message-uuid','data-chatgpt-selection-message-id','data-chatgpt-search-message-ids','data-turn-key','data-turn-id']) {
           const raw = current.getAttribute?.(name);
           if (!raw) continue;
-          const values = name === 'data-chatgpt-search-message-ids' ? raw.split(/[\\s,]+/).filter(Boolean) : [raw];
+          const values = name === 'data-chatgpt-search-message-ids' ? raw.split(/[\s,]+/).filter(Boolean) : [raw];
           for (const id of values) if (!seen.has(id)) { seen.add(id); ids.push(id); }
         }
       }
