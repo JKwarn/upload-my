@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT 会话 HTML 导出器
 // @namespace    https://github.com/JKwarn/upload-my
-// @version      2.7.7
+// @version      2.7.8
 // @description  通过会话接口校验消息，并复用 ChatGPT 原生 DOM 与 CSS 导出独立 HTML
 // @match        https://chatgpt.com/c/*
 // @run-at       document-idle
@@ -11,7 +11,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '2.7.7';
+  const VERSION = '2.7.8';
   const PREFIX = '[ChatGPT 会话 HTML 导出器]';
   const IDS = {
     button: 'chatgpt-html-exporter-button',
@@ -1318,17 +1318,31 @@
             entry.identityProgress = {visibleIdentityCount:identity.ids.length,newlyObservedIdentityIds:newlyObservedIds.slice(0,80),
               newlyObservedIdentityCount:newlyObservedIds.length,earliestVisibleSelectedRank:Number.isFinite(currentEarliestRank)?currentEarliestRank:null,
               earlierSelectedMessageFound,repeatedIdentitySequenceCount};
-            const transitionKey = [direction, identitySequence, Math.round(scrollElement.scrollHeight), entry.waitResult.finishReason].join('|');
-            const transitionCount = (repeatedTransitions.get(transitionKey) || 0) + 1;
-            repeatedTransitions.set(transitionKey, transitionCount);
-            entry.transitionRepeatCount = transitionCount;
-            if (transitionCount >= 3 && repeatedIdentitySequenceCount >= 2 && newlyObservedIds.length === 0) {
-              phase.relocationLoopDetected = true;
-              phase.relocationLoop = { key: transitionKey, repeatCount: transitionCount, repeatedIdentitySequenceCount, identityCount: identity.ids.length, detectedAt: new Date().toISOString() };
-              throw new Error(`检测到分页加载引起的滚动重定位循环：方向 ${direction}，请求位置 ${Math.round(requestedTop)}，实际位置 ${Math.round(scrollElement.scrollTop)}，相同转换重复 ${transitionCount} 次。`);
-            }
             const actualTop = Math.max(0, scrollElement.scrollTop);
             const newMax = Math.max(0, scrollElement.scrollHeight - scrollElement.clientHeight);
+            const positionStalled = isUp ? actualTop >= currentTop - 1 : actualTop <= currentTop + 1;
+            const transitionKey = [
+              direction, identitySequence, Math.round(actualTop), Math.round(newMax),
+              entry.waitResult.finishReason
+            ].join('|');
+            // 身份序列稳定是虚拟列表正常状态；只有实际滚动位置也停滞时才累计循环次数。
+            const transitionCount = positionStalled
+              ? (repeatedTransitions.get(transitionKey) || 0) + 1
+              : 0;
+            if (positionStalled) repeatedTransitions.set(transitionKey, transitionCount);
+            entry.transitionRepeatCount = transitionCount;
+            entry.positionStalled = positionStalled;
+            if (positionStalled && transitionCount >= 3 &&
+                repeatedIdentitySequenceCount >= 2 && newlyObservedIds.length === 0) {
+              phase.relocationLoopDetected = true;
+              phase.relocationLoop = {
+                key: transitionKey, repeatCount: transitionCount,
+                repeatedIdentitySequenceCount, identityCount: identity.ids.length,
+                scrollTop: Math.round(actualTop), maxScrollTop: Math.round(newMax),
+                detectedAt: new Date().toISOString()
+              };
+              throw new Error(`检测到分页加载引起的滚动重定位循环：方向 ${direction}，请求位置 ${Math.round(requestedTop)}，实际位置 ${Math.round(actualTop)}，最大滚动位置 ${Math.round(newMax)}，停滞重复 ${transitionCount} 次。`);
+            }
             const progressed = isUp
               ? actualTop < currentTop - 1 || earlierSelectedMessageFound || newlyObservedIds.length > 0
               : actualTop > currentTop + 1 || newlyObservedIds.length > 0;
