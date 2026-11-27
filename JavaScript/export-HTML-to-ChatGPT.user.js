@@ -11,7 +11,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '2.7.6';
+  const VERSION = '2.7.7';
   const PREFIX = '[ChatGPT 会话 HTML 导出器]';
   const IDS = {
     button: 'chatgpt-html-exporter-button',
@@ -960,109 +960,79 @@
   }
 
 
-  function getVirtualizedSignature() {
-    return [...document.querySelectorAll('[data-virtualized-turn]')]
-      .map(node => (node.getAttribute('data-testid') || '') + ':' + (node.innerText || '').length)
-      .join('|');
+  function getVirtualizedIdentitySnapshot() {
+    const ids = [], seen = new Set();
+    const nodes = [...document.querySelectorAll('[data-chatgpt-search-unit-key],[data-message-id],[data-message-uuid],[data-chatgpt-selection-message-id],[data-chatgpt-search-message-ids],[data-turn-key],[data-turn-id]')];
+    for (const node of nodes) {
+      let current = node;
+      for (let depth = 0; current && depth < 9; depth++, current = current.parentElement) {
+        for (const name of ['data-message-id','data-message-uuid','data-chatgpt-selection-message-id','data-chatgpt-search-message-ids','data-turn-key','data-turn-id']) {
+          const raw = current.getAttribute?.(name);
+          if (!raw) continue;
+          const values = name === 'data-chatgpt-search-message-ids' ? raw.split(/[\\s,]+/).filter(Boolean) : [raw];
+          for (const id of values) if (!seen.has(id)) { seen.add(id); ids.push(id); }
+        }
+      }
+    }
+    const turns = [...document.querySelectorAll('[data-virtualized-turn]')].map(node => ({
+      testId: node.getAttribute('data-testid') || '', textLength: (node.innerText || '').length
+    }));
+    return { ids, turns, signature: ids.join('|') + '::' + turns.map(x => x.testId + ':' + x.textLength).join('|') };
   }
 
-  function waitForVirtualizedUpdate(previousSignature, timeout = 2500,
+  function getVirtualizedSignature() {
+    return getVirtualizedIdentitySnapshot().signature;
+  }
+
+  function waitForVirtualizedUpdate(previousSignature, timeout = 3500,
       minimumDelay = CONFIG.defaultScrollDelay, observedRoot = document.documentElement, signal = state.abortController?.signal) {
     return new Promise(resolve => {
       const startedAt = performance.now();
-      let finished = false;
-      let mutationDetected = false;
-      let stableDetected = false;
+      let finished = false, mutationDetected = false, stableDetected = false;
       let latestSignature = getVirtualizedSignature();
-      let minimumTimer = null;
-      let fallbackTimer = null;
-      let stableTimer = null;
-      let hardTimeoutTimer = null;
-      let completionPoll = null;
+      let minimumTimer = null, stableTimer = null, hardTimeoutTimer = null, completionPoll = null;
       const onAbort = () => finish('cancelled');
-
       const finish = finishReason => {
         if (finished) return;
-        finished = true;
-        observer.disconnect();
-        clearTimeout(minimumTimer);
-        clearTimeout(fallbackTimer);
-        clearTimeout(stableTimer);
-        clearTimeout(hardTimeoutTimer);
-        clearInterval(completionPoll);
+        finished = true; observer.disconnect();
+        clearTimeout(minimumTimer); clearTimeout(stableTimer); clearTimeout(hardTimeoutTimer); clearInterval(completionPoll);
         signal?.removeEventListener('abort', onAbort);
-        resolve({
-          changed: getVirtualizedSignature() !== previousSignature,
-          waitedMs: Math.round(performance.now() - startedAt),
-          configuredMinimumDelayMs: minimumDelay,
-          mutationDetected,
-          stableDetected,
-          finishReason,
-          fallbackWaitMs: 250
-        });
+        resolve({ changed: getVirtualizedSignature() !== previousSignature, identitySnapshot: getVirtualizedIdentitySnapshot(),
+          waitedMs: Math.round(performance.now()-startedAt), configuredMinimumDelayMs: minimumDelay,
+          mutationDetected, stableDetected, finishReason, fallbackWaitMs: null });
       };
-
       const checkStable = () => {
         clearTimeout(stableTimer);
         stableTimer = setTimeout(() => {
           if (getVirtualizedSignature() !== previousSignature) {
             stableDetected = true;
-            if (performance.now() - startedAt >= minimumDelay) {
-              finish('dom-stable-and-minimum-delay-met');
-            }
+            if (performance.now()-startedAt >= minimumDelay) finish('identity-dom-stable');
           }
-        }, 250);
+        }, 350);
       };
-
       const observer = new MutationObserver(() => {
-        const currentSignature = getVirtualizedSignature();
-        if (currentSignature === latestSignature) return;
-        latestSignature = currentSignature;
-        mutationDetected = currentSignature !== previousSignature;
+        const signature = getVirtualizedSignature();
+        if (signature === latestSignature) return;
+        latestSignature = signature; mutationDetected = signature !== previousSignature;
         if (mutationDetected) checkStable();
       });
-
       if (signal?.aborted) { finish('cancelled'); return; }
       signal?.addEventListener('abort', onAbort, { once: true });
       try {
-        observer.observe(observedRoot || document.documentElement, {
-          childList: true, subtree: true, characterData: true
-        });
-      } catch {
-        observer.observe(document.documentElement, {
-          childList: true, subtree: true, characterData: true
-        });
-      }
-
+        observer.observe(observedRoot || document.documentElement, {childList:true,subtree:true,characterData:true,attributes:true,
+          attributeFilter:['data-message-id','data-message-uuid','data-chatgpt-selection-message-id','data-chatgpt-search-message-ids','data-chatgpt-search-unit-key','data-turn-key','data-turn-id']});
+      } catch { observer.observe(document.documentElement,{childList:true,subtree:true,characterData:true}); }
       minimumTimer = setTimeout(() => {
-        const currentSignature = getVirtualizedSignature();
-        if (currentSignature !== previousSignature) {
-          mutationDetected = true;
-          latestSignature = currentSignature;
-          checkStable();
-        } else {
-          fallbackTimer = setTimeout(() => finish('no-dom-change-fallback'), 250);
-        }
+        const signature = getVirtualizedSignature();
+        if (signature !== previousSignature) { mutationDetected = true; latestSignature = signature; checkStable(); }
       }, minimumDelay);
-
-      hardTimeoutTimer = setTimeout(
-        () => finish('hard-timeout'),
-        Math.max(timeout, minimumDelay + 1500)
-      );
-
+      hardTimeoutTimer = setTimeout(() => finish('identity-wait-timeout'), Math.max(timeout,minimumDelay+1500));
       completionPoll = setInterval(() => {
-        if (!finished && stableDetected && performance.now() - startedAt >= minimumDelay) {
-          finish('dom-stable-and-minimum-delay-met');
-        }
-      }, 40);
-
+        if (!finished && stableDetected && performance.now()-startedAt >= minimumDelay) finish('identity-dom-stable');
+      },50);
       requestAnimationFrame(() => requestAnimationFrame(() => {
-        const currentSignature = getVirtualizedSignature();
-        if (currentSignature !== previousSignature) {
-          mutationDetected = true;
-          latestSignature = currentSignature;
-          checkStable();
-        }
+        const signature = getVirtualizedSignature();
+        if (signature !== previousSignature) { mutationDetected = true; latestSignature = signature; checkStable(); }
       }));
     });
   }
@@ -1241,10 +1211,10 @@
     const traversal = {
       startedAt: new Date().toISOString(),
       strategy: 'preheat-top-bottom-top-then-forward-scan',
-      preheat: { enabled: true, stepSize: null, mutationWaitTimeoutMs: 2500, directions: [] },
+      preheat: { enabled: true, stepSize: null, mutationWaitTimeoutMs: 3500, identityDriven: true, directions: [] },
       container: null, initialScrollTop: null, finalScrollTop: null,
       maxScrollTop: null, stepSize: null, stepCount: 0,
-      mutationWaitTimeoutMs: 2500, fallbackWaitMs: 250, configuredMinimumDelayMs: scrollDelay,
+      mutationWaitTimeoutMs: 3500, fallbackWaitMs: null, configuredMinimumDelayMs: scrollDelay,
       capturedPerStep: [], initialTopWait: null, codeBlocks: [],
       reachedTop: false, reachedBottom: false,
       restoredOriginalScrollTop: false, failure: null
@@ -1311,11 +1281,11 @@
         const preheatTraverse = async (direction, label) => {
           const isUp = direction === 'up';
           const phase = traversal.preheat.directions.at(-1);
-          let noProgressCount = 0;
-          let stepCount = 0;
-          const repeatedTransitions = new Map();
-          const maxSteps = 800;
-          const maxNoProgress = 4;
+          let noProgressCount = 0, stepCount = 0;
+          const repeatedTransitions = new Map(), seenIdentityIds = new Set();
+          const selectedRank = new Map(selected.map((item,index) => [item.message.id,index]));
+          let earliestSelectedRank = Number.POSITIVE_INFINITY, lastIdentitySequence = '', repeatedIdentitySequenceCount = 0;
+          const maxSteps = 800, maxNoProgress = 4;
 
           while (stepCount < maxSteps) {
             throwIfStopped(); traversal.preheat.currentStage = label;
@@ -1335,20 +1305,33 @@
               : Math.min(currentMax, currentTop + preheatStepSize);
             const entry = await moveAndWait(direction, requestedTop, ++stepCount);
             throwIfStopped();
-            const transitionKey = [direction, Math.round(requestedTop/100), Math.round(scrollElement.scrollTop/100), entry.waitResult.finishReason].join('|');
+            const identity = getVirtualizedIdentitySnapshot();
+            const newlyObservedIds = identity.ids.filter(id => !seenIdentityIds.has(id));
+            identity.ids.forEach(id => seenIdentityIds.add(id));
+            const ranks = identity.ids.map(id => selectedRank.get(id)).filter(Number.isInteger);
+            const currentEarliestRank = ranks.length ? Math.min(...ranks) : Number.POSITIVE_INFINITY;
+            const earlierSelectedMessageFound = isUp && currentEarliestRank < earliestSelectedRank;
+            if (Number.isFinite(currentEarliestRank)) earliestSelectedRank = Math.min(earliestSelectedRank,currentEarliestRank);
+            const identitySequence = identity.ids.join('|');
+            repeatedIdentitySequenceCount = identitySequence && identitySequence === lastIdentitySequence ? repeatedIdentitySequenceCount+1 : 0;
+            lastIdentitySequence = identitySequence;
+            entry.identityProgress = {visibleIdentityCount:identity.ids.length,newlyObservedIdentityIds:newlyObservedIds.slice(0,80),
+              newlyObservedIdentityCount:newlyObservedIds.length,earliestVisibleSelectedRank:Number.isFinite(currentEarliestRank)?currentEarliestRank:null,
+              earlierSelectedMessageFound,repeatedIdentitySequenceCount};
+            const transitionKey = [direction, identitySequence, Math.round(scrollElement.scrollHeight), entry.waitResult.finishReason].join('|');
             const transitionCount = (repeatedTransitions.get(transitionKey) || 0) + 1;
             repeatedTransitions.set(transitionKey, transitionCount);
             entry.transitionRepeatCount = transitionCount;
-            if (transitionCount >= 3) {
+            if (transitionCount >= 3 && repeatedIdentitySequenceCount >= 2 && newlyObservedIds.length === 0) {
               phase.relocationLoopDetected = true;
-              phase.relocationLoop = { key: transitionKey, repeatCount: transitionCount, detectedAt: new Date().toISOString() };
+              phase.relocationLoop = { key: transitionKey, repeatCount: transitionCount, repeatedIdentitySequenceCount, identityCount: identity.ids.length, detectedAt: new Date().toISOString() };
               throw new Error(`检测到分页加载引起的滚动重定位循环：方向 ${direction}，请求位置 ${Math.round(requestedTop)}，实际位置 ${Math.round(scrollElement.scrollTop)}，相同转换重复 ${transitionCount} 次。`);
             }
             const actualTop = Math.max(0, scrollElement.scrollTop);
             const newMax = Math.max(0, scrollElement.scrollHeight - scrollElement.clientHeight);
             const progressed = isUp
-              ? actualTop < currentTop - 1
-              : actualTop > currentTop + 1;
+              ? actualTop < currentTop - 1 || earlierSelectedMessageFound || newlyObservedIds.length > 0
+              : actualTop > currentTop + 1 || newlyObservedIds.length > 0;
 
             entry.beforeScrollTop = Math.round(currentTop);
             entry.beforeMaxScrollTop = Math.round(currentMax);
