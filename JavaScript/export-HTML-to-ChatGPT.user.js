@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT 会话 HTML 导出器
 // @namespace    https://github.com/JKwarn/upload-my
-// @version      2.7.11
+// @version      2.7.12
 // @description  通过会话接口校验消息，并复用 ChatGPT 原生 DOM 与 CSS 导出独立 HTML
 // @match        https://chatgpt.com/c/*
 // @run-at       document-idle
@@ -11,7 +11,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '2.7.11';
+  const VERSION = '2.7.12';
   const PREFIX = '[ChatGPT 会话 HTML 导出器]';
   const IDS = {
     button: 'chatgpt-html-exporter-button',
@@ -2104,9 +2104,15 @@ document.addEventListener('click',e=>{if(!e.target.closest('.menu-wrap'))menu.cl
       setStatus(`接口已筛选 ${selected.length} 条消息，正在遍历虚拟滚动页面…`);
       const exported = await cloneNativeMessages(selected);
       throwIfStopped();
-      diagnostics.dom.coverage = { expected: selected.length, captured: exported.length,
-        missing: selected.length - exported.length, observedDomIdentityCount: observedDom.size,
-        capturedIds: exported.map(item => item.messageId), missingIds: selected.filter(item => !captured.has(item.message.id)).map(item => item.message.id) };
+      const domDiagnostics = diagnostics.dom || {};
+      diagnostics.dom.coverage = {
+        expected: selected.length,
+        captured: exported.length,
+        missing: domDiagnostics.missingMessageCount ?? (selected.length - exported.length),
+        observedDomIdentityCount: domDiagnostics.observedDomMessageCount ?? 0,
+        capturedIds: exported.map(item => item.messageId),
+        missingIds: (domDiagnostics.missing || []).map(item => item.messageId).filter(Boolean)
+      };
       if (exported.length !== selected.length) {
         const missingCount = diagnostics.dom.missingMessageCount + diagnostics.dom.duplicateMessageCount;
         throw new Error(`虚拟滚动遍历后仍无法完整对应接口消息：目标 ${selected.length} 条，匹配 ${exported.length} 条，缺失或歧义 ${missingCount} 条。未生成不完整文件。`);
