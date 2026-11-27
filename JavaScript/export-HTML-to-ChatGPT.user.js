@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT 会话 HTML 导出器
 // @namespace    https://github.com/JKwarn/upload-my
-// @version      2.7.8
+// @version      2.7.9
 // @description  通过会话接口校验消息，并复用 ChatGPT 原生 DOM 与 CSS 导出独立 HTML
 // @match        https://chatgpt.com/c/*
 // @run-at       document-idle
@@ -11,7 +11,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '2.7.8';
+  const VERSION = '2.7.9';
   const PREFIX = '[ChatGPT 会话 HTML 导出器]';
   const IDS = {
     button: 'chatgpt-html-exporter-button',
@@ -1050,7 +1050,7 @@
           const value = current.getAttribute(name);
           if (!value) continue;
           const values = name === 'data-chatgpt-search-message-ids'
-            ? value.split(/[\\s,]+/).filter(Boolean) : [value];
+            ? value.split(/[\s,]+/).filter(Boolean) : [value];
           for (const id of values) {
             if (!target.has(id)) target.set(id, { id, role, attribute: name });
           }
@@ -1239,12 +1239,68 @@
         // This gives lazy-loaded content (including Mermaid) a chance to initialize.
         const preheatStepSize = traversal.stepSize;
         traversal.preheat.stepSize = preheatStepSize;
+        traversal.preheat.paginationRecovery = {
+          suspectedEvents: 0, recoveredEvents: 0, failedEvents: 0,
+          maxRecoveryAttempts: 3, quietWindowMs: 900, maxWaitMs: 12000, events: []
+        };
+
+        const waitForPaginationSettled = async scrollTarget => {
+          const startedAt = performance.now();
+          const quietWindowMs = 900, maxWaitMs = 12000;
+          let mutationCount = 0, finished = false;
+          return await new Promise(resolve => {
+            let quietTimer = null, hardTimer = null;
+            const observer = new MutationObserver(records => {
+              mutationCount += records.length;
+              clearTimeout(quietTimer);
+              quietTimer = setTimeout(() => finish('dom-quiet'), quietWindowMs);
+            });
+            const finish = reason => {
+              if (finished) return;
+              finished = true;
+              observer.disconnect(); clearTimeout(quietTimer); clearTimeout(hardTimer);
+              state.abortController?.signal.removeEventListener('abort', onAbort);
+              const snapshot = getVirtualizedIdentitySnapshot();
+              resolve({
+                reason, waitedMs: Math.round(performance.now() - startedAt), mutationCount,
+                scrollTop: Math.round(scrollTarget.scrollTop),
+                scrollHeight: scrollTarget.scrollHeight, clientHeight: scrollTarget.clientHeight,
+                maxScrollTop: Math.max(0, scrollTarget.scrollHeight - scrollTarget.clientHeight),
+                isConnected: scrollTarget.isConnected,
+                identityCount: snapshot.ids.length, turnCount: snapshot.turns.length,
+                identitySignature: snapshot.signature.slice(0, 1200)
+              });
+            };
+            const onAbort = () => finish('cancelled');
+            if (state.abortController?.signal.aborted) { finish('cancelled'); return; }
+            state.abortController?.signal.addEventListener('abort', onAbort, { once: true });
+            try {
+              observer.observe(document.documentElement, { childList: true, subtree: true, characterData: true, attributes: true });
+            } catch (error) {
+              diagnostics.warnings.push('历史消息加载观察器启动失败：' + (error?.message || String(error)));
+            }
+            quietTimer = setTimeout(() => finish('dom-quiet'), quietWindowMs);
+            hardTimer = setTimeout(() => finish('max-wait-timeout'), maxWaitMs);
+          });
+        };
+
+        const getScrollGeometry = element => ({
+          scrollTop: Math.round(element.scrollTop), scrollHeight: element.scrollHeight,
+          clientHeight: element.clientHeight,
+          maxScrollTop: Math.max(0, Math.round(element.scrollHeight - element.clientHeight)),
+          isConnected: element.isConnected,
+          tag: element.tagName?.toLowerCase() || null,
+          id: element.id || null,
+          testId: element.getAttribute?.('data-testid') || null
+        });
 
         const moveAndWait = async (direction, requestedTop, stepNumber) => {
           throwIfStopped();
           const beforeTop = scrollElement.scrollTop;
           const beforeMax = Math.max(0, scrollElement.scrollHeight - scrollElement.clientHeight);
-          const beforeSignature = getVirtualizedSignature();
+          const beforeGeometry = getScrollGeometry(scrollElement);
+          const beforeIdentity = getVirtualizedIdentitySnapshot();
+          const beforeSignature = beforeIdentity.signature;
           const beforeIds = [...document.querySelectorAll('[data-virtualized-turn]')].map(n => (n.innerText || '').slice(0,100));
           const moveStartedAt = new Date().toISOString();
           scrollElement.scrollTop = requestedTop;
@@ -1261,6 +1317,11 @@
             requestedScrollTop: Math.round(requestedTop),
             actualScrollTop: Math.round(scrollElement.scrollTop),
             maxScrollTop: Math.max(0, scrollElement.scrollHeight - scrollElement.clientHeight),
+            beforeGeometry, afterGeometry: getScrollGeometry(scrollElement),
+            beforeIdentityCount: beforeIdentity.ids.length,
+            beforeIdentityIds: beforeIdentity.ids.slice(0, 100),
+            afterIdentityIds: getVirtualizedIdentitySnapshot().ids.slice(0, 100),
+            scrollContainerConnected: scrollElement.isConnected,
             virtualizedTurnCount: document.querySelectorAll('[data-virtualized-turn]').length,
             waitResult
           };
@@ -1305,7 +1366,58 @@
               : Math.min(currentMax, currentTop + preheatStepSize);
             const entry = await moveAndWait(direction, requestedTop, ++stepCount);
             throwIfStopped();
-            const identity = getVirtualizedIdentitySnapshot();
+            let identity = getVirtualizedIdentitySnapshot();
+            const firstActualTop = Math.max(0, scrollElement.scrollTop);
+            const firstMax = Math.max(0, scrollElement.scrollHeight - scrollElement.clientHeight);
+            const reversedByPageUpdate = isUp && firstActualTop > currentTop + Math.max(80, preheatStepSize * 0.2);
+            const rangeCollapsedDuringLoad = isUp && currentMax - firstMax > 500 && firstActualTop > requestedTop + 80;
+            if (reversedByPageUpdate || rangeCollapsedDuringLoad) {
+              const recovery = traversal.preheat.paginationRecovery;
+              recovery.suspectedEvents++;
+              const event = {
+                step: stepCount, detectedAt: new Date().toISOString(),
+                trigger: reversedByPageUpdate ? 'upward-scroll-reversed' : 'scroll-range-collapsed',
+                before: getScrollGeometry(scrollElement), requestedTop: Math.round(requestedTop),
+                afterInitialMove: entry.afterGeometry,
+                beforeIdentityIds: entry.beforeIdentityIds,
+                afterIdentityIds: identity.ids.slice(0, 120),
+                attempts: []
+              };
+              recovery.events.push(event);
+              const settled = await waitForPaginationSettled(scrollElement);
+              event.paginationWait = settled;
+              throwIfStopped();
+              let recovered = false;
+              for (let attempt = 1; attempt <= recovery.maxRecoveryAttempts; attempt++) {
+                const fromTop = Math.max(0, scrollElement.scrollTop);
+                const targetTop = Math.max(0, fromTop - preheatStepSize);
+                const signatureBeforeRecovery = getVirtualizedSignature();
+                scrollElement.scrollTop = targetTop;
+                const recoveryWait = await waitForVirtualizedUpdate(
+                  signatureBeforeRecovery, traversal.preheat.mutationWaitTimeoutMs, scrollDelay, scrollElement
+                );
+                throwIfStopped();
+                const afterTop = Math.max(0, scrollElement.scrollTop);
+                const afterMax = Math.max(0, scrollElement.scrollHeight - scrollElement.clientHeight);
+                const attemptInfo = {
+                  attempt, fromTop: Math.round(fromTop), targetTop: Math.round(targetTop),
+                  afterTop: Math.round(afterTop), afterMax: Math.round(afterMax),
+                  geometry: getScrollGeometry(scrollElement), waitResult: recoveryWait
+                };
+                event.attempts.push(attemptInfo);
+                identity = getVirtualizedIdentitySnapshot();
+                if (afterTop < fromTop - 1 || afterTop <= 2) { recovered = true; break; }
+                await new Promise(resolve => setTimeout(resolve, 350));
+              }
+              event.recovered = recovered;
+              event.completedAt = new Date().toISOString();
+              if (recovered) recovery.recoveredEvents++;
+              else {
+                recovery.failedEvents++;
+                phase.paginationRecoveryFailed = true;
+                throw new Error(`检测到向上滚动触发历史消息加载后发生回弹，等待分页加载并尝试恢复 ${recovery.maxRecoveryAttempts} 次仍未成功。当前 scrollTop=${Math.round(scrollElement.scrollTop)}，maxScrollTop=${Math.round(scrollElement.scrollHeight - scrollElement.clientHeight)}。`);
+              }
+            }
             const newlyObservedIds = identity.ids.filter(id => !seenIdentityIds.has(id));
             identity.ids.forEach(id => seenIdentityIds.add(id));
             const ranks = identity.ids.map(id => selectedRank.get(id)).filter(Number.isInteger);
@@ -1350,6 +1462,7 @@
             entry.beforeScrollTop = Math.round(currentTop);
             entry.beforeMaxScrollTop = Math.round(currentMax);
             entry.actualMaxScrollTop = Math.round(newMax);
+            entry.afterRecoveryGeometry = getScrollGeometry(scrollElement);
             entry.progressed = progressed;
 
             const nowAtBoundary = isUp ? actualTop <= 2 : actualTop >= newMax - 2;
