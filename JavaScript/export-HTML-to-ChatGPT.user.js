@@ -1409,6 +1409,8 @@
               ? Math.max(0, currentTop - preheatStepSize)
               : Math.min(currentMax, currentTop + preheatStepSize);
             const entry = await moveAndWait(direction, requestedTop, ++stepCount);
+            phase.stepCount = stepCount;
+            phase.capturedMessageCount = (phase.capturedMessageCount || 0) + (entry.capture || 0);
             throwIfStopped();
             let identity = getVirtualizedIdentitySnapshot();
             const firstActualTop = Math.max(0, scrollElement.scrollTop);
@@ -1635,8 +1637,8 @@
           startedAt: new Date().toISOString(),
           startScrollTop: Math.round(scrollElement.scrollTop),
           startMaxScrollTop: Math.round(scrollElement.scrollHeight - scrollElement.clientHeight),
-          upward: { stepCount: 0, reachedBoundary: false, steps: [], stopReason: null },
-          downward: { stepCount: 0, reachedBoundary: false, steps: [], stopReason: null },
+          upward: { stepCount: 0, capturedMessageCount: 0, reachedBoundary: false, steps: [], stopReason: null },
+          downward: { stepCount: 0, capturedMessageCount: 0, reachedBoundary: false, steps: [], stopReason: null },
           completed: false
         };
 
@@ -1684,6 +1686,7 @@
               recoveryEventStep: entry.recoveryEventStep || null
             };
             phase.steps.push(stepInfo);
+            phase.capturedMessageCount += capturedNow;
             traversal.capturedPerStep.push({
               ...stepInfo,
               phase: phaseName
