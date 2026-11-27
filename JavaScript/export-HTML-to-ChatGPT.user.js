@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT 会话 HTML 导出器
 // @namespace    https://github.com/JKwarn/upload-my
-// @version      2.7.10
+// @version      2.7.11
 // @description  通过会话接口校验消息，并复用 ChatGPT 原生 DOM 与 CSS 导出独立 HTML
 // @match        https://chatgpt.com/c/*
 // @run-at       document-idle
@@ -11,7 +11,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '2.7.10';
+  const VERSION = '2.7.11';
   const PREFIX = '[ChatGPT 会话 HTML 导出器]';
   const IDS = {
     button: 'chatgpt-html-exporter-button',
@@ -953,7 +953,12 @@
         scrollHeight: chosen.scrollHeight, clientHeight: chosen.clientHeight,
         scrollTop: chosen.scrollTop, scrollRange: chosen.scrollRange,
         virtualizedTurnCount: chosen.turnCount, candidateCount: candidates.length,
-        ancestorDepth: chosen.depth
+        ancestorDepth: chosen.depth,
+        candidates: candidates.map(item => ({ tag: item.element.tagName.toLowerCase(), id: item.element.id || null,
+          className: typeof item.element.className === 'string' ? item.element.className.slice(0, 200) : null,
+          testId: item.element.getAttribute('data-testid'), overflowY: item.overflowY,
+          scrollHeight: item.scrollHeight, clientHeight: item.clientHeight, scrollTop: item.scrollTop,
+          scrollRange: item.scrollRange, virtualizedTurnCount: item.turnCount, ancestorDepth: item.depth }))
       } : null,
       reason: chosen ? null : 'no-scrollable-ancestor-containing-virtualized-turn'
     };
@@ -1210,7 +1215,7 @@
     const observedDom = new Map();
     const traversal = {
       startedAt: new Date().toISOString(),
-      strategy: 'preheat-top-bottom-top-then-forward-scan',
+      strategy: 'capture-during-scroll-with-nonblocking-preheat-and-forward-scan',
       preheat: { enabled: true, stepSize: null, mutationWaitTimeoutMs: 3500, identityDriven: true, directions: [] },
       container: null, initialScrollTop: null, finalScrollTop: null,
       maxScrollTop: null, stepSize: null, stepCount: 0,
@@ -1361,6 +1366,7 @@
             virtualizedTurnCount: document.querySelectorAll('[data-virtualized-turn]').length,
             waitResult
           };
+          entry.capture = await captureVisibleMessages(selected, captured, duplicates, observedDom);
           traversal.preheat.directions.at(-1).steps.push(entry);
           traversal.preheat.recentTrace ||= [];
           traversal.preheat.recentTrace.push({
@@ -1444,7 +1450,12 @@
                   currentStep: stepCount, geometry: getScrollGeometry(scrollElement),
                   detectedAt: new Date().toISOString()
                 };
-                throw new Error('检测到相同的历史加载/滚动回弹模式再次出现。为避免重复回弹循环，已停止预热。请查看 paginationRecovery.events 中的 patternKey、DOM 变化及网络请求诊断。');
+                phase.repeatedBouncePatternDetected = true;
+                phase.repeatedBouncePattern = { patternKey: patternKey.slice(0, 1600), count: patternCount,
+                  previousEventStep: recovery.events.slice(0, -1).reverse().find(item => item.patternKey === event.patternKey)?.step ?? null,
+                  currentStep: stepCount, geometry: getScrollGeometry(scrollElement), detectedAt: new Date().toISOString() };
+                phase.stoppedAtRepeatedPattern = true;
+                return false;
               }
               entry.recoveryEventStep = stepCount;
               const settled = await waitForPaginationSettled(scrollElement);
@@ -1582,23 +1593,26 @@
         setStatus('预热页面（1/3）：正在逐步滚动到顶部…');
         traversal.preheat.directions.push({ direction: 'up-to-top', steps: [] });
         traversal.preheat.reachedTop = await preheatTraverse('up', '向上到顶部');
-
-        // Phase 2: incrementally traverse to the bottom.
-        setStatus('预热页面（2/3）：正在逐步向下滚动以触发内容渲染…');
-        traversal.preheat.directions.push({ direction: 'down-to-bottom', steps: [] });
-        traversal.preheat.reachedBottom = await preheatTraverse('down', '向下到底部');
-
-        // Phase 3: return to the top using the same live-coordinate algorithm.
-        setStatus('预热页面（3/3）：正在逐步向上滚动以完成渲染…');
-        traversal.preheat.directions.push({ direction: 'bottom-to-top', steps: [] });
-        traversal.preheat.reachedTop = await preheatTraverse('up', '返回顶部');
-        if (scrollElement.scrollTop > 2) {
-          throw new Error('预热向上滚动结束后未能确认返回顶部。');
+        if (traversal.preheat.reachedTop) {
+          // Phase 2: incrementally traverse to the bottom.
+          setStatus('预热页面（2/3）：正在逐步向下滚动以触发内容渲染…');
+          traversal.preheat.directions.push({ direction: 'down-to-bottom', steps: [] });
+          traversal.preheat.reachedBottom = await preheatTraverse('down', '向下到底部');
         }
-        traversal.preheat.completed = true;
+        if (traversal.preheat.reachedBottom) {
+          // Phase 3: return to the top using live scroll coordinates.
+          setStatus('预热页面（3/3）：正在逐步向上滚动以完成渲染…');
+          traversal.preheat.directions.push({ direction: 'bottom-to-top', steps: [] });
+          traversal.preheat.reachedTop = await preheatTraverse('up', '返回顶部');
+        }
+        traversal.preheat.completed = Boolean(traversal.preheat.reachedTop && traversal.preheat.reachedBottom && scrollElement.scrollTop <= 2);
         traversal.preheat.completedAt = new Date().toISOString();
+        if (!traversal.preheat.completed) {
+          traversal.preheat.partial = true;
+          warn('页面预热未完整走完；保留已采集消息，并继续正式 DOM 扫描。');
+        }
 
-        setStatus('页面预热完成，正在正式采集消息…');
+        setStatus('正在采集可见消息并继续遍历虚拟列表…');
         throwIfStopped();
         const topWaitSignature = getVirtualizedSignature();
         const topWaitStartedAt = performance.now();
@@ -1610,7 +1624,7 @@
         traversal.initialCaptureCount = await captureVisibleMessages(selected, captured, duplicates, observedDom);
         traversal.reachedTop = scrollElement.scrollTop <= 2;
         let previousTop = scrollElement.scrollTop;
-        const maxSteps = Math.min(600, Math.ceil(traversal.maxScrollTop / Math.max(1, traversal.stepSize)) + 8);
+        const maxSteps = Math.min(800, Math.ceil(Math.max(0, scrollElement.scrollHeight - scrollElement.clientHeight) / Math.max(1, traversal.stepSize)) + 12);
         for (let step = 0; step < maxSteps; step++) {
           const maxTop = Math.max(0, scrollElement.scrollHeight - scrollElement.clientHeight);
           const nextTop = Math.min(maxTop, previousTop + traversal.stepSize);
@@ -2090,6 +2104,9 @@ document.addEventListener('click',e=>{if(!e.target.closest('.menu-wrap'))menu.cl
       setStatus(`接口已筛选 ${selected.length} 条消息，正在遍历虚拟滚动页面…`);
       const exported = await cloneNativeMessages(selected);
       throwIfStopped();
+      diagnostics.dom.coverage = { expected: selected.length, captured: exported.length,
+        missing: selected.length - exported.length, observedDomIdentityCount: observedDom.size,
+        capturedIds: exported.map(item => item.messageId), missingIds: selected.filter(item => !captured.has(item.message.id)).map(item => item.message.id) };
       if (exported.length !== selected.length) {
         const missingCount = diagnostics.dom.missingMessageCount + diagnostics.dom.duplicateMessageCount;
         throw new Error(`虚拟滚动遍历后仍无法完整对应接口消息：目标 ${selected.length} 条，匹配 ${exported.length} 条，缺失或歧义 ${missingCount} 条。未生成不完整文件。`);
@@ -2099,6 +2116,7 @@ document.addEventListener('click',e=>{if(!e.target.closest('.menu-wrap'))menu.cl
       const svgSpriteMarkup = await inlineExternalSvgSprites(exported);
 
       setStatus('正在提取 ChatGPT 原生样式并生成 HTML…');
+      if (exported.length !== selected.length) throw new Error('消息 ID 覆盖率未达到 100%，拒绝生成不完整 HTML。');
       const html = buildDocument(exported, selected, conversationId, svgSpriteMarkup);
       const validation = validateDocument(html, selected.length);
       const filename = downloadHTML(html, conversationId);
