@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT 会话 HTML 导出器
 // @namespace    https://github.com/JKwarn/upload-my
-// @version      2.7.15
+// @version      2.7.16
 // @description  通过会话接口校验消息，并复用 ChatGPT 原生 DOM 与 CSS 导出独立 HTML
 // @match        https://chatgpt.com/c/*
 // @run-at       document-idle
@@ -11,7 +11,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '2.7.15';
+  const VERSION = '2.7.16';
   const PREFIX = '[ChatGPT 会话 HTML 导出器]';
   const IDS = {
     button: 'chatgpt-html-exporter-button',
@@ -325,7 +325,14 @@
     else externalSignal?.addEventListener('abort', abortFromExport, { once: true });
     const timer = setTimeout(() => controller.abort(), CONFIG.requestTimeout);
     try {
-      const response = await fetch(url, {
+      // In Firefox userscript sandboxes, fetch('/path') may resolve against
+      // the moz-extension:// origin instead of the page origin. Resolve every
+      // API endpoint explicitly against the current ChatGPT page.
+      const requestUrl = new URL(url, window.location.origin);
+      if (requestUrl.origin !== window.location.origin) {
+        throw new Error('请求地址不属于当前 ChatGPT 页面：' + requestUrl.origin);
+      }
+      const response = await fetch(requestUrl.href, {
         ...options,
         credentials: 'include',
         cache: 'no-store',
