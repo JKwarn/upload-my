@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT 会话 HTML 导出器
 // @namespace    https://github.com/JKwarn/upload-my
-// @version      2.7.14
+// @version      2.7.15
 // @description  通过会话接口校验消息，并复用 ChatGPT 原生 DOM 与 CSS 导出独立 HTML
 // @match        https://chatgpt.com/c/*
 // @run-at       document-idle
@@ -11,7 +11,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '2.7.14';
+  const VERSION = '2.7.15';
   const PREFIX = '[ChatGPT 会话 HTML 导出器]';
   const IDS = {
     button: 'chatgpt-html-exporter-button',
@@ -1207,6 +1207,42 @@
     return newlyCaptured;
   }
 
+
+  function getScrollAnchorSnapshot(scrollElement) {
+    const viewport = scrollElement.getBoundingClientRect();
+    return [...document.querySelectorAll('[data-virtualized-turn]')].map((node, index) => {
+      const rect = node.getBoundingClientRect();
+      const text = (node.innerText || node.textContent || '').replace(/\s+/g, ' ').trim();
+      const identities = [];
+      for (const item of [node, ...node.querySelectorAll('[data-message-id],[data-message-uuid],[data-turn-id],[data-turn-key]')]) {
+        for (const attr of ['data-message-id','data-message-uuid','data-turn-id','data-turn-key']) {
+          const value = item.getAttribute?.(attr);
+          if (value && !identities.includes(value)) identities.push(value);
+        }
+      }
+      const fingerprint = identities.length ? identities.join('|') :
+        (node.getAttribute('data-testid') || '') + ':' + text.slice(0, 100) + ':' + text.slice(-80);
+      return { index, fingerprint, top: Math.round(rect.top - viewport.top),
+        bottom: Math.round(rect.bottom - viewport.top), height: Math.round(rect.height),
+        textLength: text.length, visible: rect.bottom > viewport.top && rect.top < viewport.bottom };
+    }).filter(item => item.visible);
+  }
+
+  function compareScrollAnchors(before, after) {
+    const afterByFingerprint = new Map(after.map(item => [item.fingerprint, item]));
+    const matches = before.map(item => {
+      const next = afterByFingerprint.get(item.fingerprint);
+      return next ? { fingerprint: item.fingerprint.slice(0, 240),
+        beforeTop: item.top, afterTop: next.top, viewportDelta: next.top - item.top,
+        beforeHeight: item.height, afterHeight: next.height } : null;
+    }).filter(Boolean);
+    return { beforeVisibleCount: before.length, afterVisibleCount: after.length,
+      matchedCount: matches.length,
+      stableCount: matches.filter(item => Math.abs(item.viewportDelta) <= 3).length,
+      movedCount: matches.filter(item => Math.abs(item.viewportDelta) > 3).length,
+      matches: matches.slice(0, 20) };
+  }
+
   async function cloneNativeMessages(selected) {
     const discovery = diagnoseDom(selected);
     const scrollDelay = getScrollDelay();
@@ -1322,6 +1358,7 @@
           const beforeTop = scrollElement.scrollTop;
           const beforeMax = Math.max(0, scrollElement.scrollHeight - scrollElement.clientHeight);
           const beforeGeometry = getScrollGeometry(scrollElement);
+          const beforeAnchors = getScrollAnchorSnapshot(scrollElement);
           const beforeIdentity = getVirtualizedIdentitySnapshot();
           const beforeSignature = beforeIdentity.signature;
           const moveStartedPerformance = performance.now();
@@ -1356,6 +1393,18 @@
           throwIfStopped();
           const afterSignature = getVirtualizedSignature();
           const afterIds = [...document.querySelectorAll('[data-virtualized-turn]')].map(n => (n.innerText || '').slice(0,100));
+          const afterGeometry = getScrollGeometry(scrollElement);
+          const afterAnchors = getScrollAnchorSnapshot(scrollElement);
+          const anchorAnalysis = compareScrollAnchors(beforeAnchors, afterAnchors);
+          const expectedTop = Math.min(beforeMax, Math.max(0, requestedTop));
+          const actualTop = scrollElement.scrollTop;
+          const geometryRangeChanged = Math.abs(afterGeometry.maxScrollTop - beforeGeometry.maxScrollTop) > 80;
+          const positionDeviation = Math.abs(actualTop - expectedTop);
+          let relocationClassification = 'normal';
+          if (positionDeviation > 80 && geometryRangeChanged) relocationClassification = 'range-change-reposition';
+          else if (positionDeviation > 80) relocationClassification = 'unexpected-position-adjustment';
+          else if (anchorAnalysis.matchedCount > 0 && anchorAnalysis.movedCount > 0) relocationClassification = 'anchor-content-shift';
+          else if (anchorAnalysis.matchedCount > 0 && anchorAnalysis.stableCount > 0) relocationClassification = 'stable-anchor';
           const entry = {
             step: stepNumber, timestamp: moveStartedAt, direction,
             beforeScrollTop: Math.round(beforeTop), beforeMaxScrollTop: Math.round(beforeMax),
@@ -1363,7 +1412,9 @@
             requestedScrollTop: Math.round(requestedTop),
             actualScrollTop: Math.round(scrollElement.scrollTop),
             maxScrollTop: Math.max(0, scrollElement.scrollHeight - scrollElement.clientHeight),
-            beforeGeometry, afterGeometry: getScrollGeometry(scrollElement),
+            beforeGeometry, afterGeometry, beforeAnchors, afterAnchors, anchorAnalysis,
+            expectedClampedScrollTop: Math.round(expectedTop), actualVsExpectedDelta: Math.round(actualTop - expectedTop),
+            geometryRangeChanged, relocationClassification,
             domMutationRecordCount: moveMutationCount,
             scrollEventCount,
             scrollEventObserved: scrollEventCount > 0,
@@ -1401,6 +1452,8 @@
         const preheatTraverse = async (direction, label) => {
           const isUp = direction === 'up';
           const phase = traversal.preheat.directions.at(-1);
+          let adaptiveStepSize = preheatStepSize;
+          phase.adaptiveStepSizing = { initialStepSize: preheatStepSize, minStepSize: 160, changes: [] };
           let noProgressCount = 0, stepCount = 0;
           const repeatedTransitions = new Map(), seenIdentityIds = new Set();
           const selectedRank = new Map(selected.map((item,index) => [item.message.id,index]));
@@ -1421,11 +1474,24 @@
             }
 
             const requestedTop = isUp
-              ? Math.max(0, currentTop - preheatStepSize)
-              : Math.min(currentMax, currentTop + preheatStepSize);
+              ? Math.max(0, currentTop - adaptiveStepSize)
+              : Math.min(currentMax, currentTop + adaptiveStepSize);
             const entry = await moveAndWait(direction, requestedTop, ++stepCount);
             phase.stepCount = stepCount;
             phase.capturedMessageCount = (phase.capturedMessageCount || 0) + (entry.capture || 0);
+            const shouldReduceStep = entry.relocationClassification === 'range-change-reposition' ||
+              (entry.relocationClassification === 'unexpected-position-adjustment' && entry.anchorAnalysis.matchedCount > 0);
+            if (shouldReduceStep && adaptiveStepSize > 160) {
+              const previousStepSize = adaptiveStepSize;
+              adaptiveStepSize = Math.max(160, Math.floor(adaptiveStepSize / 2));
+              phase.adaptiveStepSizing.changes.push({ step: stepCount, reason: entry.relocationClassification,
+                previousStepSize, nextStepSize: adaptiveStepSize, anchorAnalysis: entry.anchorAnalysis });
+            } else if (entry.relocationClassification === 'stable-anchor' && adaptiveStepSize < preheatStepSize) {
+              const previousStepSize = adaptiveStepSize;
+              adaptiveStepSize = Math.min(preheatStepSize, adaptiveStepSize + 120);
+              phase.adaptiveStepSizing.changes.push({ step: stepCount, reason: 'stable-anchor-recovery',
+                previousStepSize, nextStepSize: adaptiveStepSize });
+            }
             throwIfStopped();
             let identity = getVirtualizedIdentitySnapshot();
             const firstActualTop = Math.max(0, scrollElement.scrollTop);
@@ -1485,7 +1551,7 @@
               const recoveryBaselineRank = earliestSelectedRank;
               for (let attempt = 1; attempt <= recovery.maxRecoveryAttempts; attempt++) {
                 const fromTop = Math.max(0, scrollElement.scrollTop);
-                const targetTop = Math.max(0, fromTop - preheatStepSize);
+                const targetTop = Math.max(0, fromTop - adaptiveStepSize);
                 const signatureBeforeRecovery = getVirtualizedSignature();
                 scrollElement.scrollTop = targetTop;
                 const recoveryWait = await waitForVirtualizedUpdate(
