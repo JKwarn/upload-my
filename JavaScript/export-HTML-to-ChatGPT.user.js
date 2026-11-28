@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT 会话 HTML 导出器
 // @namespace    https://github.com/JKwarn/upload-my
-// @version      2.7.13
+// @version      2.7.14
 // @description  通过会话接口校验消息，并复用 ChatGPT 原生 DOM 与 CSS 导出独立 HTML
 // @match        https://chatgpt.com/c/*
 // @run-at       document-idle
@@ -11,7 +11,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '2.7.13';
+  const VERSION = '2.7.14';
   const PREFIX = '[ChatGPT 会话 HTML 导出器]';
   const IDS = {
     button: 'chatgpt-html-exporter-button',
@@ -1335,13 +1335,22 @@
           const networkBefore = performance.getEntriesByType('resource').length;
           const beforeIds = [...document.querySelectorAll('[data-virtualized-turn]')].map(n => (n.innerText || '').slice(0,100));
           const moveStartedAt = new Date().toISOString();
-          scrollElement.scrollTop = requestedTop;
+          let scrollEventCount = 0;
+          let scrollEventAt = null;
+          const onScroll = event => {
+            if (event.target !== scrollElement) return;
+            scrollEventCount++;
+            if (!scrollEventAt) scrollEventAt = new Date().toISOString();
+          };
+          scrollElement.addEventListener('scroll', onScroll, { passive: true });
           let waitResult;
           try {
+            scrollElement.scrollTop = requestedTop;
             waitResult = await waitForVirtualizedUpdate(
               beforeSignature, traversal.preheat.mutationWaitTimeoutMs, scrollDelay, scrollElement
             );
           } finally {
+            scrollElement.removeEventListener('scroll', onScroll);
             moveObserver.disconnect();
           }
           throwIfStopped();
@@ -1356,6 +1365,12 @@
             maxScrollTop: Math.max(0, scrollElement.scrollHeight - scrollElement.clientHeight),
             beforeGeometry, afterGeometry: getScrollGeometry(scrollElement),
             domMutationRecordCount: moveMutationCount,
+            scrollEventCount,
+            scrollEventObserved: scrollEventCount > 0,
+            scrollEventAt,
+            scrollEventExpected: Math.abs(Math.min(beforeMax, Math.max(0, requestedTop)) - beforeTop) > 1,
+            scrollPositionChanged: Math.abs(scrollElement.scrollTop - beforeTop) > 1,
+            messageIdentityChanged: beforeSignature !== afterSignature,
             networkActivity: getNetworkActivitySnapshot(moveStartedPerformance),
             networkResourceEntryCountBefore: networkBefore,
             networkResourceEntryCountAfter: performance.getEntriesByType('resource').length,
@@ -1605,27 +1620,49 @@
           throw new Error(`预热${label}超过安全步数上限（${maxSteps}）。`);
         };
 
-        // Phase 1: incrementally reach the top from the current position.
-        setStatus('预热页面（1/3）：正在逐步滚动到顶部…');
-        traversal.preheat.directions.push({ direction: 'up-to-top', steps: [] });
-        traversal.preheat.reachedTop = await preheatTraverse('up', '向上到顶部');
-        if (traversal.preheat.reachedTop) {
-          // Phase 2: incrementally traverse to the bottom.
-          setStatus('预热页面（2/3）：正在逐步向下滚动以触发内容渲染…');
-          traversal.preheat.directions.push({ direction: 'down-to-bottom', steps: [] });
-          traversal.preheat.reachedBottom = await preheatTraverse('down', '向下到底部');
-        }
-        if (traversal.preheat.reachedBottom) {
-          // Phase 3: return to the top using live scroll coordinates.
-          setStatus('预热页面（3/3）：正在逐步向上滚动以完成渲染…');
-          traversal.preheat.directions.push({ direction: 'bottom-to-top', steps: [] });
-          traversal.preheat.reachedTop = await preheatTraverse('up', '返回顶部');
-        }
-        traversal.preheat.completed = Boolean(traversal.preheat.reachedTop && traversal.preheat.reachedBottom && scrollElement.scrollTop <= 2);
-        traversal.preheat.completedAt = new Date().toISOString();
-        if (!traversal.preheat.completed) {
+        // Preheat is diagnostic and opportunistic: failures must not suppress
+        // the independent formal scan. Only an explicit user cancellation aborts.
+        try {
+          // Phase 1: incrementally reach the top from the current position.
+          setStatus('预热页面（1/3）：正在逐步滚动到顶部…');
+          traversal.preheat.directions.push({ direction: 'up-to-top', steps: [] });
+          traversal.preheat.reachedTop = await preheatTraverse('up', '向上到顶部');
+          if (traversal.preheat.reachedTop) {
+            // Phase 2: incrementally traverse to the bottom.
+            setStatus('预热页面（2/3）：正在逐步向下滚动以触发内容渲染…');
+            traversal.preheat.directions.push({ direction: 'down-to-bottom', steps: [] });
+            traversal.preheat.reachedBottom = await preheatTraverse('down', '向下到底部');
+          }
+          if (traversal.preheat.reachedBottom) {
+            // Phase 3: return to the top using live scroll coordinates.
+            setStatus('预热页面（3/3）：正在逐步向上滚动以完成渲染…');
+            traversal.preheat.directions.push({ direction: 'bottom-to-top', steps: [] });
+            traversal.preheat.reachedTop = await preheatTraverse('up', '返回顶部');
+          }
+          traversal.preheat.completed = Boolean(traversal.preheat.reachedTop && traversal.preheat.reachedBottom && scrollElement.scrollTop <= 2);
+          traversal.preheat.completedAt = new Date().toISOString();
+          if (!traversal.preheat.completed) {
+            traversal.preheat.partial = true;
+            warn('页面预热未完整走完；保留已采集消息，并继续正式 DOM 扫描。');
+          }
+  
+  
+        } catch (preheatError) {
+          if (preheatError?.name === 'AbortError' || state.stopRequested) throw preheatError;
+          traversal.preheat.completed = false;
           traversal.preheat.partial = true;
-          warn('页面预热未完整走完；保留已采集消息，并继续正式 DOM 扫描。');
+          traversal.preheat.failed = true;
+          traversal.preheat.failure = {
+            name: preheatError?.name || 'Error',
+            message: preheatError?.message || String(preheatError),
+            timestamp: new Date().toISOString(),
+            scrollTop: Math.round(scrollElement.scrollTop),
+            maxScrollTop: Math.round(scrollElement.scrollHeight - scrollElement.clientHeight),
+            identitySnapshot: getVirtualizedIdentitySnapshot()
+          };
+          warn('页面预热阶段未完成；已记录原因，将从当前真实滚动位置继续正式扫描：' +
+            traversal.preheat.failure.message);
+          traversal.preheat.completedAt = new Date().toISOString();
         }
 
         setStatus('正在正式扫描虚拟列表并采集消息…');
@@ -1635,6 +1672,8 @@
         );
         traversal.formalScan = {
           startedAt: new Date().toISOString(),
+          startReason: traversal.preheat.failed ? 'preheat-failed-continue-from-live-position' :
+            (traversal.preheat.completed ? 'preheat-completed' : 'preheat-partial-or-skipped'),
           startScrollTop: Math.round(scrollElement.scrollTop),
           startMaxScrollTop: Math.round(scrollElement.scrollHeight - scrollElement.clientHeight),
           upward: { stepCount: 0, capturedMessageCount: 0, reachedBoundary: false, steps: [], stopReason: null },
@@ -1677,7 +1716,12 @@
               actualScrollTop: Math.round(afterTop),
               maxScrollTop: Math.round(afterMax),
               movedInDirection,
+              scrollPositionChanged: Math.abs(afterTop - beforeTop) > 1,
               identityChanged,
+              messageContentProgress: identityChanged || capturedNow > 0,
+              scrollEventObserved: Boolean(entry.scrollEventObserved),
+              scrollEventCount: entry.scrollEventCount || 0,
+              domMutationRecordCount: entry.domMutationRecordCount || 0,
               newlyCapturedMessageCount: capturedNow,
               totalCapturedMessageCount: captured.size,
               waitResult: entry.waitResult,
